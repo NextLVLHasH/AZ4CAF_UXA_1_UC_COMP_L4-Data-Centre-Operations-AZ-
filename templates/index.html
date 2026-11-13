@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AZ4CAF L4 Data Centre Operations Study Hub</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #111; }
+      header { background: #1f3c88; color: #fff; padding: 1rem 1.2rem; }
+      main { padding: 1rem 1.2rem; display: grid; gap: 1rem; }
+      .panel { background: #fff; border-radius: 10px; padding: 1rem; box-shadow: 0 1px 5px rgba(0,0,0,.08); }
+      .grid { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+      .note { border: 1px solid #e3e9f4; border-radius: 8px; padding: .75rem; }
+      .meta { font-size: .85rem; color: #444; }
+      .flashcard { perspective: 1000px; height: 170px; cursor: pointer; }
+      .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform .45s; transform-style: preserve-3d; }
+      .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+      .face { position: absolute; inset: 0; border: 1px solid #cdd7eb; border-radius: 8px; padding: .75rem; backface-visibility: hidden; background: #fff; }
+      .back { transform: rotateY(180deg); background: #edf3ff; }
+      select { margin-right: .5rem; padding: .35rem; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>AZ4CAF_UXA_1_UC_COMP_L4 Study Notes & Flip Cards</h1>
+      <p>Level 4 Data Centre Operations (AZ) 2026/27</p>
+    </header>
+    <main>
+      <section class="panel">
+        <h2>About the Programme</h2>
+        <p>
+          Semester 1: Fundamentals of Computer Science, Computer Systems Architecture (A+), Core Networking (CCNA), Applied Networking (CCNA).<br />
+          Semester 2: Operating Systems, Core AI, Work Based Learning, Professional Practice, and optional Designing a Computing Project.
+        </p>
+        <p>Vendor certifications: Cisco CCNA v7 and CompTIA A+.</p>
+      </section>
+
+      <section class="panel">
+        <h2>Study Notes</h2>
+        <label>Semester: <select id="semesterFilter"><option value="">All</option><option value="1">1</option><option value="2">2</option></select></label>
+        <label>Category: <select id="categoryFilter"><option value="">All</option></select></label>
+        <label>Vendor: <select id="vendorFilter"><option value="">All</option></select></label>
+        <div id="notes" class="grid"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Flip Cards</h2>
+        <div id="cards" class="grid"></div>
+      </section>
+    </main>
+
+    <script>
+      const notesEl = document.getElementById('notes');
+      const cardsEl = document.getElementById('cards');
+      const semesterFilter = document.getElementById('semesterFilter');
+      const categoryFilter = document.getElementById('categoryFilter');
+      const vendorFilter = document.getElementById('vendorFilter');
+
+      const setOptions = (select, values) => {
+        const existing = new Set(['']);
+        for (const opt of select.options) existing.add(opt.value);
+        values.forEach(v => {
+          if (!existing.has(v)) {
+            const option = document.createElement('option');
+            option.value = v;
+            option.textContent = v;
+            select.appendChild(option);
+          }
+        });
+      };
+
+      const renderNotes = (notes) => {
+        notesEl.innerHTML = '';
+        notes.forEach(note => {
+          const div = document.createElement('article');
+          div.className = 'note';
+          div.innerHTML = `
+            <h3>${note.topic}</h3>
+            <p class="meta">${note.unit} | Semester ${note.semester} | ${note.category} | ${note.vendor}</p>
+            <p>${note.content}</p>
+          `;
+          notesEl.appendChild(div);
+        });
+      };
+
+      const renderCards = (cards) => {
+        cardsEl.innerHTML = '';
+        cards.forEach(card => {
+          const div = document.createElement('article');
+          div.className = 'flashcard';
+          div.innerHTML = `
+            <div class="flashcard-inner">
+              <div class="face front"><h3>Q</h3><p>${card.question}</p></div>
+              <div class="face back"><h3>A</h3><p>${card.answer}</p><p class="meta">${card.unit}</p></div>
+            </div>
+          `;
+          div.addEventListener('click', () => div.classList.toggle('flipped'));
+          cardsEl.appendChild(div);
+        });
+      };
+
+      const refreshNotes = async () => {
+        const params = new URLSearchParams();
+        if (semesterFilter.value) params.set('semester', semesterFilter.value);
+        if (categoryFilter.value) params.set('category', categoryFilter.value);
+        if (vendorFilter.value) params.set('vendor', vendorFilter.value);
+        const res = await fetch(`/api/notes?${params.toString()}`);
+        const notes = await res.json();
+        renderNotes(notes);
+      };
+
+      const init = async () => {
+        const [notesRes, cardsRes] = await Promise.all([fetch('/api/notes'), fetch('/api/flashcards')]);
+        const notes = await notesRes.json();
+        const cards = await cardsRes.json();
+
+        setOptions(categoryFilter, [...new Set(notes.map(n => n.category))].sort());
+        setOptions(vendorFilter, [...new Set(notes.map(n => n.vendor))].sort());
+        renderNotes(notes);
+        renderCards(cards);
+      };
+
+      [semesterFilter, categoryFilter, vendorFilter].forEach(el => el.addEventListener('change', refreshNotes));
+      init();
+    </script>
+  </body>
+</html>
