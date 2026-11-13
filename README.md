@@ -75,3 +75,11 @@ python app.py
 Open `http://127.0.0.1:5000`.
 
 > If MySQL is unavailable, the app serves built-in fallback study notes and flashcards.
+
+## GitHub Pages support
+
+- A fully static, GitHub Pages-compatible interactive version is available at:
+  - `/docs/index.html`
+- To publish on GitHub Pages, set the repository Pages source to **Deploy from a branch** and choose:
+  - Branch: `main` (or your default branch)
+  - Folder: `/docs`
