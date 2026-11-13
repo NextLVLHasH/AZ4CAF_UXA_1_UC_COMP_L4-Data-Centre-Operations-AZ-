@@ -1,205 +1,82 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AZ4CAF Interactive Study Book</title>
-    <style>
-      body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #111; }
-      header { background: #1f3c88; color: #fff; padding: 1rem 1.2rem; }
-      main { padding: 1rem 1.2rem; display: grid; gap: 1rem; }
-      .panel { background: #fff; border-radius: 10px; padding: 1rem; box-shadow: 0 1px 5px rgba(0,0,0,.08); }
-      .grid { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
-      .note { border: 1px solid #e3e9f4; border-radius: 8px; padding: .75rem; }
-      .meta { font-size: .85rem; color: #444; }
-      .source { font-size: .9rem; }
-      .flashcard { perspective: 1000px; min-height: 190px; cursor: pointer; }
-      .flashcard-inner { position: relative; width: 100%; height: 100%; min-height: 190px; transition: transform .45s; transform-style: preserve-3d; }
-      .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
-      .face { position: absolute; inset: 0; border: 1px solid #cdd7eb; border-radius: 8px; padding: .75rem; backface-visibility: hidden; background: #fff; overflow: auto; }
-      .back { transform: rotateY(180deg); background: #edf3ff; }
-      select, button { margin-right: .5rem; padding: .35rem; }
-      .controls { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin-bottom: .75rem; }
-      .speak-btn { margin-top: .5rem; }
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>AZ4CAF Interactive Study Book (GitHub Pages)</h1>
-      <p>Distinction-level comprehensive notes and flip cards across all core subjects</p>
-    </header>
-    <main>
-      <section class="panel">
-        <h2>Interactive Book View</h2>
-        <div class="controls">
-          <label>Chapter (Unit): <select id="unitFilter"><option value="">All</option></select></label>
-          <button id="prevUnitBtn" type="button">Previous Chapter</button>
-          <button id="nextUnitBtn" type="button">Next Chapter</button>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="AZ4CAF Level 4 Data Centre Operations: study notes, worked examples, practical exercises and revision cards.">
+  <title>AZ4CAF · Data Centre Study Book</title>
+  <link rel="stylesheet" href="./assets/study.css">
+  <script src="./assets/study.js" defer></script>
+</head>
+<body data-content-url="./data/study_content.json">
+  <a class="skip-link" href="#main">Skip to study content</a>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="AZ4CAF study book home"><span class="brand-mark" aria-hidden="true">L4</span><span>AZ4CAF <small>DATA CENTRE OPERATIONS</small></span></a>
+    <div class="topbar-right"><span class="cohort">2026 / 27</span><span class="personal-badge">YOUR STUDY BOOK</span></div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Unit navigation">
+      <div class="sidebar-label">THE PROGRAMME <span>09 UNITS</span></div>
+      <button class="all-units active" id="allUnitsBtn" type="button" aria-pressed="true"><span>All units</span><span id="totalNotes">—</span></button>
+      <nav id="unitNav" aria-label="Choose a unit"><p class="muted">Loading units…</p></nav>
+      <div class="sidebar-footer"><span class="small-label">A LITTLE, OFTEN</span><p>Read. Recall. Put it into practice.</p><p class="muted">Use your tutor’s brief to guide assessed work.</p></div>
+    </aside>
+    <main id="main" tabindex="-1">
+      <section class="hero" aria-labelledby="bookTitle">
+        <div class="eyebrow">HRUC · LEVEL 4 · AZ4CAF</div>
+        <h1 id="bookTitle">Build knowledge.<br><span>Keep operations running.</span></h1>
+        <p>From computing fundamentals to the data centre floor. Learn the concepts, work through examples and test what you remember.</p>
+        <div class="hero-footer"><span><i class="status-dot" aria-hidden="true"></i> September 2026 – July 2027</span><span>CCNA v7 &amp; CompTIA A+ aligned study</span></div>
+      </section>
+      <section class="progress-strip" aria-label="Your revision progress">
+        <div><span class="stat-value" id="notesProgress">0 / —</span><span class="stat-label">notes reviewed</span></div>
+        <div><span class="stat-value" id="cardsProgress">0 / —</span><span class="stat-label">cards you know</span></div>
+        <div class="progress-message"><strong>Your pace. Your progress.</strong><span>Saved in this browser only.</span></div>
+        <button id="resetProgressBtn" class="text-button" type="button">Reset progress</button>
+      </section>
+      <div id="resetConfirm" class="notice" hidden><p>Clear all reviewed notes and card ratings saved in this browser?</p><button id="confirmResetBtn" type="button">Clear progress</button><button id="cancelResetBtn" class="secondary" type="button">Keep progress</button></div>
+      <p id="storageNotice" class="notice" hidden>Browser storage is unavailable. You can study normally; progress will last for this visit.</p>
+      <section class="library" aria-labelledby="libraryTitle">
+        <div class="library-heading"><h2 id="libraryTitle">Go deeper</h2><span>YOUR PRACTICAL LIBRARY</span></div>
+        <div class="library-links">
+          <a href="./guides/study-guide.html"><span>01 · STUDY SKILLS</span><strong>Study &amp; revision plan</strong><span>Build a repeatable learning routine →</span></a>
+          <a href="./guides/labs.html"><span>02 · HANDS-ON</span><strong>Practical lab workbook</strong><span>Turn concepts into working evidence →</span></a>
+          <a href="./guides/network-labs.html"><span>03 · NETWORKING</span><strong>Switches, firewalls &amp; networks</strong><span>Explore configuration and troubleshooting →</span></a>
+          <a href="./guides/data-tools.html"><span>04 · DATA &amp; CODE</span><strong>Access, MongoDB, Python &amp; Node.js</strong><span>Practise data and automation skills →</span></a>
+          <a href="./guides/ai-guide.html"><span>05 · AI PRACTICE</span><strong>Using AI &amp; AI firewalls</strong><span>Agents, verification, Boolean rules &amp; model decisions →</span></a>
+          <a href="./guides/research.html"><span>06 · SOURCES</span><strong>Research &amp; verification</strong><span>Inspect the sources, findings &amp; limits →</span></a>
         </div>
-        <label>Semester: <select id="semesterFilter"><option value="">All</option><option value="1">1</option><option value="2">2</option></select></label>
-        <label>Category: <select id="categoryFilter"><option value="">All</option></select></label>
-        <label>Vendor: <select id="vendorFilter"><option value="">All</option></select></label>
-        <div id="notes" class="grid"></div>
       </section>
-
-      <section class="panel">
-        <h2>Flip Cards</h2>
-        <div id="cards" class="grid"></div>
+      <div class="view-switch" role="group" aria-label="Study view">
+        <button type="button" id="notesTab" class="view-button active" aria-pressed="true" data-view="notes">Study notes <span id="notesTabCount">—</span></button>
+        <button type="button" id="cardsTab" class="view-button" aria-pressed="false" data-view="cards">Recall cards <span id="cardsTabCount">—</span></button>
+        <button type="button" id="programmeTab" class="view-button" aria-pressed="false" data-view="programme">Programme guide</button>
+      </div>
+      <section id="studyControls" class="filters" aria-label="Find study material">
+        <label class="search-label" for="searchInput"><span class="visually-hidden">Search study material</span><span aria-hidden="true" class="search-icon">⌕</span><input type="search" id="searchInput" placeholder="Search concepts, examples or questions…" autocomplete="off"></label>
+        <div class="filter-row">
+          <label>Semester<select id="semesterFilter"><option value="">All semesters</option><option value="1">1 · Sep 2026 – Feb 2027</option><option value="2">2 · Feb – Jul 2027</option></select></label>
+          <label>Unit<select id="unitFilter"><option value="">All units</option></select></label>
+          <label>Topic area<select id="categoryFilter"><option value="">All topic areas</option></select></label>
+          <label>Vendor<select id="vendorFilter"><option value="">All vendors</option></select></label>
+          <button id="clearFiltersBtn" class="text-button" type="button">Clear filters</button>
+        </div>
       </section>
-
-      <section class="panel">
-        <h2>Referenced Sources (Case Study Evidence)</h2>
-        <ul id="references"></ul>
+      <div id="loadState" class="notice" role="status">Opening your study book…</div>
+      <button id="retryBtn" type="button" hidden>Try loading again</button>
+      <section id="studySection" aria-labelledby="sectionTitle" hidden>
+        <div class="section-heading"><div><span class="small-label" id="sectionEyebrow">YOUR REFERENCE SHELF</span><h2 id="sectionTitle">All study notes</h2><p id="unitSummary" class="muted"></p></div><div class="chapter-controls"><button id="prevUnitBtn" class="icon-button" type="button" aria-label="Previous unit">←</button><button id="nextUnitBtn" class="icon-button" type="button" aria-label="Next unit">→</button></div></div>
+        <p id="resultCount" class="result-count" role="status" aria-live="polite"></p>
+        <div id="notes" class="notes-grid"></div>
+        <div id="cards" class="cards-grid" hidden></div>
+        <div id="emptyState" class="empty-state" hidden><span aria-hidden="true">⌕</span><h3>No matching material</h3><p>Try a broader search or clear your filters.</p><button id="emptyClearBtn" type="button">Clear filters</button></div>
+        <section id="referencesPanel" class="references" aria-labelledby="referencesTitle"><h3 id="referencesTitle">Read further</h3><p class="muted">Official references for the notes in this view. Scenarios are illustrative practice, rather than evidence of real incidents.</p><ul id="references"></ul></section>
       </section>
+      <section id="programmeSection" aria-labelledby="programmeTitle" hidden><div class="section-heading"><div><span class="small-label">THE YEAR AHEAD</span><h2 id="programmeTitle">Your programme at a glance</h2></div></div><div id="programmeContent"></div></section>
+      <footer class="page-footer"><span>AZ4CAF · Built for steady progress</span><span>Independent revision aid · Confirm assessment and placement details with HRUC</span><button id="stopSpeechBtn" class="text-button" type="button" hidden>Stop reading aloud</button></footer>
+      <p id="announcement" class="visually-hidden" role="status" aria-live="polite"></p>
     </main>
-
-    <script>
-      const notesEl = document.getElementById('notes');
-      const cardsEl = document.getElementById('cards');
-      const referencesEl = document.getElementById('references');
-      const unitFilter = document.getElementById('unitFilter');
-      const semesterFilter = document.getElementById('semesterFilter');
-      const categoryFilter = document.getElementById('categoryFilter');
-      const vendorFilter = document.getElementById('vendorFilter');
-      const prevUnitBtn = document.getElementById('prevUnitBtn');
-      const nextUnitBtn = document.getElementById('nextUnitBtn');
-      let UNITS = [];
-      let NOTES = [];
-      let CARDS = [];
-
-      const setOptions = (select, values) => {
-        const existing = new Set(['']);
-        for (const opt of select.options) existing.add(opt.value);
-        values.forEach((value) => {
-          if (!existing.has(value)) {
-            const option = document.createElement('option');
-            option.value = value;
-            option.textContent = value;
-            select.appendChild(option);
-          }
-        });
-      };
-
-      const speak = (text) => {
-        if (!('speechSynthesis' in window)) return;
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
-      };
-
-      const applyFilters = () => {
-        let filteredNotes = [...NOTES];
-        let filteredCards = [...CARDS];
-
-        if (unitFilter.value) {
-          filteredNotes = filteredNotes.filter((item) => item.unit === unitFilter.value);
-          filteredCards = filteredCards.filter((item) => item.unit === unitFilter.value);
-        }
-        if (semesterFilter.value) {
-          filteredNotes = filteredNotes.filter((item) => String(item.semester) === semesterFilter.value);
-          filteredCards = filteredCards.filter((item) => String(item.semester) === semesterFilter.value);
-        }
-        if (categoryFilter.value) {
-          filteredNotes = filteredNotes.filter((item) => item.category === categoryFilter.value);
-          filteredCards = filteredCards.filter((item) => item.category === categoryFilter.value);
-        }
-        if (vendorFilter.value) {
-          filteredNotes = filteredNotes.filter((item) => item.vendor === vendorFilter.value);
-        }
-
-        return { filteredNotes, filteredCards };
-      };
-
-      const renderNotes = (notes) => {
-        notesEl.innerHTML = '';
-        notes.forEach((note) => {
-          const div = document.createElement('article');
-          div.className = 'note';
-          div.innerHTML = `
-            <h3>${note.topic}</h3>
-            <p class="meta">${note.unit} | Semester ${note.semester} | ${note.category} | ${note.vendor}</p>
-            <p>${note.content}</p>
-            <p><strong>Case study:</strong> ${note.case_study}</p>
-            <p class="source"><strong>Source:</strong> <a href="${note.source_url}" target="_blank" rel="noopener noreferrer">${note.source_title}</a></p>
-            <button class="speak-btn" type="button">Read this note aloud</button>
-          `;
-          div.querySelector('.speak-btn').addEventListener('click', () => speak(`${note.topic}. ${note.content}. ${note.case_study}`));
-          notesEl.appendChild(div);
-        });
-      };
-
-      const renderReferences = (notes) => {
-        referencesEl.innerHTML = '';
-        const refs = new Map();
-        notes.forEach((note) => refs.set(note.source_url, note.source_title));
-        [...refs.entries()].sort((a, b) => a[1].localeCompare(b[1])).forEach(([url, title]) => {
-          const li = document.createElement('li');
-          li.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">${title}</a>`;
-          referencesEl.appendChild(li);
-        });
-      };
-
-      const renderCards = (cards) => {
-        cardsEl.innerHTML = '';
-        cards.forEach((card) => {
-          const div = document.createElement('article');
-          div.className = 'flashcard';
-          div.innerHTML = `
-            <div class="flashcard-inner">
-              <div class="face front"><h3>Q</h3><p>${card.question}</p></div>
-              <div class="face back"><h3>A</h3><p>${card.answer}</p><p class="meta">${card.unit}</p></div>
-            </div>
-            <button class="speak-btn" type="button">Read card aloud</button>
-          `;
-          div.addEventListener('click', () => div.classList.toggle('flipped'));
-          div.querySelector('.speak-btn').addEventListener('click', (event) => {
-            event.stopPropagation();
-            speak(`Question: ${card.question}. Answer: ${card.answer}`);
-          });
-          cardsEl.appendChild(div);
-        });
-      };
-
-      const refresh = () => {
-        const { filteredNotes, filteredCards } = applyFilters();
-        renderNotes(filteredNotes);
-        renderCards(filteredCards);
-        renderReferences(filteredNotes);
-      };
-
-      const navigateUnit = (direction) => {
-        if (!UNITS.length) return;
-        const currentIndex = UNITS.findIndex((unit) => unit.name === unitFilter.value);
-        const baseIndex = currentIndex === -1 ? 0 : currentIndex;
-        const nextIndex = (baseIndex + direction + UNITS.length) % UNITS.length;
-        unitFilter.value = UNITS[nextIndex].name;
-        refresh();
-      };
-
-      const init = async () => {
-        const response = await fetch('./data/study_content.json');
-        const content = await response.json();
-        UNITS = content.units || [];
-        NOTES = (content.notes || []).map((note) => ({
-          ...note,
-          semester: note.semester || (UNITS.find((unit) => unit.name === note.unit)?.semester ?? 1),
-        }));
-        CARDS = (content.flashcards || []).map((card) => ({
-          ...card,
-          semester: card.semester || (UNITS.find((unit) => unit.name === card.unit)?.semester ?? 1),
-        }));
-
-        setOptions(unitFilter, UNITS.map((unit) => unit.name));
-        setOptions(categoryFilter, [...new Set(NOTES.map((note) => note.category))].sort());
-        setOptions(vendorFilter, [...new Set(NOTES.map((note) => note.vendor))].sort());
-
-        [unitFilter, semesterFilter, categoryFilter, vendorFilter].forEach((element) => element.addEventListener('change', refresh));
-        prevUnitBtn.addEventListener('click', () => navigateUnit(-1));
-        nextUnitBtn.addEventListener('click', () => navigateUnit(1));
-
-        refresh();
-      };
-
-      init();
-    </script>
-  </body>
+  </div>
+  <noscript><p class="notice">Enable JavaScript to browse and filter this study book. The full notes are also available in docs/data/study_content.json in the repository.</p></noscript>
+</body>
 </html>

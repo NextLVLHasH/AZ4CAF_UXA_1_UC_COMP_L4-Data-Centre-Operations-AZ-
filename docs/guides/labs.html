@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Practical lab workbook · AZ4CAF</title><style>
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #182b3a; background: #f4f6f7; }
+body { margin: 0; line-height: 1.75; }
+nav, main { max-width: 1000px; margin: auto; padding: 1.5rem; }
+nav { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; }
+main { background: white; border-top: 4px solid #237b69; padding-bottom: 4rem; overflow-wrap: anywhere; }
+a { color: #145e80; text-underline-offset: .2em; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #ca691b; outline-offset: 3px; }
+h1,h2,h3,h4 { line-height: 1.25; color: #143c38; scroll-margin-top: 1rem; }
+h1 { font-size: clamp(1.8rem, 4vw, 2.7rem); }
+h2 { margin-top: 2.5rem; border-bottom: 1px solid #dce7e4; padding-bottom: .6rem; }
+pre { padding: 1rem; border-radius: .4rem; background: #152a32; color: #e7f3ed; overflow: auto; line-height: 1.6; font-size: .9rem; }
+code { font-family: ui-monospace, monospace; } p code, li code { background: #edf2f2; padding: .1rem .25rem; }
+table { display: block; overflow: auto; border-collapse: collapse; font-size: .9rem; }
+th,td { padding: .6rem; border: 1px solid #d2dfdc; text-align: left; min-width: 5rem; }
+th { background: #edf4f0; } blockquote { border-left: 3px solid #c18c40; margin-left: 0; padding-left: 1rem; }
+details { margin: 1rem 0; padding: 1rem; background: #f0f5f2; } summary { cursor: pointer; font-weight: 600; }
+@media print { nav, .toc { display: none; } :root { background: white; } main { max-width: none; padding: 0; } pre { white-space: pre-wrap; color: black; background: #eee; } a { color: black; } }
+</style></head>
+<body><nav aria-label="Study resources"><a href="../index.html">← Study notebook</a><a href="study-guide.html">Study and revision guide</a><a href="labs.html">Practical lab workbook</a><a href="network-labs.html">Switches, firewalls and complex networks</a><a href="data-tools.html">Access, MongoDB, Python and Node.js</a><a href="ai-guide.html">Using AI and understanding AI firewalls</a><a href="research.html">Research sources and verification</a></nav><main>
+<details class="toc"><summary>On this page</summary><div class="toc">
+<ul>
+<li><a href="#az4caf-practical-lab-workbook">AZ4CAF practical lab workbook</a><ul>
+<li><a href="#preparation">Preparation</a></li>
+<li><a href="#lab-1-binary-hexadecimal-storage-and-validation">Lab 1 — Binary, hexadecimal, storage and validation</a></li>
+<li><a href="#lab-2-inventory-reconciliation-and-algorithm-choices">Lab 2 — Inventory reconciliation and algorithm choices</a></li>
+<li><a href="#lab-3-hardware-capacity-and-power-desk-exercise">Lab 3 — Hardware, capacity and power desk exercise</a></li>
+<li><a href="#lab-4-ipv4-subnetting-and-vlsm-verification">Lab 4 — IPv4 subnetting and VLSM verification</a></li>
+<li><a href="#lab-5-ipv6-addressing-and-packet-path-explanation">Lab 5 — IPv6 addressing and packet-path explanation</a></li>
+<li><a href="#lab-6-vlans-a-trunk-and-inter-vlan-routing">Lab 6 — VLANs, a trunk and inter-VLAN routing</a></li>
+<li><a href="#lab-7-access-control-and-positivenegative-tests">Lab 7 — Access control and positive/negative tests</a></li>
+<li><a href="#lab-8-route-selection-and-a-troubleshooting-runbook">Lab 8 — Route selection and a troubleshooting runbook</a></li>
+<li><a href="#lab-9-linux-files-permissions-backup-and-restore">Lab 9 — Linux files, permissions, backup and restore</a></li>
+<li><a href="#lab-10-a-local-service-running-listening-and-reachable">Lab 10 — A local service: running, listening and reachable</a></li>
+<li><a href="#lab-11-windows-process-and-recovery-practice">Lab 11 — Windows process and recovery practice</a></li>
+<li><a href="#lab-12-ai-evaluation-without-a-training-framework">Lab 12 — AI evaluation without a training framework</a></li>
+<li><a href="#lab-13-ai-assisted-explanation-with-verification">Lab 13 — AI-assisted explanation with verification</a></li>
+<li><a href="#lab-14-incident-handover-and-change-rehearsal">Lab 14 — Incident handover and change rehearsal</a></li>
+<li><a href="#lab-15-placement-learning-plan-or-optional-project-proposal">Lab 15 — Placement learning plan or optional project proposal</a><ul>
+<li><a href="#placement-practice-route">Placement practice route</a></li>
+<li><a href="#optional-project-practice-route">Optional project practice route</a></li>
+</ul>
+</li>
+<li><a href="#lab-16-linux-access-and-a-read-only-diagnostic-baseline">Lab 16 — Linux access and a read-only diagnostic baseline</a></li>
+<li><a href="#extended-tools-and-complex-networks">Extended tools and complex networks</a></li>
+<li><a href="#integrated-challenge-investigate-restore-and-explain">Integrated challenge — investigate, restore and explain</a></li>
+<li><a href="#reading-alongside-the-labs">Reading alongside the labs</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</details>
+<h1 id="az4caf-practical-lab-workbook">AZ4CAF practical lab workbook</h1>
+<p><a href="study-guide.html">Study guide</a> · <a href="network-labs.html">Complex switch and firewall labs</a> · <a href="data-tools.html">Access, MongoDB, Python and Node</a> · <a href="ai-guide.html">AI operations guide</a> · <a href="https://github.com/NextLVLHasH/AZ4CAF_UXA_1_UC_COMP_L4-Data-Centre-Operations-AZ-/blob/main/README.md">Repository setup</a></p>
+<p>These exercises connect the notes to observable results. Use a local computer, a disposable virtual machine or an isolated network simulator. They do not authorise access to a college, employer, Amazon or public network. Do not paste network configuration into real equipment. Follow your tutor's brief and the tool's licence and installation instructions.</p>
+<p>The examples use synthetic data, loopback services and documentation or private address ranges. Record the versions you actually use. Command syntax and output differ between platforms. Each lab includes an expected result, evidence and cleanup; document differences instead of editing evidence to match the example.</p>
+<h2 id="preparation">Preparation</h2>
+<ul>
+<li>Create a dedicated folder for lab records and synthetic files. Keep passwords, tokens, workplace information and personal data out of it.</li>
+<li>For Python labs, use Python 3 and its standard library. Run scripts from the directory containing your disposable files.</li>
+<li>For Linux labs, use an unprivileged account in a disposable VM or a local environment you control. The exercises below do not require <code>sudo</code>.</li>
+<li>For network labs, use Cisco Packet Tracer where provided by your course, or an equivalent approved simulator. Interface names vary: adapt <code>GigabitEthernet0/0</code> and <code>FastEthernet0/1</code> to the simulated device.</li>
+<li>Take a VM snapshot or save a separate simulator copy before a lab. A screenshot alone does not describe how to reproduce a result.</li>
+<li>Use the <a href="study-guide.html#lab-record">lab record template</a>. Predict the result before executing a command.</li>
+</ul>
+<h2 id="lab-1-binary-hexadecimal-storage-and-validation">Lab 1 — Binary, hexadecimal, storage and validation</h2>
+<p><strong>Units:</strong> Fundamentals of Computer Science; Computer Systems Architecture.</p>
+<p><strong>Goal:</strong> perform calculations, state units and reject invalid inputs.</p>
+<p><strong>Prerequisites:</strong> Python 3; a disposable working directory.</p>
+<ol>
+<li>Convert decimal 47 into binary and hexadecimal by hand. Show 32 + 8 + 4 + 2 + 1. Predict the output of <code>format(47, "08b")</code>.</li>
+<li>Create <code>representation.py</code>:</li>
+</ol>
+<p>```python
+   def octet(value):
+       if type(value) is not int or not 0 &lt;= value &lt;= 255:
+           raise ValueError("an octet must be an integer from 0 to 255")
+       return format(value, "08b"), format(value, "02X")</p>
+<p>assert octet(0) == ("00000000", "00")
+   assert octet(47) == ("00101111", "2F")
+   assert octet(255) == ("11111111", "FF")
+   for invalid in (-1, 256, "47", True):
+       try:
+           octet(invalid)
+       except ValueError:
+           pass
+       else:
+           raise AssertionError(f"accepted invalid input: {invalid!r}")</p>
+<p>print("47:", <em>octet(47))
+   print("1 GB in bytes:", 10</em><em>9)
+   print("1 GiB in bytes:", 2</em><em>30)
+   print("1 TB in TiB:", round(10</em><em>12 / 2</em>*40, 3))
+   ```</p>
+<ol start="3">
+<li>Run <code>python representation.py</code>.</li>
+<li>Extend the function to return decimal as well, keeping the validation. Add a boundary test rather than only retesting 47.</li>
+</ol>
+<p><strong>Expected result:</strong> <code>47: 00101111 2F</code>; GB and GiB are 1,000,000,000 and 1,073,741,824 bytes; 1 TB is approximately 0.909 TiB. All assertions pass. <code>True</code> is rejected deliberately: Python treats <code>bool</code> as a subclass of <code>int</code>, so the exact type check matters here.</p>
+<p><strong>Evidence:</strong> hand conversion, script, test result and an explanation of one rejected input. Explain why a capacity-unit difference does not by itself prove storage is missing.</p>
+<p><strong>Troubleshooting:</strong> <code>AssertionError</code> means a prediction or implementation is wrong; inspect the expected and actual values. If <code>python</code> is unavailable, use the interpreter name installed by your environment, often <code>python3</code>.</p>
+<p><strong>Cleanup:</strong> delete only the lab files when no longer needed. Retain your explanation and test output.</p>
+<h2 id="lab-2-inventory-reconciliation-and-algorithm-choices">Lab 2 — Inventory reconciliation and algorithm choices</h2>
+<p><strong>Units:</strong> Fundamentals of Computer Science; Professional Practice.</p>
+<p><strong>Goal:</strong> validate structured data, detect duplicates and explain the algorithm.</p>
+<p><strong>Prerequisites:</strong> Python 3; no external access.</p>
+<ol>
+<li>Create <code>inventory.py</code> with this synthetic fixture:</li>
+</ol>
+<p>```python
+   expected = {"LAB-SRV-01", "LAB-SRV-02", "LAB-SRV-03"}
+   observed = ["LAB-SRV-01", "LAB-SRV-01", "LAB-SRV-03", "LAB-SRV-99"]</p>
+<p>seen = set()
+   duplicates = set()
+   for asset in observed:
+       if asset in seen:
+           duplicates.add(asset)
+       seen.add(asset)</p>
+<p>missing = expected - seen
+   unexpected = seen - expected
+   assert missing == {"LAB-SRV-02"}
+   assert unexpected == {"LAB-SRV-99"}
+   assert duplicates == {"LAB-SRV-01"}
+   print("Missing:", sorted(missing))
+   print("Unexpected:", sorted(unexpected))
+   print("Duplicates:", sorted(duplicates))
+   ```</p>
+<ol start="2">
+<li>Predict and run the output. Explain why converting the observed list into a set before checking duplicates would discard useful information.</li>
+<li>Add tests for an empty observed list, identical lists and a malformed identifier. Decide explicitly whether malformed data should stop processing or be reported separately.</li>
+<li>Compare repeated list membership checks with set membership. Explain average-case lookup assumptions and the memory trade-off; do not claim a runtime speedup without measuring it.</li>
+</ol>
+<p><strong>Expected result:</strong> missing <code>LAB-SRV-02</code>, unexpected <code>LAB-SRV-99</code>, duplicate <code>LAB-SRV-01</code>.</p>
+<p><strong>Evidence:</strong> tests, algorithm explanation and a short operational limitation: an absent identifier in a stale discovery file does not prove a physical asset is absent.</p>
+<p><strong>Troubleshooting:</strong> sorting is used only to make display deterministic. Set iteration order must not be treated as a stable inventory order.</p>
+<p><strong>Cleanup:</strong> keep synthetic fixtures only; do not substitute a real asset export without permission.</p>
+<h2 id="lab-3-hardware-capacity-and-power-desk-exercise">Lab 3 — Hardware, capacity and power desk exercise</h2>
+<p><strong>Units:</strong> Computer Systems Architecture; Professional Practice.</p>
+<p><strong>Goal:</strong> make a defensible comparison using specifications and calculations without opening equipment.</p>
+<p><strong>Prerequisites:</strong> public manufacturer documentation for one chosen server or desktop model; calculator or Python.</p>
+<ol>
+<li>Build a table of CPU support, memory generation and maximum capacity, storage interfaces, form factor, PSU options, management features and relevant firmware revision. Record the exact model and document revision. Mark unavailable facts as unknown.</li>
+<li>For four equal 2 TB drives, calculate these simplified capacities:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Layout</th>
+<th>Simplified usable capacity</th>
+<th>Important limitation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RAID 0 across four drives</td>
+<td>8 TB</td>
+<td>No drive-failure tolerance.</td>
+</tr>
+<tr>
+<td>RAID 1 using two mirrored pairs, presented separately</td>
+<td>Two 2 TB volumes; 4 TB total</td>
+<td>Failure tolerance depends on which drives fail.</td>
+</tr>
+<tr>
+<td>RAID 5 across four drives</td>
+<td>6 TB</td>
+<td>Normally tolerates one drive failure; rebuild risk remains.</td>
+</tr>
+<tr>
+<td>RAID 6 across four drives</td>
+<td>4 TB</td>
+<td>Normally tolerates two drive failures; controller support required.</td>
+</tr>
+</tbody>
+</table>
+<p>Ignore filesystem and metadata overhead for the calculation, then state that real usable space will be lower. Do not describe two separate mirrors as one large RAID 1 volume.
+3. Calculate energy for a measured 400 W load over 24 hours: 0.4 kW × 24 h = 9.6 kWh. At an illustrative £0.25/kWh the result is £2.40. Calculate seven days and explain why maximum PSU rating is not a measured load.
+4. A facility reports total energy of 120,000 kWh and IT-equipment energy of 80,000 kWh over the same boundary and period. Calculate PUE = 120,000 / 80,000 = 1.5. Explain why PUE alone cannot establish service efficiency or compare facilities with different measurement boundaries fairly.
+5. Write a diagnostic decision tree for “powers on, no OS boot.” Separate firmware detection, boot order, drive presence, bootloader and OS symptoms. Include a point at which you stop and escalate.</p>
+<p><strong>Expected result:</strong> correct capacity and energy arithmetic, source-specific compatibility claims and explicit assumptions.</p>
+<p><strong>Evidence:</strong> comparison table, calculations with units, a diagnostic diagram and a paragraph distinguishing resilience from backup.</p>
+<p><strong>Troubleshooting:</strong> mixed drive sizes and vendor RAID implementations change real capacity. Use the smallest-member capacity only when the specific layout's rules justify it. Avoid comparing products from marketing names alone.</p>
+<p><strong>Cleanup:</strong> none; this lab involves no physical or configuration changes.</p>
+<h2 id="lab-4-ipv4-subnetting-and-vlsm-verification">Lab 4 — IPv4 subnetting and VLSM verification</h2>
+<p><strong>Units:</strong> Core Networking; Fundamentals of Computer Science.</p>
+<p><strong>Goal:</strong> produce an address plan and independently verify it.</p>
+<p><strong>Prerequisites:</strong> Python 3; calculator optional. Addresses remain inside documentation or simulated examples.</p>
+<ol>
+<li>For <code>192.0.2.77/27</code>, calculate network <code>.64</code>, broadcast <code>.95</code>, host range <code>.65–.94</code>, 32 total addresses and normally 30 hosts. Explain the 32-address block boundaries.</li>
+<li>Allocate <code>10.20.0.0/24</code> to segments requiring 60, 28 and 12 conventional host addresses. Include the gateway in each requirement or state how you count it. Allocate largest first:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th>Prefix</th>
+<th>Network</th>
+<th>Conventional usable range</th>
+<th>Broadcast</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A, up to 62 hosts</td>
+<td>/26</td>
+<td>10.20.0.0</td>
+<td>.1–.62</td>
+<td>.63</td>
+</tr>
+<tr>
+<td>B, up to 30 hosts</td>
+<td>/27</td>
+<td>10.20.0.64</td>
+<td>.65–.94</td>
+<td>.95</td>
+</tr>
+<tr>
+<td>C, up to 14 hosts</td>
+<td>/28</td>
+<td>10.20.0.96</td>
+<td>.97–.110</td>
+<td>.111</td>
+</tr>
+</tbody>
+</table>
+<ol start="3">
+<li>Verify with Python:</li>
+</ol>
+<p>```python
+   from ipaddress import ip_interface, ip_network</p>
+<p>interface = ip_interface("192.0.2.77/27")
+   print(interface.network)
+   print(interface.network.broadcast_address)
+   parent = ip_network("10.20.0.0/24")
+   segments = [ip_network(x) for x in (
+       "10.20.0.0/26", "10.20.0.64/27", "10.20.0.96/28"
+   )]
+   assert all(segment.subnet_of(parent) for segment in segments)
+   for i, segment in enumerate(segments):
+       for other in segments[i + 1:]:
+           assert not segment.overlaps(other)
+       hosts = list(segment.hosts())
+       print(segment, hosts[0], hosts[-1], len(hosts))
+   ```</p>
+<ol start="4">
+<li>Deliberately replace segment C with <code>10.20.0.80/28</code>. The overlap assertion should fail because that range sits within segment B. Restore the correct plan.</li>
+<li>Explain why the conventional <code>2^host_bits − 2</code> formula needs special treatment for /31 and /32. Do not use it blindly for all prefixes.</li>
+</ol>
+<p><strong>Expected result:</strong> verified ranges above; an overlap produces an assertion failure.</p>
+<p><strong>Evidence:</strong> hand calculation, verification output and one rejected overlapping plan with an explanation.</p>
+<p><strong>Troubleshooting:</strong> <code>ip_network</code> rejects non-network addresses in strict mode. Do not silence this check merely to make an incorrect plan pass.</p>
+<p><strong>Cleanup:</strong> restore the correct fixture or remove the disposable script.</p>
+<h2 id="lab-5-ipv6-addressing-and-packet-path-explanation">Lab 5 — IPv6 addressing and packet-path explanation</h2>
+<p><strong>Unit:</strong> Core Networking.</p>
+<p><strong>Goal:</strong> interpret prefixes and distinguish neighbour discovery from IPv4 ARP.</p>
+<p><strong>Prerequisites:</strong> Python 3; optional two-host IPv6 simulator. <code>2001:db8::/32</code> is reserved for documentation.</p>
+<ol>
+<li>Expand <code>2001:db8:10::25</code> into eight groups: <code>2001:0db8:0010:0000:0000:0000:0000:0025</code>.</li>
+<li>Assign two simulated hosts <code>2001:db8:10::10/64</code> and <code>2001:db8:10::20/64</code>. Label their common prefix <code>2001:db8:10::/64</code>.</li>
+<li>With Python, verify:</li>
+</ol>
+<p><code>python
+   from ipaddress import ip_address, ip_network
+   host = ip_address("2001:db8:10::25")
+   print(host.exploded)
+   assert host in ip_network("2001:db8:10::/64")
+   assert host not in ip_network("2001:db8:20::/64")</code></p>
+<ol start="4">
+<li>In the simulator, test host-to-host reachability and inspect neighbour discovery if the simulator exposes it. Explain how a host resolves an on-link neighbour and why IPv6 does not use IPv4 broadcast ARP.</li>
+<li>Explain the role of <code>fe80::/10</code> link-local addresses and why a link-local address may need an interface scope identifier in a real OS.</li>
+</ol>
+<p><strong>Expected result:</strong> the expanded address above and successful membership assertions; simulated hosts on the same link can communicate when the link and configuration are valid.</p>
+<p><strong>Evidence:</strong> address plan, an annotated packet-path diagram and a comparison of IPv4 ARP and IPv6 neighbour discovery.</p>
+<p><strong>Troubleshooting:</strong> a valid prefix alone does not establish connectivity; link state, duplicate addresses and host configuration still matter.</p>
+<p><strong>Cleanup:</strong> close or reset the simulated topology; do not assign documentation addresses to an external interface.</p>
+<h2 id="lab-6-vlans-a-trunk-and-inter-vlan-routing">Lab 6 — VLANs, a trunk and inter-VLAN routing</h2>
+<p><strong>Units:</strong> Core Networking; Applied Networking.</p>
+<p><strong>Goal:</strong> verify segmentation, then restore a controlled fault.</p>
+<p><strong>Prerequisites:</strong> simulator; one router, one Layer 2 switch and two PCs. Use a fresh topology. Save a baseline copy.</p>
+<p>Connect PC-A to switch Fa0/1, PC-B to Fa0/2 and switch Gi0/1 to router Gi0/0. Use VLAN 10 for PC-A and VLAN 20 for PC-B. Configure PC-A as <code>192.0.2.10/26</code>, gateway <code>192.0.2.1</code>; PC-B as <code>192.0.2.70/26</code>, gateway <code>192.0.2.65</code>.</p>
+<ol>
+<li>On the simulated switch, adapt interface names if necessary:</li>
+</ol>
+<p><code>text
+   enable
+   configure terminal
+   vlan 10
+    name LAB_A
+   exit
+   vlan 20
+    name LAB_B
+   exit
+   interface fastethernet0/1
+    switchport mode access
+    switchport access vlan 10
+    spanning-tree portfast
+   exit
+   interface fastethernet0/2
+    switchport mode access
+    switchport access vlan 20
+    spanning-tree portfast
+   exit
+   interface gigabitethernet0/1
+    switchport mode trunk
+    switchport trunk allowed vlan 10,20
+   end
+   show vlan brief
+   show interfaces trunk</code></p>
+<p>PortFast is used only on the two end-host ports in this isolated exercise. Do not enable it indiscriminately on links between switches. Some simulated models require explicit trunk encapsulation; consult that model's syntax.</p>
+<ol start="2">
+<li>On the simulated router:</li>
+</ol>
+<p><code>text
+   enable
+   configure terminal
+   interface gigabitethernet0/0
+    no shutdown
+   exit
+   interface gigabitethernet0/0.10
+    encapsulation dot1Q 10
+    ip address 192.0.2.1 255.255.255.192
+   exit
+   interface gigabitethernet0/0.20
+    encapsulation dot1Q 20
+    ip address 192.0.2.65 255.255.255.192
+   end
+   show ip interface brief
+   show ip route</code></p>
+<ol start="3">
+<li>From each PC, ping its own gateway and then the other PC. An initial packet may be lost during address resolution; repeat the test and explain the dependency.</li>
+<li>Predict what happens if the trunk carries only VLAN 10. In the simulator, change the allowed list to <code>10</code>, test both PCs and capture the result.</li>
+<li>Restore <code>switchport trunk allowed vlan 10,20</code>, retest and verify that the gateway and cross-VLAN tests recover.</li>
+</ol>
+<p><strong>Expected result:</strong> the router has connected routes for <code>192.0.2.0/26</code> and <code>192.0.2.64/26</code>; both VLANs appear on the trunk. Removing VLAN 20 breaks PC-B's routed path while VLAN 10 remains available.</p>
+<p><strong>Evidence:</strong> topology, address/port plan, selected <code>show</code> output, before/fault/recovery test matrix and a packet-path explanation. Explain that the router permits inter-VLAN traffic here because no policy has yet been applied.</p>
+<p><strong>Troubleshooting:</strong> check port state, cable, VLAN membership, trunk list, subinterface tag, mask and gateway before changing routing. A host in the wrong VLAN may have a correct-looking IP address but no valid gateway path.</p>
+<p><strong>Cleanup:</strong> restore the baseline or keep a separate clearly named completed lab file. Never copy this configuration to real equipment.</p>
+<h2 id="lab-7-access-control-and-positivenegative-tests">Lab 7 — Access control and positive/negative tests</h2>
+<p><strong>Unit:</strong> Applied Networking.</p>
+<p><strong>Goal:</strong> show that a policy works in both directions of the requirement.</p>
+<p><strong>Prerequisites:</strong> completed simulator topology from Lab 6. Save a separate copy. The policy is deliberately narrow: block ICMP echo requests from PC-A to PC-B, while allowing other IP traffic in this small lab. It is not a recommended production policy.</p>
+<ol>
+<li>Confirm PC-A can ping PC-B before applying the policy.</li>
+<li>On the simulated router:</li>
+</ol>
+<p><code>text
+   configure terminal
+   ip access-list extended LAB_A_IN
+    deny icmp host 192.0.2.10 host 192.0.2.70 echo
+    permit ip any any
+   exit
+   interface gigabitethernet0/0.10
+    ip access-group LAB_A_IN in
+   end
+   show access-lists
+   show ip interface gigabitethernet0/0.10</code></p>
+<ol start="3">
+<li>Test PC-A → PC-B ping: it should fail. Test PC-A → its gateway: it should succeed. Test PC-B → PC-A ping: it should succeed because the returning echo reply from PC-A does not match the denied echo-request type.</li>
+<li>Inspect ACL counters after the tests. Explain direction: <code>in</code> means entering the router through VLAN 10's subinterface, not “towards PC-A.”</li>
+<li>Explain the implicit deny at the end of an ACL and why the final permit line matters in this exercise. Do not infer stateful firewall behaviour from this stateless ACL.</li>
+<li>Roll back:</li>
+</ol>
+<p><code>text
+   configure terminal
+   interface gigabitethernet0/0.10
+    no ip access-group LAB_A_IN in
+   exit
+   no ip access-list extended LAB_A_IN
+   end</code></p>
+<p><strong>Expected result:</strong> the three tests match the policy above; PC-A → PC-B ping works again after rollback. Exact counters depend on repeat count and simulator behaviour.</p>
+<p><strong>Evidence:</strong> a test matrix with source, destination, protocol/type, expected, actual and interpretation; relevant ACL output; rollback verification.</p>
+<p><strong>Troubleshooting:</strong> an ACL applied to the wrong interface or direction may never match. A failed positive test might come from routing or addressing rather than the ACL. Establish the baseline first.</p>
+<p><strong>Cleanup:</strong> remove the ACL and verify baseline connectivity, or revert the saved lab copy.</p>
+<h2 id="lab-8-route-selection-and-a-troubleshooting-runbook">Lab 8 — Route selection and a troubleshooting runbook</h2>
+<p><strong>Units:</strong> Core Networking; Applied Networking; Professional Practice.</p>
+<p><strong>Goal:</strong> explain longest-prefix match and build a diagnostic sequence.</p>
+<p><strong>Prerequisites:</strong> paper or a text editor; optional simulator with three routers.</p>
+<ol>
+<li>Given the following hypothetical routes, determine the match for each destination before considering route-source preference:</li>
+</ol>
+<p><code>text
+   0.0.0.0/0       via 10.0.0.1
+   10.30.0.0/16    via 10.0.0.2
+   10.30.40.0/24   via 10.0.0.3
+   10.30.40.128/25 via 10.0.0.4</code></p>
+<ol start="2">
+<li>Expected matches: <code>10.30.40.150</code> → /25; <code>10.30.40.20</code> → /24; <code>10.30.80.20</code> → /16; <code>198.51.100.20</code> → default route. Assume the routes are installed and next hops are reachable; those assumptions need verification in a real network.</li>
+<li>Write a runbook for “client cannot reach service.” For each step state a test, expected result and branch:
+   - link and interface state;
+   - host address, prefix and gateway;
+   - local gateway reachability;
+   - forward and return route;
+   - relevant ACL/firewall path;
+   - transport listener and service health;
+   - DNS compared with direct-address access.</li>
+<li>If building a simulator topology, introduce only one fault at a time: wrong host gateway, missing route or disabled interface. Ask another learner to diagnose it using your runbook.</li>
+</ol>
+<p><strong>Expected result:</strong> correct prefix matches and a runbook that narrows faults without immediately changing configuration.</p>
+<p><strong>Evidence:</strong> route reasoning, runbook, fault timeline and final recovery test. Distinguish a timeout from proof that a specific intermediate device is faulty.</p>
+<p><strong>Troubleshooting:</strong> administrative distance and metric help select among route candidates for the same prefix; they do not make a less-specific installed route beat a more-specific match for forwarding.</p>
+<p><strong>Cleanup:</strong> revert simulator faults and verify the saved baseline.</p>
+<h2 id="lab-9-linux-files-permissions-backup-and-restore">Lab 9 — Linux files, permissions, backup and restore</h2>
+<p><strong>Units:</strong> Operating Systems; Professional Practice.</p>
+<p><strong>Goal:</strong> explain permissions and prove recovery using disposable data.</p>
+<p><strong>Prerequisites:</strong> Linux shell, <code>mktemp</code>, <code>tar</code>, <code>sha256sum</code>; unprivileged account. Run the commands in one subshell so the temporary variables and <code>umask</code> do not affect later work.</p>
+<pre><code class="language-bash">(
+  lab_dir=$(mktemp -d -t az4caf-files-XXXXXX) || exit 1
+  trap 'rm -rf -- &quot;$lab_dir&quot;' EXIT
+  umask 027
+  mkdir &quot;$lab_dir/original&quot; &quot;$lab_dir/restored&quot;
+  printf 'Synthetic service configuration\nport=8080\n' &gt; &quot;$lab_dir/original/service.conf&quot;
+  chmod 640 &quot;$lab_dir/original/service.conf&quot;
+  stat -c '%a %n' &quot;$lab_dir/original/service.conf&quot;
+  tar -cf &quot;$lab_dir/backup.tar&quot; -C &quot;$lab_dir/original&quot; service.conf
+  tar -tf &quot;$lab_dir/backup.tar&quot;
+  tar -xf &quot;$lab_dir/backup.tar&quot; -C &quot;$lab_dir/restored&quot;
+  sha256sum &quot;$lab_dir/original/service.conf&quot; &quot;$lab_dir/restored/service.conf&quot;
+  cmp &quot;$lab_dir/original/service.conf&quot; &quot;$lab_dir/restored/service.conf&quot; &amp;&amp; printf 'Restore content matches\n'
+)
+</code></pre>
+<ol>
+<li>Predict what <code>640</code> allows: owner read/write; group read; others no permission. Explain why directory execute permission has a different meaning from file execute permission.</li>
+<li>Run the commands and interpret the two matching hashes. The archive contains only the disposable configuration file created in this lab.</li>
+<li>Repeat in a new disposable directory, modify the restored file and show that <code>cmp</code> detects a mismatch. Restore again and verify recovery.</li>
+<li>State what the test establishes: content equality for one file. It does not establish a full system restore, preserved ACLs, application consistency or achievement of an RPO/RTO.</li>
+</ol>
+<p><strong>Expected result:</strong> permission <code>640</code>, archive member <code>service.conf</code>, matching SHA-256 values and <code>Restore content matches</code>.</p>
+<p><strong>Evidence:</strong> interpreted permission output, hashes and scope/limitations. Measure elapsed restore time if practising RTO calculations, stating what the measurement includes.</p>
+<p><strong>Troubleshooting:</strong> a missing command indicates a platform difference; use an approved environment rather than changing system packages without need. Do not extract an untrusted archive with these commands.</p>
+<p><strong>Cleanup:</strong> the trap deletes only the directory created by <code>mktemp</code>. Do not replace it with a broad directory path or run cleanup against your evidence folder.</p>
+<h2 id="lab-10-a-local-service-running-listening-and-reachable">Lab 10 — A local service: running, listening and reachable</h2>
+<p><strong>Units:</strong> Operating Systems; Applied Networking.</p>
+<p><strong>Goal:</strong> distinguish process state, socket state and an application response.</p>
+<p><strong>Prerequisites:</strong> Python 3; two terminal sessions; local port 8765 available.</p>
+<ol>
+<li>In terminal A create a disposable directory, put a file named <code>health.txt</code> in it containing <code>lab-ok</code>, and start a loopback-only server from that directory:</li>
+</ol>
+<p><code>bash
+   python -m http.server 8765 --bind 127.0.0.1</code></p>
+<p>The server exposes files in its current directory to local clients. Use only the disposable directory.
+2. In terminal B request the file without requiring <code>curl</code>:</p>
+<p><code>bash
+   python -c "from urllib.request import urlopen; print(urlopen('http://127.0.0.1:8765/health.txt', timeout=3).read().decode().strip())"</code></p>
+<ol start="3">
+<li>On Linux, inspect the listener using <code>ss -ltn</code> and find <code>127.0.0.1:8765</code>. If <code>ss</code> is unavailable, use the OS's documented socket tool. Explain why binding to loopback limits reachability.</li>
+<li>Request a missing filename and observe an HTTP 404 in the server log. Explain how this differs from a connection refusal when no process is listening.</li>
+<li>Stop the server with Ctrl+C in terminal A and repeat the valid request. It should fail because the listening process has ended.</li>
+</ol>
+<p><strong>Expected result:</strong> <code>lab-ok</code> while the server is running; an HTTP 404 for a missing file; a connection failure after shutdown. Exact exception wording varies by OS.</p>
+<p><strong>Evidence:</strong> a dependency diagram, listener output and three outcomes. Explain why “process running” is weaker evidence than a successful application request.</p>
+<p><strong>Troubleshooting:</strong> “address already in use” means another listener uses the port. Choose another unused high port consistently; do not terminate an unfamiliar process. If a request fails while the server is running, compare address, port, filename and working directory.</p>
+<p><strong>Cleanup:</strong> stop the server and remove only the disposable files you created. Confirm the listener has gone.</p>
+<h2 id="lab-11-windows-process-and-recovery-practice">Lab 11 — Windows process and recovery practice</h2>
+<p><strong>Unit:</strong> Operating Systems.</p>
+<p><strong>Goal:</strong> practise read-only inspection and file recovery with PowerShell.</p>
+<p><strong>Prerequisites:</strong> Windows with PowerShell; unprivileged account. No services or system configuration are changed.</p>
+<pre><code class="language-powershell">$labDir = Join-Path ([System.IO.Path]::GetTempPath()) (&quot;az4caf-&quot; + [guid]::NewGuid().ToString())
+New-Item -ItemType Directory -Path $labDir | Out-Null
+try {
+    $original = Join-Path $labDir &quot;original.txt&quot;
+    $backup = Join-Path $labDir &quot;backup.txt&quot;
+    $restored = Join-Path $labDir &quot;restored.txt&quot;
+    Set-Content -Path $original -Value &quot;Synthetic configuration&quot; -Encoding UTF8
+    Copy-Item -Path $original -Destination $backup
+    Copy-Item -Path $backup -Destination $restored
+    Get-FileHash -Algorithm SHA256 -Path $original, $restored
+    Get-Process | Sort-Object CPU -Descending | Select-Object -First 5 Name, Id, CPU
+} finally {
+    Remove-Item -LiteralPath $labDir -Recurse -Force
+}
+</code></pre>
+<ol>
+<li>Compare hashes and explain why copying files is only a small recovery exercise.</li>
+<li>Interpret <code>CPU</code> as accumulated processor time for the process, not the current CPU utilisation percentage. Explain why two observations at different times can differ.</li>
+<li>Use <code>Get-Service | Select-Object -First 10 Name, Status</code> for read-only service inspection. Do not stop or reconfigure unfamiliar services.</li>
+<li>Compare the terms process, service, listening port and application response with Lab 10.</li>
+</ol>
+<p><strong>Expected result:</strong> matching content hashes; process and service lists reflect the local machine. Do not publish personally identifying paths or process details unnecessarily.</p>
+<p><strong>Evidence:</strong> a short interpretation using only approved, relevant output. Redact personal path details from screenshots.</p>
+<p><strong>Troubleshooting:</strong> shell versions and permissions affect available fields. A blank CPU value does not mean a process has never used CPU; access restrictions or unavailable data may apply.</p>
+<p><strong>Cleanup:</strong> the <code>finally</code> block removes the new temporary directory. Do not alter it to point at an existing folder.</p>
+<h2 id="lab-12-ai-evaluation-without-a-training-framework">Lab 12 — AI evaluation without a training framework</h2>
+<p><strong>Units:</strong> Core AI; Fundamentals of Computer Science.</p>
+<p><strong>Goal:</strong> calculate metrics, compare a baseline and explain operational consequences.</p>
+<p><strong>Prerequisites:</strong> Python 3; synthetic labels only.</p>
+<ol>
+<li>Treat <code>1</code> as “requires investigation” and <code>0</code> as “does not require investigation.” Create <code>metrics.py</code>:</li>
+</ol>
+<p>```python
+   actual = [1] * 12 + [0] * 88
+   predicted = [1] * 8 + [0] * 4 + [1] * 2 + [0] * 86</p>
+<p>def metrics(truth, guess):
+       if len(truth) != len(guess) or not truth:
+           raise ValueError("non-empty label lists must have equal length")
+       if any(value not in (0, 1) for value in truth + guess):
+           raise ValueError("this exercise expects binary labels")
+       tp = sum(t == 1 and p == 1 for t, p in zip(truth, guess))
+       fp = sum(t == 0 and p == 1 for t, p in zip(truth, guess))
+       fn = sum(t == 1 and p == 0 for t, p in zip(truth, guess))
+       tn = sum(t == 0 and p == 0 for t, p in zip(truth, guess))
+       precision = tp / (tp + fp) if tp + fp else None
+       recall = tp / (tp + fn) if tp + fn else None
+       accuracy = (tp + tn) / len(truth)
+       return tp, fp, fn, tn, precision, recall, accuracy</p>
+<p>result = metrics(actual, predicted)
+   assert result[:4] == (8, 2, 4, 86)
+   print("Candidate:", result)
+   print("Always negative:", metrics(actual, [0] * len(actual)))
+   ```</p>
+<ol start="2">
+<li>Calculate the results by hand before running it: precision 80%, recall about 66.7%, accuracy 94%.</li>
+<li>The always-negative baseline has 88% accuracy and 0% recall; precision is undefined because it predicts no positive cases. Explain why the code uses <code>None</code> rather than pretending the ratio is meaningful.</li>
+<li>Use illustrative costs of £100 per false negative and £5 per false positive. Candidate error cost: 4×£100 + 2×£5 = £410; always-negative cost: 12×£100 = £1,200. Explain that these assumed costs are a teaching example, not evidence of real business savings.</li>
+<li>Design a data split for six months of timestamped events: earlier months for training, a later period for validation and the final period held out for testing. Explain why random splitting can leak future operational patterns.</li>
+<li>List leakage risks: post-resolution labels in input features, duplicates spanning splits, preprocessing fitted on all data and selecting the final model based on the test set.</li>
+</ol>
+<p><strong>Expected result:</strong> confusion counts and baseline above. This lab evaluates supplied predictions; it does not train a model or establish performance on unseen operational data.</p>
+<p><strong>Evidence:</strong> hand calculations, output, a split diagram, a cost discussion and a limitation statement. State which decision remains with a human.</p>
+<p><strong>Troubleshooting:</strong> swapping the meanings of positive and negative changes precision and recall. Define the positive class before calculating.</p>
+<p><strong>Cleanup:</strong> delete the synthetic script if desired. Do not replace the fixture with workplace telemetry without approval.</p>
+<h2 id="lab-13-ai-assisted-explanation-with-verification">Lab 13 — AI-assisted explanation with verification</h2>
+<p><strong>Units:</strong> Core AI; Professional Practice.</p>
+<p><strong>Goal:</strong> evaluate an assistant's output as a claim that needs evidence.</p>
+<p><strong>Prerequisites:</strong> an approved AI tool if available; otherwise use a peer-written answer. Use only a fictional scenario.</p>
+<ol>
+<li>Ask for a troubleshooting explanation for a synthetic host that can reach its gateway but cannot resolve a hostname.</li>
+<li>Separate the response into facts, assumptions, hypotheses and proposed actions. Mark any invented environmental details.</li>
+<li>Verify two technical claims against the exact OS or vendor documentation. Record the section and access date.</li>
+<li>Reject any proposed action that changes unrelated infrastructure, exposes secrets or exceeds the stated scope. Rewrite the advice into read-only tests first.</li>
+<li>Produce your own final explanation, including uncertainties and the next test that would distinguish a DNS problem from a broader service issue.</li>
+</ol>
+<p><strong>Expected result:</strong> an evidence-based critique, not a screenshot showing that a tool produced fluent text.</p>
+<p><strong>Evidence:</strong> synthetic prompt, relevant output excerpts where permitted, claim/source table and your corrected explanation. Follow your institution's AI-use and attribution rules.</p>
+<p><strong>Troubleshooting:</strong> a link in generated output may be nonexistent or irrelevant. Open the authoritative document and confirm what it supports.</p>
+<p><strong>Cleanup:</strong> remove any accidentally included sensitive content according to the tool and institutional process; prevent it by using synthetic data from the start.</p>
+<h2 id="lab-14-incident-handover-and-change-rehearsal">Lab 14 — Incident handover and change rehearsal</h2>
+<p><strong>Units:</strong> Professional Practice; Work Based Learning; Applied Networking.</p>
+<p><strong>Goal:</strong> communicate an operational problem and practise a controlled response.</p>
+<p><strong>Prerequisites:</strong> Lab 6 simulator or a tabletop exercise with a peer. No workplace data.</p>
+<p>Scenario: at 10:00 UTC a simulated host in VLAN 20 loses gateway connectivity after an approved lab change. VLAN 10 still works. The previous saved configuration carried both VLANs; the current trunk carries VLAN 10 only.</p>
+<ol>
+<li>Write a brief incident update with impact, start time, facts, hypothesis, owner and next update time. Label the missing VLAN as a hypothesis until verified.</li>
+<li>Collect the trunk and interface outputs. State what each supports and what remains unknown.</li>
+<li>Prepare a change plan to restore VLAN 20. Include a pre-change snapshot, expected impact, positive and negative tests, rollback steps and a measurable stop condition.</li>
+<li>Have a peer review the plan. In a tabletop exercise, role-play approval; do not imply that a classroom role-play grants workplace permission.</li>
+<li>Apply the correction only in the simulator. Verify both VLANs and record the result.</li>
+<li>Write a handover another learner could use without asking you to repeat the history. Include current state, evidence references and remaining actions.</li>
+<li>Reflect on the process: was the fault detection timely, was the change scope clear and did the communication distinguish facts from assumptions?</li>
+</ol>
+<p><strong>Expected result:</strong> a reproducible plan, successful simulator recovery and a concise factual handover. A peer can explain the next action and its owner.</p>
+<p><strong>Evidence:</strong> incident timeline, change plan, selected outputs, test matrix and reflection. Use <a href="study-guide.html#reusable-evidence-templates">the templates</a>.</p>
+<p><strong>Troubleshooting:</strong> avoid rewriting the initial record to make your first hypothesis look correct. Preserve the original hypothesis and add the test result.</p>
+<p><strong>Cleanup:</strong> restore or save the intended lab baseline; close the simulated incident record as a training exercise.</p>
+<h2 id="lab-15-placement-learning-plan-or-optional-project-proposal">Lab 15 — Placement learning plan or optional project proposal</h2>
+<p><strong>Units:</strong> Work Based Learning; Professional Practice; optional Designing a Computing Project.</p>
+<p><strong>Goal:</strong> prepare an achievable learning activity with evidence and boundaries.</p>
+<p><strong>Prerequisites:</strong> current tutor guidance. Placement availability and project approval are separate institutional decisions.</p>
+<h3 id="placement-practice-route">Placement practice route</h3>
+<ol>
+<li>Draft three objectives with observable outcomes, such as “explain an approved incident escalation path using a supervisor-reviewed anonymised flowchart.”</li>
+<li>For each objective list authorised activities, required supervision, evidence permitted by the host, a review date and a fallback if the activity is unavailable.</li>
+<li>Draft one learning-log entry using a fictional observation. Label it “practice example”; do not submit it as workplace evidence.</li>
+<li>Explain how you will distinguish observing, assisting and performing under supervision.</li>
+<li>Agree actual evidence arrangements with HRUC and the placement host before collecting workplace material.</li>
+</ol>
+<h3 id="optional-project-practice-route">Optional project practice route</h3>
+<ol>
+<li>Obtain the current Pearson-set theme and tutor-approved brief before choosing the assessed project.</li>
+<li>As a practice proposal, consider a local synthetic incident-log analyser. Define users, inputs, outputs and success criteria, such as rejecting malformed timestamps and reproducing a supplied count exactly.</li>
+<li>Plan research, design, implementation, evaluation and reporting milestones. Add risks, ethical issues and scope exclusions.</li>
+<li>Create a synthetic dataset with known expected results and a test plan before implementation.</li>
+<li>Explain how you will evaluate the outcome honestly, including an unmet criterion or limitation.</li>
+</ol>
+<p><strong>Expected result:</strong> a plan that can be reviewed and revised, with clear boundaries and measurable outcomes. It is not a completed assessment or a guarantee of Level 5 progression.</p>
+<p><strong>Evidence:</strong> proposal, objective/evidence matrix, schedule, risk register and tutor feedback where appropriate.</p>
+<p><strong>Troubleshooting:</strong> an objective such as “learn networking” is too broad; narrow it to a concept, activity and observable result. Do not promise access to production systems as a project dependency.</p>
+<p><strong>Cleanup:</strong> replace practice placeholders only after approval; retain version history so scope changes are visible.</p>
+<h2 id="lab-16-linux-access-and-a-read-only-diagnostic-baseline">Lab 16 — Linux access and a read-only diagnostic baseline</h2>
+<p><strong>Units:</strong> Operating Systems; Applied Networking; Professional Practice.</p>
+<p><strong>Goal:</strong> establish approved access and explain what a diagnostic baseline shows.</p>
+<p><strong>Prerequisites:</strong> a disposable Linux VM or local Linux environment you control. For SSH, the VM must already have a configured SSH service and an individually assigned account. Confirm the expected host-key fingerprint through the VM console or another trusted channel. Do not install or expose an SSH server on a public interface for this exercise.</p>
+<ol>
+<li>First practise locally. Record identity and environment without displaying secrets:</li>
+</ol>
+<p><code>bash
+   id
+   hostname
+   uname -r
+   pwd
+   uptime
+   df -h .
+   free -h
+   ps -u "$(id -u)" -o pid,comm,etime</code></p>
+<p>Explain real versus effective identity if the environment distinguishes them. <code>df -h .</code> reports the filesystem containing the working directory; it is not an inventory of every physical drive. Available memory includes reclaimable resources, so “free” memory alone is not a complete memory-pressure assessment.
+2. On the disposable VM, use <code>ip address</code> and <code>ip route</code> to identify the intended lab interface and route. Record only relevant output. If the host has other interfaces, do not change or probe them.
+3. If approved SSH access is available, connect with the assigned account, substituting the real address of your own isolated VM:</p>
+<p><code>bash
+   ssh labuser@192.168.56.10</code></p>
+<p><code>192.168.56.10</code> is an example private address, not a service provided by this repository. Use only the address assigned to your VM. Confirm the presented fingerprint against the trusted value before accepting it. Do not disable host-key checking to bypass a mismatch.
+4. On the remote session run <code>id</code>, <code>hostname</code> and <code>pwd</code> again. Explain which machine produced each result. If the shell prompt alone is ambiguous, include an explicit hostname in your evidence.
+5. Inspect your own files and permissions with <code>ls -ld .</code> and <code>ls -l</code>. Use a dedicated lab directory rather than listing another person's files. Explain why login success does not grant permission for every operation.
+6. If the VM uses systemd, run the read-only command <code>systemctl --failed</code>. An empty failure list means systemd reports no units in the failed state at that moment; it does not prove every application is healthy. Use Lab 10 to demonstrate the separate need for an application-level check.
+7. End the remote session with <code>exit</code>. Confirm that a subsequent <code>hostname</code> comes from the local environment.</p>
+<p><strong>Expected result:</strong> the intended individual account accesses the intended VM; diagnostic output can be explained; the session closes cleanly. Results such as memory size, uptime and process count depend on the VM.</p>
+<p><strong>Evidence:</strong> a short baseline table with timestamp, machine, command, observation and interpretation. Redact personal usernames, internal hostnames and addresses where required. State that this is lab evidence, not workplace access.</p>
+<p><strong>Troubleshooting:</strong> connection refusal suggests no listener at that address/port; a timeout can have several causes, including routing or filtering; authentication failure does not imply a network fault. A host-key change must be investigated through a trusted channel. Do not delete the known-host entry merely to make the warning disappear.</p>
+<p><strong>Cleanup:</strong> close SSH sessions; remove disposable lab files only. If the VM is no longer needed, shut it down or revert its snapshot using the normal VM controls. Do not remove keys or change account privileges outside the agreed lab scope.</p>
+<h2 id="extended-tools-and-complex-networks">Extended tools and complex networks</h2>
+<p>Use <a href="data-tools.html">the data-tools guide</a> for the detailed <strong>Access, MongoDB, Python and Node</strong> pathway, including local examples and access boundaries. Use <a href="network-labs.html">the network-labs guide</a> for deeper <strong>switch configuration, firewalls and complex network topologies</strong>. These focused guides extend the sequence above without changing the official unit list.</p>
+<p>For every extension keep the same evidence discipline: define a working baseline, predict a result, collect actual output, test allowed and denied behaviour where relevant, document limitations and verify cleanup. An application that connects successfully with one account has not automatically proved least privilege for other operations.</p>
+<h2 id="integrated-challenge-investigate-restore-and-explain">Integrated challenge — investigate, restore and explain</h2>
+<p>Combine the skills above in a fresh copy of your simulator and local fixtures:</p>
+<ol>
+<li>Produce an address plan and inventory for a two-VLAN training environment.</li>
+<li>Establish and document a working baseline.</li>
+<li>Ask a peer to introduce one agreed reversible simulator fault. Do not reveal its cause to the investigator.</li>
+<li>Diagnose with read-only tests, recording predictions and results.</li>
+<li>Propose and review the smallest correction that addresses the evidence.</li>
+<li>Restore service, verify unaffected behaviour and record rollback readiness.</li>
+<li>Write a technical report and a short non-technical incident update.</li>
+<li>Summarise the evidence in a synthetic CSV and explain one simple metric. If using AI assistance, verify the output and attribute its use according to your institution's policy.</li>
+</ol>
+<p>Evaluate the work against reproducibility, correct reasoning, verified recovery, clear communication and honest limitations. These are study criteria, not an official assessment rubric.</p>
+<h2 id="reading-alongside-the-labs">Reading alongside the labs</h2>
+<p>Use the <a href="study-guide.html#authoritative-starting-references">authoritative starting references</a>, the notes' source links, and the manuals for your actual tool versions. Particularly useful references include <a href="https://docs.python.org/3/library/ipaddress.html">Python <code>ipaddress</code></a>, <a href="https://docs.python.org/3/library/http.server.html">Python HTTP server</a>, <a href="https://learn.microsoft.com/powershell/">Microsoft PowerShell documentation</a>, <a href="https://www.cisco.com/c/en/us/support/index.html">Cisco support</a> and <a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI RMF</a>.</p>
+<p>Record the access date when you consult a source. A successful simulator lab demonstrates behaviour in that simulator; explain its limits before generalising to real hardware or operational practice.</p>
+</main></body></html>

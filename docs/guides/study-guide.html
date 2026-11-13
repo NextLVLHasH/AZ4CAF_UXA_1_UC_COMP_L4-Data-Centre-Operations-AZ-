@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Study and revision guide · AZ4CAF</title><style>
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #182b3a; background: #f4f6f7; }
+body { margin: 0; line-height: 1.75; }
+nav, main { max-width: 1000px; margin: auto; padding: 1.5rem; }
+nav { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; }
+main { background: white; border-top: 4px solid #237b69; padding-bottom: 4rem; overflow-wrap: anywhere; }
+a { color: #145e80; text-underline-offset: .2em; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #ca691b; outline-offset: 3px; }
+h1,h2,h3,h4 { line-height: 1.25; color: #143c38; scroll-margin-top: 1rem; }
+h1 { font-size: clamp(1.8rem, 4vw, 2.7rem); }
+h2 { margin-top: 2.5rem; border-bottom: 1px solid #dce7e4; padding-bottom: .6rem; }
+pre { padding: 1rem; border-radius: .4rem; background: #152a32; color: #e7f3ed; overflow: auto; line-height: 1.6; font-size: .9rem; }
+code { font-family: ui-monospace, monospace; } p code, li code { background: #edf2f2; padding: .1rem .25rem; }
+table { display: block; overflow: auto; border-collapse: collapse; font-size: .9rem; }
+th,td { padding: .6rem; border: 1px solid #d2dfdc; text-align: left; min-width: 5rem; }
+th { background: #edf4f0; } blockquote { border-left: 3px solid #c18c40; margin-left: 0; padding-left: 1rem; }
+details { margin: 1rem 0; padding: 1rem; background: #f0f5f2; } summary { cursor: pointer; font-weight: 600; }
+@media print { nav, .toc { display: none; } :root { background: white; } main { max-width: none; padding: 0; } pre { white-space: pre-wrap; color: black; background: #eee; } a { color: black; } }
+</style></head>
+<body><nav aria-label="Study resources"><a href="../index.html">← Study notebook</a><a href="study-guide.html">Study and revision guide</a><a href="labs.html">Practical lab workbook</a><a href="network-labs.html">Switches, firewalls and complex networks</a><a href="data-tools.html">Access, MongoDB, Python and Node.js</a><a href="ai-guide.html">Using AI and understanding AI firewalls</a><a href="research.html">Research sources and verification</a></nav><main>
+<details class="toc"><summary>On this page</summary><div class="toc">
+<ul>
+<li><a href="#az4caf-study-guide-from-concepts-to-operations">AZ4CAF study guide: from concepts to operations</a><ul>
+<li><a href="#programme-map">Programme map</a></li>
+<li><a href="#how-to-study-a-topic">How to study a topic</a><ul>
+<li><a href="#extended-practical-pathways">Extended practical pathways</a></li>
+</ul>
+</li>
+<li><a href="#semester-1-learning-pathway">Semester 1 learning pathway</a><ul>
+<li><a href="#fundamentals-of-computer-science">Fundamentals of Computer Science</a></li>
+<li><a href="#computer-systems-architecture-a">Computer Systems Architecture (A+)</a></li>
+<li><a href="#core-networking-ccna">Core Networking (CCNA)</a></li>
+<li><a href="#applied-networking-ccna">Applied Networking (CCNA)</a></li>
+</ul>
+</li>
+<li><a href="#semester-2-learning-pathway">Semester 2 learning pathway</a><ul>
+<li><a href="#operating-systems">Operating Systems</a></li>
+<li><a href="#core-ai">Core AI</a></li>
+<li><a href="#work-based-learning">Work Based Learning</a></li>
+<li><a href="#professional-practice">Professional Practice</a></li>
+<li><a href="#designing-a-computing-project-optional-route">Designing a Computing Project: optional route</a></li>
+</ul>
+</li>
+<li><a href="#cross-unit-operational-reasoning">Cross-unit operational reasoning</a></li>
+<li><a href="#reusable-evidence-templates">Reusable evidence templates</a><ul>
+<li><a href="#lab-record">Lab record</a></li>
+<li><a href="#change-plan-for-a-lab">Change plan for a lab</a></li>
+<li><a href="#incident-update-and-handover">Incident update and handover</a></li>
+<li><a href="#placement-reflection">Placement reflection</a></li>
+<li><a href="#source-and-claim-record">Source and claim record</a></li>
+</ul>
+</li>
+<li><a href="#revision-checkpoints">Revision checkpoints</a></li>
+<li><a href="#authoritative-starting-references">Authoritative starting references</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</details>
+<h1 id="az4caf-study-guide-from-concepts-to-operations">AZ4CAF study guide: from concepts to operations</h1>
+<p><a href="https://github.com/NextLVLHasH/AZ4CAF_UXA_1_UC_COMP_L4-Data-Centre-Operations-AZ-/blob/main/README.md">Return to the repository</a> · <a href="labs.html">Practical labs</a> · <a href="network-labs.html">Complex network labs</a> · <a href="data-tools.html">Access, MongoDB, Python and Node</a> · <a href="ai-guide.html">AI operations guide</a></p>
+<p>Use this guide with the searchable notes and flashcards in the study app. It provides a learning sequence, evidence templates and readiness checks. It is supplementary revision material, not an HRUC assessment brief, a Pearson grading rubric, an Amazon operating procedure or a promise of certification. Your tutor's current unit specification and assessment instructions take priority.</p>
+<h2 id="programme-map">Programme map</h2>
+<p>The programme information below comes from the course description supplied for this repository. Confirm current dates, assessment arrangements, placement eligibility and certification arrangements with HRUC.</p>
+<table>
+<thead>
+<tr>
+<th>Period</th>
+<th>Units</th>
+<th>Suggested connection to data centre work</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Semester 1: September 2026–February 2027</td>
+<td>Fundamentals of Computer Science; Computer Systems Architecture (A+); Core Networking (CCNA); Applied Networking (CCNA)</td>
+<td>Interpret data, diagnose hardware, understand packet paths and practise controlled network changes.</td>
+</tr>
+<tr>
+<td>Semester 2: February–July 2027</td>
+<td>Operating Systems; Core AI; Work Based Learning; Professional Practice</td>
+<td>Administer services, evaluate operational data, collect permitted learning evidence and communicate decisions.</td>
+</tr>
+<tr>
+<td>Optional route</td>
+<td>Designing a Computing Project</td>
+<td>A Pearson-set project option for students unable to complete work experience, and for students considering progression to Level 5 HND (RQF) study. Confirm the applicable route and progression conditions with HRUC.</td>
+</tr>
+</tbody>
+</table>
+<p>Eligible students may have the opportunity to undertake a <strong>14-week placement at Amazon data centres, with work experience starting from January 2027</strong>. January overlaps semester 1; do not infer a fixed weekly timetable from the semester headings. A placement is an opportunity subject to eligibility and arrangements, not a guaranteed entitlement.</p>
+<p>The supplied programme description identifies Cisco CCNA v7 learning integrated with Core Networking and CompTIA A+ support from external professionals for Computer Systems Architecture. CCNA v7 describes a curriculum; certification exams have their own published objectives, versions, booking rules and fees. Confirm the current exam and what the programme provides before booking. Completion of these notes does not establish exam readiness or an award.</p>
+<p>The course is described as free of charge for students. Confirm what is included in any certification or placement arrangement directly with HRUC.</p>
+<h2 id="how-to-study-a-topic">How to study a topic</h2>
+<p>Work through five activities for each topic. A reading session alone rarely reveals whether you can apply a concept.</p>
+<ol>
+<li><strong>Explain it without notes.</strong> Define the concept and draw the relevant system: a CPU datapath, a subnet, a service dependency or a data pipeline.</li>
+<li><strong>Calculate or trace an example.</strong> Show intermediate steps and units. Trace a packet hop by hop; convert a number; calculate usable addresses; distinguish an observation from a hypothesis.</li>
+<li><strong>Practise in an isolated lab.</strong> Predict the output, perform the task, collect the actual result and explain any difference. Use <a href="labs.html">the lab sequence</a>.</li>
+<li><strong>Diagnose a variation.</strong> Change one controlled variable, such as a mask or file permission. State why the result changed and how you would verify recovery.</li>
+<li><strong>Recall it later.</strong> Answer the flashcards before revealing answers. Return to uncertain topics the next day, after a week and after several weeks. These intervals are a practical starting point, not a mandatory schedule.</li>
+</ol>
+<p>Suggested weekly pattern, adaptable around taught sessions and work:</p>
+<table>
+<thead>
+<tr>
+<th>Session</th>
+<th>Activity</th>
+<th>Deliverable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First pass, 40–60 minutes</td>
+<td>Read one topic group; list unfamiliar terms; build a small diagram.</td>
+<td>One page of your own explanation and three questions.</td>
+</tr>
+<tr>
+<td>Practice, 60–90 minutes</td>
+<td>Complete one lab with predictions and verification.</td>
+<td>Commands, relevant output, a diagram and a short interpretation.</td>
+</tr>
+<tr>
+<td>Recall, 20–30 minutes</td>
+<td>Answer mixed flashcards without notes; correct misconceptions.</td>
+<td>A list of weak topics and why each answer was wrong.</td>
+</tr>
+<tr>
+<td>Review, 30 minutes</td>
+<td>Revisit a previous unit and connect it to the current one.</td>
+<td>An explanation of a cross-unit failure or operational trade-off.</td>
+</tr>
+</tbody>
+</table>
+<p>Keep a small error log. For example: “I treated a /27 as 27 host bits; correction: 32−27=5 host bits, 32 addresses, normally 30 usable host addresses.” An error log is useful only when it records the corrected reasoning.</p>
+<h3 id="extended-practical-pathways">Extended practical pathways</h3>
+<p>After the core exercises, use the focused guides to connect several technologies:</p>
+<ul>
+<li><a href="network-labs.html">Complex network labs</a>: switch setup, VLANs, trunks, routed networks, firewall policy, verification and recovery.</li>
+<li><a href="data-tools.html">Access, MongoDB, Python and Node</a>: data modelling, queries, application access and reproducible local examples. Treat these as supplementary tools that support the computing units; they are not additional confirmed HRUC units.</li>
+<li><a href="ai-guide.html">AI operations guide</a>: deeper study of AI use, evaluation, agents and their operational boundaries.</li>
+<li><a href="labs.html#lab-16--linux-access-and-a-read-only-diagnostic-baseline">Linux access and diagnostics</a>: approved SSH access, identity, permissions and evidence collection.</li>
+</ul>
+<h2 id="semester-1-learning-pathway">Semester 1 learning pathway</h2>
+<h3 id="fundamentals-of-computer-science">Fundamentals of Computer Science</h3>
+<p><strong>Study sequence:</strong> data representation → logic → algorithms → data structures → programming and testing → handling files and structured data.</p>
+<p>Be able to:</p>
+<ul>
+<li>Convert decimal, binary and hexadecimal by showing place values; explain why one hexadecimal digit represents four bits.</li>
+<li>Distinguish bits from bytes and decimal capacity units from binary units: 1 GB = 10⁹ bytes; 1 GiB = 2³⁰ bytes. Explain why a device can appear smaller when the display uses a different unit convention.</li>
+<li>Interpret unsigned and two's-complement values for a stated bit width. Explain overflow rather than treating a wrapped value as a valid large positive number.</li>
+<li>Trace Boolean expressions, including AND, OR and NOT; build a truth table and connect the result to an access or monitoring rule.</li>
+<li>Write pseudocode with sequence, selection and iteration. Explain termination and test boundary cases.</li>
+<li>Compare a list, set, dictionary and queue for an inventory or incident-processing task. Explain ordering, duplicate handling and lookup behaviour.</li>
+<li>Explain O(1), O(log n), O(n) and O(n²) as growth models, not exact elapsed times. Identify assumptions such as a sorted input for binary search.</li>
+<li>Parse CSV or JSON; validate required fields; distinguish malformed data from an empty valid result.</li>
+<li>Design tests for normal, boundary and invalid inputs. Handle a failed lookup explicitly rather than silently returning a plausible value.</li>
+</ul>
+<p><strong>Operational application:</strong> a script reconciles an approved asset list with a lab discovery file. A set difference finds missing identifiers; a dictionary maps an identifier to a location. Explain how duplicate identifiers and stale data could produce a wrong conclusion.</p>
+<p><strong>Readiness check:</strong> calculate 0x2F in decimal and binary; explain the behaviour of an empty input list; choose a data structure for detecting duplicate serial numbers; show a test that would expose an off-by-one error.</p>
+<p><strong>Evidence to practise producing:</strong> annotated code, input fixtures, expected and actual results, a complexity explanation, a short note on input validation and limitations. Do not upload real asset inventories.</p>
+<h3 id="computer-systems-architecture-a">Computer Systems Architecture (A+)</h3>
+<p><strong>Study sequence:</strong> CPU and memory → motherboards and buses → storage → power and cooling → firmware and boot → virtualisation → troubleshooting and maintenance.</p>
+<p>Be able to:</p>
+<ul>
+<li>Explain fetch–decode–execute at an appropriate level, registers, cache and RAM; distinguish CPU utilisation from throughput and latency.</li>
+<li>Explain volatile and non-volatile storage, capacity versus bandwidth, and why a cache hit reduces access time.</li>
+<li>Identify component compatibility constraints from manufacturer documentation: socket, memory generation, capacity, form factor, firmware support and power requirements.</li>
+<li>Compare SATA, SAS and NVMe in context; distinguish a protocol/interface from a drive form factor.</li>
+<li>Calculate raw and usable capacity for a stated RAID layout. Explain tolerated failures and why RAID does not replace an independent, tested backup.</li>
+<li>Trace power supply, motherboard, firmware, boot device, bootloader and OS start-up. Use observable symptoms to narrow a fault domain.</li>
+<li>Explain the purpose of ECC, redundant power supplies and out-of-band management without assuming that redundancy removes the need for monitoring.</li>
+<li>Distinguish physical, virtual and containerised resources. Explain overcommitment and the dependency of virtual machines on their host.</li>
+<li>Calculate power, energy and cost with stated assumptions: W versus Wh, kW versus kWh, and why maximum nameplate power is not a measurement of normal draw.</li>
+<li>Explain airflow and inlet conditions; follow approved ESD, lifting and isolation procedures. Electrical, optical and mechanical work requires local authorisation and training.</li>
+<li>Use a structured diagnostic method: establish the symptom, identify a likely cause, test safely, plan a correction, verify and document.</li>
+</ul>
+<p><strong>Worked relationship:</strong> a 400 W measured load running continuously for 24 hours uses 0.4 kW × 24 h = 9.6 kWh. At an illustrative £0.25/kWh, the energy cost is £2.40. This excludes cooling and other overheads; state this limitation. Do not use an illustrative tariff as a real cost estimate.</p>
+<p><strong>Readiness check:</strong> compare RAID 1 and RAID 5 for four equal drives; explain why a failed redundant PSU can remain a high-priority fault; distinguish a thermal symptom from proof that the fan is defective.</p>
+<p><strong>Evidence to practise producing:</strong> a component compatibility table with source/model/revision, a boot-chain diagram, a non-invasive diagnostic record and a recovery verification checklist.</p>
+<h3 id="core-networking-ccna">Core Networking (CCNA)</h3>
+<p><strong>Study sequence:</strong> layered communication → Ethernet and switching → IPv4 subnetting → IPv6 → VLANs and trunks → routing → DHCP/DNS → wireless and security fundamentals.</p>
+<p>Be able to:</p>
+<ul>
+<li>Trace an application request through transport, IP and the local link. Identify which addresses change across a routed hop and which normally remain end-to-end.</li>
+<li>Distinguish Ethernet switching based on MAC tables from routing based on destination prefixes. Explain flooding, learning and the role of ARP for IPv4.</li>
+<li>Calculate a subnet's network, broadcast, host range and size. Recognise conventional host-address rules and the special use of /31 and /32.</li>
+<li>Allocate VLSM subnets from largest to smallest and verify that ranges neither overlap nor exceed the parent prefix.</li>
+<li>Explain a default gateway and longest-prefix match. Distinguish a connected route, static route and dynamically learned route.</li>
+<li>Explain IPv6 notation, prefix lengths, link-local addresses and neighbour discovery. Do not apply IPv4 broadcast terminology to IPv6.</li>
+<li>Explain access ports, VLAN separation, 802.1Q trunks, allowed VLAN lists and inter-VLAN routing.</li>
+<li>Explain how STP prevents Layer 2 loops; identify the need for consistent edge-port protection and an intentional root bridge design.</li>
+<li>Compare single-mode and multimode fibre, wavelengths, connectors, transceiver compatibility and link-budget assumptions. Never look into a fibre end or use an unapproved optic.</li>
+<li>Separate a name-resolution problem from a reachability problem. Explain the DHCP address, mask/prefix, gateway and DNS information a host needs.</li>
+<li>Explain TCP reliability and UDP use cases without saying “UDP is always faster” or “TCP guarantees application success.”</li>
+</ul>
+<p><strong>Worked subnet:</strong> 192.0.2.77/27 has mask 255.255.255.224 and a block size of 32. The containing block starts at 64, so the network is 192.0.2.64, broadcast 192.0.2.95 and conventional host range .65–.94. There are 32 addresses and normally 30 host addresses. The 192.0.2.0/24 range is reserved for documentation; lab connectivity must stay inside the simulator or isolated environment.</p>
+<p><strong>Readiness check:</strong> explain a same-VLAN and different-VLAN packet path; calculate three differently sized non-overlapping subnets; predict the effect of a wrong gateway; explain why a switch can have a management IP without routing user traffic.</p>
+<p><strong>Evidence to practise producing:</strong> an address plan, labelled logical and physical diagrams, relevant <code>show</code> output, predicted packet paths and verification of both allowed and denied communication.</p>
+<h3 id="applied-networking-ccna">Applied Networking (CCNA)</h3>
+<p><strong>Study sequence:</strong> baseline configuration → verification → routing and resilience → access policies → monitoring → controlled change → troubleshooting.</p>
+<p>Be able to:</p>
+<ul>
+<li>Build a small simulated topology from an address and port plan. Apply descriptions and capture the configuration before changing it.</li>
+<li>Verify VLAN membership, trunks, STP state, interface errors and routing before assuming an application is faulty.</li>
+<li>Explain link aggregation: multiple links can share traffic across flows, but one flow is generally limited to one member link. Check the platform's actual hashing and protocol behaviour.</li>
+<li>Explain static routes and single-area OSPF at the appropriate course level; recognise neighbour, area, mask and interface-state faults.</li>
+<li>Trace ACL processing, direction and implicit deny. Prove that required traffic passes and prohibited traffic is blocked.</li>
+<li>Distinguish stateful firewall policy, stateless ACLs and NAT. NAT alone is not a security policy.</li>
+<li>Interpret counters and logs with timestamps and scope; distinguish total counts from rates and a normal baseline from an unexplained deviation.</li>
+<li>Explain management-plane protection, SSH, role-based access, backups and approved firmware lifecycle work.</li>
+<li>Compare Cisco, Netgear and Fortinet features using the exact model and software documentation. Never assume CLI syntax or licence availability transfers between products.</li>
+<li>Prepare a change record with impact, dependencies, verification, rollback conditions and a named decision owner.</li>
+</ul>
+<p><strong>Operational application:</strong> a newly provisioned server cannot reach a service. Test link state, VLAN, addressing, gateway, route, policy, transport port and service in sequence. Record the last known working point. A successful ping is one observation, not proof that the required application works.</p>
+<p><strong>Readiness check:</strong> design a verification plan before entering commands; diagnose a trunk missing a VLAN; explain a route that wins by longest-prefix match; write rollback criteria that are measurable.</p>
+<p><strong>Evidence to practise producing:</strong> before/after configuration extracts, a test matrix, a fault timeline, a rollback plan and an explanation of remaining uncertainty.</p>
+<h2 id="semester-2-learning-pathway">Semester 2 learning pathway</h2>
+<h3 id="operating-systems">Operating Systems</h3>
+<p><strong>Study sequence:</strong> processes and memory → filesystems and permissions → users and services → networking and logs → patching → backup and recovery → automation.</p>
+<p>Be able to:</p>
+<ul>
+<li>Distinguish a program, process, thread and service; describe scheduling and virtual memory without assuming that high RAM use always means a fault.</li>
+<li>Explain users, groups, least privilege, Linux permission bits and Windows access control at the relevant platform level.</li>
+<li>Interpret filesystem paths, ownership, free space, inode usage and mount points. Distinguish filesystem capacity from the underlying storage arrangement.</li>
+<li>Use read-only diagnostics to inspect CPU, memory, disk, processes, services, routes, sockets and logs. Explain the meaning of each selected output field.</li>
+<li>Separate a service being installed, enabled, running and reachable. Identify dependency and configuration failures.</li>
+<li>Explain patch testing, maintenance windows, backups and recovery verification. Define the difference between a backup existing and a restore being proven.</li>
+<li>Explain RPO (acceptable data loss measured in time) and RTO (target time to restore service). State what is included in any measurement.</li>
+<li>Write small scripts with validation, meaningful errors and logs; avoid embedding passwords and tokens.</li>
+<li>Explain the difference between authentication, authorisation and auditing. Use individual approved accounts rather than shared credentials.</li>
+</ul>
+<p><strong>Readiness check:</strong> investigate “service running but inaccessible”; explain <code>640</code> permissions; recover a disposable file from a lab backup; distinguish a process listening only on loopback from an externally reachable service.</p>
+<p><strong>Evidence to practise producing:</strong> a reproducible command sequence, an interpreted log extract, a service dependency diagram and a measured recovery exercise using disposable data.</p>
+<h3 id="core-ai">Core AI</h3>
+<p><strong>Study sequence:</strong> problem framing → data preparation → model concepts → evaluation → operational use → risk and governance.</p>
+<p>Be able to:</p>
+<ul>
+<li>Distinguish supervised, unsupervised and reinforcement learning; separate a trained model from deterministic rule-based automation.</li>
+<li>Define a prediction target and a baseline before choosing a model. Explain when a simple threshold or manual review may be adequate.</li>
+<li>Identify missing values, duplicates, class imbalance and label quality issues in operational data.</li>
+<li>Separate training, validation and test data. Use time-aware splits when future data must not influence earlier predictions.</li>
+<li>Explain data leakage with a concrete example, such as including a post-incident resolution field in an incident prediction model.</li>
+<li>Calculate TP, FP, FN and TN; derive precision, recall and accuracy; explain why high accuracy can conceal rare-fault detection failure.</li>
+<li>Discuss the operational cost of false positives and false negatives. Threshold choice is a decision about impact, not just a mathematical score.</li>
+<li>Distinguish correlation from causation and prediction from a verified diagnosis.</li>
+<li>Explain drift, monitoring, review and rollback. An initially good score does not establish continuing reliability.</li>
+<li>Treat generated text and commands as unverified suggestions. Check authoritative sources and obtain normal change authorisation before any operational action.</li>
+<li>Describe privacy, confidentiality, access control, bias and accountability. Use synthetic or expressly approved data for learning.</li>
+</ul>
+<p><strong>Worked metrics:</strong> with TP=8, FP=2, FN=4 and TN=86, precision is 8/(8+2)=80%, recall is 8/(8+4)=66.7% and accuracy is (8+86)/100=94%. The 94% accuracy does not cancel the four missed positive cases. Explain whether missing those cases is acceptable for the intended use.</p>
+<p><strong>Readiness check:</strong> detect leakage in a dataset plan; compare a model to an always-negative baseline; explain why an AI-generated incident summary needs verification; propose a meaningful human review boundary.</p>
+<p><strong>Evidence to practise producing:</strong> a data dictionary, split strategy, baseline, confusion matrix, limitations and an approval/review plan. Do not claim model performance on data you did not evaluate.</p>
+<h3 id="work-based-learning">Work Based Learning</h3>
+<p><strong>Study sequence:</strong> induction and scope → observation → supervised practice → evidence review → reflection and development planning.</p>
+<p>Be able to:</p>
+<ul>
+<li>Explain your authorised role, supervision arrangements and escalation route. Ask when a task exceeds training or permission.</li>
+<li>Follow site-specific access, safety, confidentiality and change procedures. This repository does not authorise production access or maintenance.</li>
+<li>Record what you observed, what you performed, what someone else performed and what remains uncertain as separate statements.</li>
+<li>Connect an experience to taught concepts using a reasoned explanation, not only a diary of activities.</li>
+<li>Maintain a factual learning log with dates, approved evidence references, feedback and a next action.</li>
+<li>Remove confidential details before using workplace material in academic work. Anonymisation needs employer and tutor guidance; deleting a name alone may be insufficient.</li>
+<li>Reflect on an outcome and explain what you would repeat or change. Include supervision and limitations honestly.</li>
+</ul>
+<p><strong>Readiness check:</strong> draft a learning objective with observable evidence; explain how to escalate an unfamiliar alarm; turn an observation into a reflection without inventing hands-on work.</p>
+<p><strong>Evidence to practise producing:</strong> an approved learning agreement, a redacted activity log, supervisor feedback where permitted and a skills-development review. Placement availability and evidence acceptance must be confirmed with HRUC and the host organisation.</p>
+<h3 id="professional-practice">Professional Practice</h3>
+<p><strong>Study sequence:</strong> communication → teamwork → planning → problem solving → ethics → reflective development.</p>
+<p>Be able to:</p>
+<ul>
+<li>Write an incident update that states impact, evidence, actions, current owner and next update time.</li>
+<li>Produce a handover another person can act on without relying on an informal conversation.</li>
+<li>Separate fact, hypothesis, recommendation and decision. State confidence and missing information when relevant.</li>
+<li>Plan work with dependencies, owners, milestones, risks and contingency. Explain why a deadline or estimate changed.</li>
+<li>Compare options using explicit criteria: safety, service impact, time, cost, maintainability and evidence quality.</li>
+<li>Listen, ask focused questions and give constructive feedback. Record decisions and responsibilities accurately.</li>
+<li>Cite sources, paraphrase accurately and distinguish your own evidence from a published example.</li>
+<li>Explain professional conduct, accessibility, privacy and responsible handling of information.</li>
+</ul>
+<p><strong>Readiness check:</strong> write a 100-word incident update for a non-specialist reader; create a dependency-aware plan; evaluate a failed team decision without assigning unsupported blame.</p>
+<p><strong>Evidence to practise producing:</strong> a stakeholder map, meeting decisions, a plan with changes explained, a risk register and a reflection linked to observable outcomes.</p>
+<h3 id="designing-a-computing-project-optional-route">Designing a Computing Project: optional route</h3>
+<p>Use the current <strong>Pearson-set theme and tutor-approved brief</strong>. The following is a practice framework, not a substitute brief or a completed submission.</p>
+<p>Be able to:</p>
+<ul>
+<li>Define a research question, intended users, constraints and measurable success criteria.</li>
+<li>Review credible sources and record where each claim comes from.</li>
+<li>Choose a proportionate method for collecting and analysing permitted data.</li>
+<li>Plan milestones, resources, risks, ethical issues and dependencies.</li>
+<li>Build or investigate only within the approved scope and retain reproducible evidence.</li>
+<li>Evaluate against the original success criteria, including unsuccessful results and limitations.</li>
+<li>Explain changes in scope and what future work would address.</li>
+</ul>
+<p>A suitable <strong>practice idea</strong>, subject to approval, is a local synthetic incident-log dashboard: ingest a supplied CSV, validate records, calculate counts and durations, and present an accessible summary. It can connect programming, data interpretation and professional communication without requiring access to workplace systems.</p>
+<h2 id="cross-unit-operational-reasoning">Cross-unit operational reasoning</h2>
+<p>Use a fault-domain map to organise troubleshooting:</p>
+<table>
+<thead>
+<tr>
+<th>Layer or dependency</th>
+<th>Questions</th>
+<th>Possible lab evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Physical and power</td>
+<td>Is equipment powered? Is there a link? Is an approved component compatible?</td>
+<td>Simulator state or manufacturer specifications; permitted inventory.</td>
+</tr>
+<tr>
+<td>Link and VLAN</td>
+<td>Are ports in the correct VLAN? Does a trunk carry it? Is a loop being prevented?</td>
+<td>VLAN, trunk, MAC table and STP outputs.</td>
+</tr>
+<tr>
+<td>Addressing and routing</td>
+<td>Are prefix and gateway correct? Which route matches? Is the return path valid?</td>
+<td>Address plan, route tables and hop-by-hop tests.</td>
+</tr>
+<tr>
+<td>Policy and transport</td>
+<td>Does policy permit this direction and port? Is a process listening?</td>
+<td>ACL test matrix, counters and local socket listing.</td>
+</tr>
+<tr>
+<td>Service and OS</td>
+<td>Is the service healthy? Does it depend on DNS, storage or another service?</td>
+<td>Logs, service state and a direct local request.</td>
+</tr>
+<tr>
+<td>Data and human process</td>
+<td>Is the input current? Is the change approved? Has the handover reached the next owner?</td>
+<td>Validated fixtures, change plan and handover record.</td>
+</tr>
+</tbody>
+</table>
+<p>Do not change every layer at once. A useful hypothesis predicts an observable result: “If VLAN 20 is missing from the trunk, adding it in the simulator should restore gateway reachability from PC-B while PC-A remains reachable.” Collect the relevant before/after result and check for side effects.</p>
+<h2 id="reusable-evidence-templates">Reusable evidence templates</h2>
+<h3 id="lab-record">Lab record</h3>
+<pre><code class="language-text">Title and date:
+Unit and learning goal:
+Environment: simulator/VM/tool version, topology, disposable data
+Scope and permissions:
+Prediction and explanation:
+Inputs and starting state:
+Actions: numbered commands or GUI steps
+Expected result:
+Actual result: concise output or screenshot reference
+Interpretation: why the result supports or rejects the prediction
+Limitations: what this test does not establish
+Recovery/cleanup and verification:
+Sources: title, organisation, URL, revision/date if available, access date
+Next question or improvement:
+</code></pre>
+<h3 id="change-plan-for-a-lab">Change plan for a lab</h3>
+<pre><code class="language-text">Purpose and success criteria:
+Affected components and dependencies:
+Risk and expected impact:
+Prerequisites and pre-change backup:
+Implementation steps:
+Verification: positive and negative tests, expected outputs
+Rollback trigger: measurable condition or time limit
+Rollback steps and verification:
+Decision owner and communication plan:
+Actual outcome and lessons:
+</code></pre>
+<h3 id="incident-update-and-handover">Incident update and handover</h3>
+<pre><code class="language-text">Reference and UTC timestamp:
+Impact: affected function, scope, start time, known exclusions
+Facts: observations with timestamps and evidence references
+Current hypothesis: explicitly labelled, with proposed test
+Actions completed and results:
+Current state and remaining risk:
+Next action, named owner and next update time:
+Escalation/decision needed:
+</code></pre>
+<h3 id="placement-reflection">Placement reflection</h3>
+<pre><code class="language-text">Date and approved learning objective:
+Context: anonymised only as authorised
+My role: observed / assisted / performed under supervision
+What happened: factual account
+Evidence reference: permitted location, not confidential content
+Connection to taught concepts:
+Feedback received:
+What went well and why:
+What I would change and why:
+Next development action and review date:
+</code></pre>
+<h3 id="source-and-claim-record">Source and claim record</h3>
+<pre><code class="language-text">Claim or technical decision:
+Source title and publishing organisation:
+Exact URL and document/software revision:
+Section/page or heading:
+Date accessed:
+What the source actually supports:
+My interpretation and any uncertainty:
+Related evidence I collected myself:
+</code></pre>
+<p>A vendor guide can support a statement about a feature; it does not prove you configured or tested it. An illustrative scenario is not a real case study result. Use your own lab output or approved workplace evidence for claims about what you did.</p>
+<h2 id="revision-checkpoints">Revision checkpoints</h2>
+<p>Use these as readiness reviews, not a replacement timetable or grading scheme.</p>
+<ol>
+<li><strong>After the foundations:</strong> explain binary/hex, a CPU–memory relationship, a layered packet path and a simple diagnostic sequence without notes.</li>
+<li><strong>Before complex network labs:</strong> calculate subnets accurately, label every interface, predict VLAN boundaries and state the intended communication policy.</li>
+<li><strong>Before placement or a project:</strong> confirm scope and permissions, agree learning objectives, prepare a factual evidence log and practise a concise handover.</li>
+<li><strong>During semester 2:</strong> connect an OS symptom to network and hardware dependencies; evaluate an AI result using a baseline and operational impact.</li>
+<li><strong>Before an assessment or certification:</strong> work from the current tutor brief or official exam objectives, identify gaps, practise under realistic conditions and explain the reasoning behind answers.</li>
+</ol>
+<p>For each checkpoint use a simple personal scale: <strong>can explain</strong>, <strong>can perform with notes</strong>, <strong>can perform independently in a lab</strong>, <strong>can diagnose a variation</strong>. This is a study aid; it does not map to Pearson pass/merit/distinction criteria.</p>
+<h2 id="authoritative-starting-references">Authoritative starting references</h2>
+<p>Prefer the document for the exact device, OS and software version you use. These links are starting points; source availability and document locations can change.</p>
+<ul>
+<li><a href="https://www.hruc.ac.uk/">HRUC</a> — confirm programme, timetable and placement arrangements directly with the institution.</li>
+<li><a href="https://qualifications.pearson.com/en/qualifications/btec-higher-nationals/computing-for-england-2022.html">Pearson Higher Nationals in Computing for England</a> — consult the applicable specification and tutor-supplied unit/assessment documents.</li>
+<li><a href="https://www.cisco.com/site/us/en/learn/training-certifications/certifications/enterprise/ccna/index.html">Cisco CCNA</a> and <a href="https://www.netacad.com/">Cisco learning resources</a> — check current curriculum and exam information.</li>
+<li><a href="https://www.comptia.org/certifications/a">CompTIA A+</a> — obtain current objectives for the exam version you intend to take.</li>
+<li><a href="https://www.cisco.com/c/en/us/support/index.html">Cisco technical support documentation</a>, <a href="https://www.netgear.com/support/">NETGEAR support</a> and <a href="https://docs.fortinet.com/">Fortinet documentation</a> — use model- and release-specific configuration guides.</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc1918">RFC 1918: private IPv4 addresses</a>, <a href="https://www.rfc-editor.org/rfc/rfc5737">RFC 5737: documentation IPv4 addresses</a> and <a href="https://www.rfc-editor.org/rfc/rfc3849">RFC 3849: documentation IPv6 prefix</a> — distinguish lab addressing from addresses intended for public routing.</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc8200">RFC 8200: IPv6</a> and <a href="https://www.rfc-editor.org/rfc/rfc4861">RFC 4861: neighbour discovery</a> — protocol references for deeper study.</li>
+<li><a href="https://docs.python.org/3/tutorial/">Python tutorial</a>, <a href="https://docs.python.org/3/library/ipaddress.html">Python <code>ipaddress</code></a> and <a href="https://docs.python.org/3/library/unittest.html">Python <code>unittest</code></a> — reproducible programming and calculation exercises.</li>
+<li><a href="https://documentation.ubuntu.com/server/">Ubuntu Server documentation</a>, <a href="https://www.freedesktop.org/software/systemd/man/latest/">systemd manuals</a> and <a href="https://learn.microsoft.com/windows/">Microsoft Learn for Windows</a> — operating-system administration references.</li>
+<li><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI Risk Management Framework</a> — structured thinking about AI risk, evaluation and governance.</li>
+<li><a href="https://csrc.nist.gov/pubs/sp/800/41/r1/final">NIST firewall policy guidance, SP 800-41 Rev. 1</a> — firewall concepts; combine it with current platform documentation and policy.</li>
+<li><a href="https://www.ncsc.gov.uk/section/advice-guidance/all-topics">UK National Cyber Security Centre guidance</a> and <a href="https://ico.org.uk/">Information Commissioner's Office</a> — security and data-protection guidance relevant to handling information.</li>
+</ul>
+<p>Record an access date when you actually consult a source. This repository does not imply every external page has been checked against the latest academic or certification requirement.</p>
+</main></body></html>

@@ -1,0 +1,931 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Switches, firewalls and complex networks · AZ4CAF</title><style>
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #182b3a; background: #f4f6f7; }
+body { margin: 0; line-height: 1.75; }
+nav, main { max-width: 1000px; margin: auto; padding: 1.5rem; }
+nav { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; }
+main { background: white; border-top: 4px solid #237b69; padding-bottom: 4rem; overflow-wrap: anywhere; }
+a { color: #145e80; text-underline-offset: .2em; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #ca691b; outline-offset: 3px; }
+h1,h2,h3,h4 { line-height: 1.25; color: #143c38; scroll-margin-top: 1rem; }
+h1 { font-size: clamp(1.8rem, 4vw, 2.7rem); }
+h2 { margin-top: 2.5rem; border-bottom: 1px solid #dce7e4; padding-bottom: .6rem; }
+pre { padding: 1rem; border-radius: .4rem; background: #152a32; color: #e7f3ed; overflow: auto; line-height: 1.6; font-size: .9rem; }
+code { font-family: ui-monospace, monospace; } p code, li code { background: #edf2f2; padding: .1rem .25rem; }
+table { display: block; overflow: auto; border-collapse: collapse; font-size: .9rem; }
+th,td { padding: .6rem; border: 1px solid #d2dfdc; text-align: left; min-width: 5rem; }
+th { background: #edf4f0; } blockquote { border-left: 3px solid #c18c40; margin-left: 0; padding-left: 1rem; }
+details { margin: 1rem 0; padding: 1rem; background: #f0f5f2; } summary { cursor: pointer; font-weight: 600; }
+@media print { nav, .toc { display: none; } :root { background: white; } main { max-width: none; padding: 0; } pre { white-space: pre-wrap; color: black; background: #eee; } a { color: black; } }
+</style></head>
+<body><nav aria-label="Study resources"><a href="../index.html">← Study notebook</a><a href="study-guide.html">Study and revision guide</a><a href="labs.html">Practical lab workbook</a><a href="network-labs.html">Switches, firewalls and complex networks</a><a href="data-tools.html">Access, MongoDB, Python and Node.js</a><a href="ai-guide.html">Using AI and understanding AI firewalls</a><a href="research.html">Research sources and verification</a></nav><main>
+<details class="toc"><summary>On this page</summary><div class="toc">
+<ul>
+<li><a href="#switching-firewalls-and-complex-networks-practical-workbook">Switching, firewalls and complex networks: practical workbook</a><ul>
+<li><a href="#working-method-and-prerequisites">Working method and prerequisites</a></li>
+<li><a href="#1-the-topology-and-address-plan">1. The topology and address plan</a><ul>
+<li><a href="#worked-vlsm-checks">Worked VLSM checks</a></li>
+</ul>
+</li>
+<li><a href="#2-establish-a-switch-baseline-and-management-access">2. Establish a switch baseline and management access</a></li>
+<li><a href="#3-configure-access-ports-and-the-router-trunk">3. Configure access ports and the router trunk</a></li>
+<li><a href="#4-build-the-lacp-inter-switch-trunk">4. Build the LACP inter-switch trunk</a></li>
+<li><a href="#5-set-and-inspect-spanning-tree">5. Set and inspect spanning tree</a></li>
+<li><a href="#6-configure-router-on-a-stick-gateways">6. Configure router-on-a-stick gateways</a></li>
+<li><a href="#7-add-a-routed-branch-with-static-routes">7. Add a routed branch with static routes</a></li>
+<li><a href="#8-replace-static-routing-with-single-area-ospf">8. Replace static routing with single-area OSPF</a><ul>
+<li><a href="#optional-complete-routed-triangle-and-failover-test">Optional complete routed triangle and failover test</a></li>
+</ul>
+</li>
+<li><a href="#9-apply-a-limited-router-acl-and-understand-its-limits">9. Apply a limited router ACL and understand its limits</a></li>
+<li><a href="#10-stateful-firewall-lab-with-linux-namespaces">10. Stateful firewall lab with Linux namespaces</a><ul>
+<li><a href="#build-the-topology">Build the topology</a></li>
+<li><a href="#define-the-policy">Define the policy</a></li>
+<li><a href="#inspect-the-path">Inspect the path</a></li>
+<li><a href="#nat-is-a-separate-decision">NAT is a separate decision</a></li>
+<li><a href="#cleanup">Cleanup</a></li>
+</ul>
+</li>
+<li><a href="#11-translate-the-design-to-managed-switches-and-firewalls">11. Translate the design to managed switches and firewalls</a><ul>
+<li><a href="#netgear-managed-switches">NETGEAR managed switches</a></li>
+<li><a href="#fortigate-and-fortiswitch">FortiGate and FortiSwitch</a></li>
+</ul>
+</li>
+<li><a href="#12-linux-network-troubleshooting-reference">12. Linux network troubleshooting reference</a></li>
+<li><a href="#13-controlled-fault-exercises">13. Controlled fault exercises</a></li>
+<li><a href="#14-design-extension-resilient-segmented-data-centre-network">14. Design extension: resilient, segmented data centre network</a></li>
+<li><a href="#15-completion-evidence-and-reflection">15. Completion evidence and reflection</a></li>
+<li><a href="#official-reference-starting-points">Official reference starting points</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</details>
+<h1 id="switching-firewalls-and-complex-networks-practical-workbook">Switching, firewalls and complex networks: practical workbook</h1>
+<p>This workbook builds a small, explainable network before adding complexity. It supports Core Networking, Applied Networking, Operating Systems and work placement preparation. It is supplementary practice, not an official HRUC assessment brief or a claim that every feature is in CCNA.</p>
+<p>Use <a href="labs.html">the main lab pathway</a> for the wider programme and <a href="study-guide.html">the study guide</a> for revision and evidence planning.</p>
+<h2 id="working-method-and-prerequisites">Working method and prerequisites</h2>
+<p>Use an isolated Packet Tracer project for the Cisco exercises. The examples assume two Catalyst 2960-style Layer 2 switches and two ISR 2911-style routers. Interface names, crypto capabilities and simulator support vary. A real IOS image, different switch family or another simulator may need different syntax. Check the device help and its own official guide before adapting a command.</p>
+<p>For Linux exercises, use a disposable Linux VM with <code>iproute2</code>, <code>nftables</code>, Python 3, <code>curl</code> and optionally <code>tcpdump</code>/DNS tools installed. Namespace creation requires administrative rights. These exercises configure only named lab namespaces; do not run them on workplace equipment or a shared host.</p>
+<p>For every change:</p>
+<ol>
+<li>Draw the intended path and record the current state.</li>
+<li>Keep console access or another known working management path.</li>
+<li>Change one dependency at a time and verify it before continuing.</li>
+<li>Save a known working checkpoint; keep the previous file for rollback.</li>
+<li>Record actual commands and observations, including unsuccessful tests.</li>
+</ol>
+<p>A successful ping alone does not establish that DNS, application access, segmentation and recovery all work. Test required flows and prohibited flows.</p>
+<h2 id="1-the-topology-and-address-plan">1. The topology and address plan</h2>
+<pre><code class="language-text">User PC                     SW1                        R1                 R2
+10.44.0.10/26 -- Fa0/1       Gi0/1 -- trunk -- G0/0      G0/1 -- /30 -- G0/0
+                            |                                             |
+                      Fa0/23 + Fa0/24                                  G0/1
+                       LACP Port-channel1                                 |
+                            |                                    Remote PC .194/27
+                           SW2
+                       /     |      \
+                    Fa0/1  Fa0/2   Fa0/3
+                    Server Admin   Storage test host
+                    .70/26 .164/28 .130/27
+</code></pre>
+<p>Both switches have VLANs 10, 20, 30, 99 and 999. SW1 connects the router trunk; the two member links between switches form <strong>one</strong> logical LACP trunk. VLAN 999 is an unused native/parking VLAN without a gateway or management address. There is no separate physical firewall in this first topology: the router routes, and a later ACL demonstrates a limited stateless filter. The Linux exercise then demonstrates a stateful firewall separately.</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>VLAN</th>
+<th>Network/prefix</th>
+<th>Mask</th>
+<th>Usable range</th>
+<th>Broadcast</th>
+<th>Gateway</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Users</td>
+<td>10</td>
+<td>10.44.0.0/26</td>
+<td>255.255.255.192</td>
+<td>.1–.62</td>
+<td>.63</td>
+<td>.1</td>
+</tr>
+<tr>
+<td>Servers</td>
+<td>20</td>
+<td>10.44.0.64/26</td>
+<td>255.255.255.192</td>
+<td>.65–.126</td>
+<td>.127</td>
+<td>.65</td>
+</tr>
+<tr>
+<td>Storage lab</td>
+<td>30</td>
+<td>10.44.0.128/27</td>
+<td>255.255.255.224</td>
+<td>.129–.158</td>
+<td>.159</td>
+<td>.129</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>99</td>
+<td>10.44.0.160/28</td>
+<td>255.255.255.240</td>
+<td>.161–.174</td>
+<td>.175</td>
+<td>.161</td>
+</tr>
+<tr>
+<td>R1–R2 transit</td>
+<td>—</td>
+<td>10.44.0.176/30</td>
+<td>255.255.255.252</td>
+<td>.177–.178</td>
+<td>.179</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Remote branch</td>
+<td>—</td>
+<td>10.44.0.192/27</td>
+<td>255.255.255.224</td>
+<td>.193–.222</td>
+<td>.223</td>
+<td>.193</td>
+</tr>
+</tbody>
+</table>
+<p>Addresses .180–.191 and .224–.255 remain unallocated; they are not one continuous free subnet. R1 uses transit .177 and R2 uses .178. SW1 management is .162 and SW2 is .163. All abbreviated addresses in this table begin <code>10.44.0</code>.</p>
+<h3 id="worked-vlsm-checks">Worked VLSM checks</h3>
+<p>A <code>/26</code> leaves six host bits: <code>2^6 = 64</code> addresses, ordinarily 62 usable host addresses. The increments are 64, so <code>.70/26</code> belongs to <code>.64/26</code>, not <code>.0/26</code>. Its gateway <code>.65</code> is inside the same subnet. <code>.127</code> is the broadcast address and cannot be allocated to the server.</p>
+<p>A <code>/28</code> leaves four host bits: 16 addresses and ordinarily 14 usable hosts. <code>.164/28</code> falls in the block <code>.160–.175</code>. The admin host, <code>.161</code> gateway, <code>.162</code> SW1 and <code>.163</code> SW2 therefore share VLAN 99's subnet.</p>
+<p>A <code>/30</code> leaves two host bits: <code>.176</code> network, <code>.177</code> and <code>.178</code> hosts, <code>.179</code> broadcast. <code>/31</code> point-to-point addressing is possible on supporting equipment, but this lab deliberately uses <code>/30</code>.</p>
+<p>Allocate larger required subnets first, align each network to its block boundary, then check that ranges do not overlap. Count interfaces, gateways and future capacity as well as end devices.</p>
+<p><strong>Evidence:</strong> an annotated topology, a complete address table and calculations for one subnet of each size. Explain why a VLAN number does not determine an IP subnet.</p>
+<h2 id="2-establish-a-switch-baseline-and-management-access">2. Establish a switch baseline and management access</h2>
+<p>Connect through the console. Confirm the device/interface names with <code>show version</code> and <code>show interfaces status</code>. In Packet Tracer choose private, unique lab passwords when entering these commands; angle-bracket values below are placeholders and must be replaced.</p>
+<p>On SW1:</p>
+<pre><code class="language-text">enable
+configure terminal
+hostname SW1
+no ip domain-lookup
+enable secret &lt;choose-a-unique-lab-enable-secret&gt;
+username labadmin privilege 15 secret &lt;choose-a-different-lab-secret&gt;
+ip domain-name az4caf.example
+crypto key generate rsa modulus 2048
+ip ssh version 2
+line console 0
+ logging synchronous
+ exec-timeout 10 0
+ login local
+exit
+line vty 0 15
+ login local
+ transport input ssh
+ exec-timeout 10 0
+exit
+vlan 10
+ name USERS
+vlan 20
+ name SERVERS
+vlan 30
+ name STORAGE_LAB
+vlan 99
+ name MANAGEMENT
+vlan 999
+ name PARKING_NATIVE
+exit
+interface vlan 99
+ ip address 10.44.0.162 255.255.255.240
+ no shutdown
+exit
+ip default-gateway 10.44.0.161
+end
+</code></pre>
+<p>Repeat on SW2, changing the hostname and SVI address to <code>10.44.0.163</code>. Some simulator images prompt for the RSA modulus instead of accepting it on the same line; use the platform-supported equivalent. Do not substitute Telnet on a production network if a simulator lacks SSH.</p>
+<p>An SVI can remain down until that VLAN exists and an appropriate Layer 2 port is active and forwarding. At this stage no remote gateway is configured on R1, so routed SSH access is not expected yet.</p>
+<p><code>ip default-gateway</code> is for this Layer 2 switch's own management traffic. It does not enable inter-VLAN routing. On a Layer 3 switch running <code>ip routing</code>, use the appropriate routed/default route design instead.</p>
+<p>The <code>privilege 15</code> account is a lab convenience. In operations, use approved role-based accounts, AAA, central authentication and emergency access controls. Never publish secrets, private keys or full sensitive configurations as assignment evidence.</p>
+<p>Verify:</p>
+<pre><code class="language-text">show vlan brief
+show ip interface brief
+show ip ssh
+show running-config
+</code></pre>
+<p><strong>Expected:</strong> the VLANs exist, the management address is correct, and VTY access allows SSH. Record whether the SVI is up and explain the dependencies.</p>
+<h2 id="3-configure-access-ports-and-the-router-trunk">3. Configure access ports and the router trunk</h2>
+<p>On SW1 configure the user port and router-facing trunk:</p>
+<pre><code class="language-text">configure terminal
+interface fastethernet 0/1
+ description LAB_USER_PC
+ switchport mode access
+ switchport access vlan 10
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+exit
+interface gigabitethernet 0/1
+ description TRUNK_TO_R1_G0_0
+ switchport mode trunk
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30,99,999
+ switchport nonegotiate
+ no shutdown
+end
+</code></pre>
+<p>On SW2:</p>
+<pre><code class="language-text">configure terminal
+interface fastethernet 0/1
+ description LAB_SERVER
+ switchport mode access
+ switchport access vlan 20
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+exit
+interface fastethernet 0/2
+ description LAB_ADMIN
+ switchport mode access
+ switchport access vlan 99
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+exit
+interface fastethernet 0/3
+ description LAB_STORAGE_HOST
+ switchport mode access
+ switchport access vlan 30
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+end
+</code></pre>
+<p>PortFast and BPDU Guard here are for known endpoint access ports. Do not apply this edge configuration blindly to switch uplinks. Receiving a BPDU can disable an edge port under BPDU Guard; investigate the unexpected bridge before recovery.</p>
+<p>Some switches require <code>switchport trunk encapsulation dot1q</code>; 2960 platforms with only 802.1Q do not offer that command. A command rejected because the platform differs is evidence to investigate, not a reason to paste larger configuration blocks repeatedly.</p>
+<p>For unused access ports, select only ports that are genuinely unused, put them in VLAN 999 and administratively shut them down. Keep the selected uplinks and console path available.</p>
+<h2 id="4-build-the-lacp-inter-switch-trunk">4. Build the LACP inter-switch trunk</h2>
+<p>Cable SW1 Fa0/23 to SW2 Fa0/23 and SW1 Fa0/24 to SW2 Fa0/24. Start from unconfigured lab ports. On <strong>both</strong> switches:</p>
+<pre><code class="language-text">configure terminal
+interface range fastethernet 0/23 - 24
+ description LACP_MEMBERS_TO_OTHER_SWITCH
+ switchport mode trunk
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30,99,999
+ switchport nonegotiate
+ channel-group 1 mode active
+ no shutdown
+exit
+interface port-channel 1
+ description LACP_TRUNK_TO_OTHER_SWITCH
+ switchport mode trunk
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30,99,999
+ no shutdown
+end
+</code></pre>
+<p>LACP <code>active</code>/<code>active</code> negotiates; <code>active</code>/<code>passive</code> can negotiate; <code>passive</code>/<code>passive</code> does not initiate. Match native/allowed VLANs, speed, duplex and channel settings. Do not mix LACP with proprietary PAgP on the peer.</p>
+<p>Verify:</p>
+<pre><code class="language-text">show etherchannel summary
+show interfaces trunk
+show interfaces port-channel 1
+</code></pre>
+<p><strong>Expected:</strong> Port-channel1 is Layer 2 and in use; both physical members are bundled. IOS commonly displays <code>Po1(SU)</code> and member <code>(P)</code> flags. Exact formatting varies. A suspended or standalone member is not a successful bundle.</p>
+<p>A two-link bundle can carry multiple flows across members according to a hash. It does not normally double the speed of one flow, and it does not survive loss of both switches. Record which failures it addresses and which remain single points of failure.</p>
+<h2 id="5-set-and-inspect-spanning-tree">5. Set and inspect spanning tree</h2>
+<p>On both switches:</p>
+<pre><code class="language-text">configure terminal
+spanning-tree mode rapid-pvst
+end
+</code></pre>
+<p>On SW1:</p>
+<pre><code class="language-text">configure terminal
+spanning-tree vlan 10,20,30,99,999 priority 24576
+end
+</code></pre>
+<p>On SW2:</p>
+<pre><code class="language-text">configure terminal
+spanning-tree vlan 10,20,30,99,999 priority 28672
+end
+</code></pre>
+<p>Verify <code>show spanning-tree vlan 10</code> and <code>show spanning-tree vlan 99</code>. SW1 should be the root with this isolated topology. Displayed bridge priorities may include the extended system ID (VLAN number), so VLAN 10 can display <code>24586</code> rather than <code>24576</code>.</p>
+<p>The LACP members form one logical STP port. In this topology there is no extra standalone inter-switch link that STP needs to block. Do not manufacture a loop to test redundancy on physical equipment.</p>
+<p><strong>Failure exercise:</strong> after saving a working checkpoint, shut down one channel member. The port-channel should remain up through the other member. Restore the member and confirm it rejoins. A brief transient or packet loss is possible; observe rather than promising zero interruption.</p>
+<h2 id="6-configure-router-on-a-stick-gateways">6. Configure router-on-a-stick gateways</h2>
+<p>On R1, G0/0 is connected to SW1's Gi0/1 trunk:</p>
+<pre><code class="language-text">enable
+configure terminal
+hostname R1
+interface gigabitethernet 0/0
+ description DOT1Q_TRUNK_TO_SW1
+ no ip address
+ no shutdown
+exit
+interface gigabitethernet 0/0.10
+ encapsulation dot1Q 10
+ ip address 10.44.0.1 255.255.255.192
+exit
+interface gigabitethernet 0/0.20
+ encapsulation dot1Q 20
+ ip address 10.44.0.65 255.255.255.192
+exit
+interface gigabitethernet 0/0.30
+ encapsulation dot1Q 30
+ ip address 10.44.0.129 255.255.255.224
+exit
+interface gigabitethernet 0/0.99
+ encapsulation dot1Q 99
+ ip address 10.44.0.161 255.255.255.240
+exit
+interface gigabitethernet 0/0.999
+ encapsulation dot1Q 999 native
+ no ip address
+end
+</code></pre>
+<p>Set endpoint IP addresses, masks and gateways from the address table. Initially allow routing between all lab VLANs to verify the foundation. Security policy is added after the path works.</p>
+<p>Verify:</p>
+<pre><code class="language-text">show ip interface brief
+show ip route connected
+show arp
+</code></pre>
+<p>Test from the admin PC to <code>.161</code>, <code>.162</code> and <code>.163</code>. Test the user PC's own gateway before testing <code>.70</code> on the server VLAN. Test SSH to both switches from the admin PC. In Packet Tracer, a PC can use <code>ssh -l labadmin 10.44.0.162</code> if its SSH client is supported.</p>
+<p><strong>Explain the packet path:</strong> the user PC determines that <code>.70</code> is outside its <code>/26</code>, ARPs for <code>.1</code>, sends a frame to R1's MAC, and R1 routes to VLAN 20. The destination IP remains <code>.70</code> while Layer 2 addresses change at the routed boundary. Switches learn source MAC addresses; they do not route this packet merely because they have a management SVI.</p>
+<p><strong>Design comparison:</strong> a multilayer switch could use SVIs and <code>ip routing</code> instead of router subinterfaces. This can remove the router trunk bottleneck, but changes the topology and routing responsibilities. Do not configure both designs with duplicate gateway addresses in the same live lab.</p>
+<h2 id="7-add-a-routed-branch-with-static-routes">7. Add a routed branch with static routes</h2>
+<p>Cable R1 G0/1 to R2 G0/0. Cable R2 G0/1 to the remote PC.</p>
+<p>On R1:</p>
+<pre><code class="language-text">configure terminal
+interface gigabitethernet 0/1
+ description TRANSIT_TO_R2
+ ip address 10.44.0.177 255.255.255.252
+ no shutdown
+exit
+ip route 10.44.0.192 255.255.255.224 10.44.0.178
+end
+</code></pre>
+<p>On R2:</p>
+<pre><code class="language-text">enable
+configure terminal
+hostname R2
+interface gigabitethernet 0/0
+ description TRANSIT_TO_R1
+ ip address 10.44.0.178 255.255.255.252
+ no shutdown
+exit
+interface gigabitethernet 0/1
+ description REMOTE_LAN
+ ip address 10.44.0.193 255.255.255.224
+ no shutdown
+exit
+ip route 10.44.0.0 255.255.255.192 10.44.0.177
+ip route 10.44.0.64 255.255.255.192 10.44.0.177
+ip route 10.44.0.128 255.255.255.224 10.44.0.177
+ip route 10.44.0.160 255.255.255.240 10.44.0.177
+end
+</code></pre>
+<p>Give the remote PC <code>.194/27</code> and gateway <code>.193</code>. Verify routes in <strong>both</strong> directions. The exact reverse routes make the return path explicit. A broad summary/default route can be valid in other designs, but can also create a loop or black hole if the next-hop design is wrong.</p>
+<p>Test the transit neighbor first, then remote gateway, then end-to-end traffic. Use <code>traceroute</code> on IOS or <code>tracert</code> on a simulated PC to investigate the path. Firewalls and control-plane rate limits can affect traceroute replies even when a service works.</p>
+<h2 id="8-replace-static-routing-with-single-area-ospf">8. Replace static routing with single-area OSPF</h2>
+<p>Save a separate checkpoint. This is an alternative to the static route exercise, not an extra reason for the existing statics to remain. Remove the exact static routes above with <code>no ip route ...</code>, using each complete route command.</p>
+<p>On R1:</p>
+<pre><code class="language-text">configure terminal
+no ip route 10.44.0.192 255.255.255.224 10.44.0.178
+router ospf 1
+ router-id 1.1.1.1
+ passive-interface default
+ no passive-interface gigabitethernet 0/1
+ network 10.44.0.0 0.0.0.63 area 0
+ network 10.44.0.64 0.0.0.63 area 0
+ network 10.44.0.128 0.0.0.31 area 0
+ network 10.44.0.160 0.0.0.15 area 0
+ network 10.44.0.176 0.0.0.3 area 0
+end
+</code></pre>
+<p>On R2:</p>
+<pre><code class="language-text">configure terminal
+no ip route 10.44.0.0 255.255.255.192 10.44.0.177
+no ip route 10.44.0.64 255.255.255.192 10.44.0.177
+no ip route 10.44.0.128 255.255.255.224 10.44.0.177
+no ip route 10.44.0.160 255.255.255.240 10.44.0.177
+router ospf 1
+ router-id 2.2.2.2
+ passive-interface default
+ no passive-interface gigabitethernet 0/0
+ network 10.44.0.176 0.0.0.3 area 0
+ network 10.44.0.192 0.0.0.31 area 0
+end
+</code></pre>
+<p>The OSPF network statements select matching interfaces; they are not ordinary forwarding routes. The wildcard mask is the inverse of the subnet mask: <code>/27</code> has <code>0.0.0.31</code>. Passive interfaces advertise their attached networks without forming neighbors there. The transit interfaces are the intended neighbor adjacency.</p>
+<p>Verify:</p>
+<pre><code class="language-text">show ip ospf neighbor
+show ip ospf interface brief
+show ip protocols
+show ip route ospf
+</code></pre>
+<p><strong>Expected:</strong> the transit neighbor reaches FULL state. A broadcast Ethernet network can show a FULL/DR or FULL/BDR relationship. R1 learns the remote <code>/27</code>; R2 learns the four VLAN networks. Static routes left in place can hide the expected OSPF route because a normal static route has lower administrative distance.</p>
+<p>This two-router topology has no alternate routed path. OSPF does not create redundancy without another usable path. For an extension, add a third router, two separate transit subnets and another destination network. Draw all return paths, assign unique router IDs, establish adjacencies and compare route costs before testing link failure.</p>
+<p><strong>Troubleshooting:</strong> check physical state, addressing/subnet, matching area, compatible hello/dead timers, authentication settings, passive status and filtering of OSPF before changing routing statements at random.</p>
+<h3 id="optional-complete-routed-triangle-and-failover-test">Optional complete routed triangle and failover test</h3>
+<p>To practise an actual alternate path, use the spare G0/2 interfaces on R1 and R2 and add a third 2911-style router. This extends the <strong>OSPF variant</strong>; retain the existing VLAN/remote LAN design and do not restore the old static routes.</p>
+<table>
+<thead>
+<tr>
+<th>New link/network</th>
+<th>Prefix</th>
+<th>First endpoint</th>
+<th>Second endpoint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R1 G0/2 — R3 G0/0</td>
+<td>10.44.0.180/30</td>
+<td>R1 .181</td>
+<td>R3 .182</td>
+</tr>
+<tr>
+<td>R2 G0/2 — R3 G0/1</td>
+<td>10.44.0.184/30</td>
+<td>R2 .185</td>
+<td>R3 .186</td>
+</tr>
+<tr>
+<td>R3 G0/2 — additional test PC</td>
+<td>10.44.0.224/28</td>
+<td>R3 .225 gateway</td>
+<td>PC .226</td>
+</tr>
+</tbody>
+</table>
+<p>These allocations do not overlap the original subnets. Give the additional PC mask <code>255.255.255.240</code> and gateway <code>10.44.0.225</code>.</p>
+<p>On R1:</p>
+<pre><code class="language-text">configure terminal
+interface gigabitethernet 0/1
+ ip ospf cost 10
+exit
+interface gigabitethernet 0/2
+ description TRANSIT_TO_R3
+ ip address 10.44.0.181 255.255.255.252
+ ip ospf cost 50
+ no shutdown
+exit
+router ospf 1
+ no passive-interface gigabitethernet 0/2
+ network 10.44.0.180 0.0.0.3 area 0
+end
+</code></pre>
+<p>On R2:</p>
+<pre><code class="language-text">configure terminal
+interface gigabitethernet 0/0
+ ip ospf cost 10
+exit
+interface gigabitethernet 0/2
+ description TRANSIT_TO_R3
+ ip address 10.44.0.185 255.255.255.252
+ ip ospf cost 10
+ no shutdown
+exit
+router ospf 1
+ no passive-interface gigabitethernet 0/2
+ network 10.44.0.184 0.0.0.3 area 0
+end
+</code></pre>
+<p>On R3:</p>
+<pre><code class="language-text">enable
+configure terminal
+hostname R3
+interface gigabitethernet 0/0
+ description TRANSIT_TO_R1
+ ip address 10.44.0.182 255.255.255.252
+ ip ospf cost 50
+ no shutdown
+exit
+interface gigabitethernet 0/1
+ description TRANSIT_TO_R2
+ ip address 10.44.0.186 255.255.255.252
+ ip ospf cost 10
+ no shutdown
+exit
+interface gigabitethernet 0/2
+ description ADDITIONAL_TEST_LAN
+ ip address 10.44.0.225 255.255.255.240
+ no shutdown
+exit
+router ospf 1
+ router-id 3.3.3.3
+ passive-interface default
+ no passive-interface gigabitethernet 0/0
+ no passive-interface gigabitethernet 0/1
+ network 10.44.0.180 0.0.0.3 area 0
+ network 10.44.0.184 0.0.0.3 area 0
+ network 10.44.0.224 0.0.0.15 area 0
+end
+</code></pre>
+<p>Verify that each router has two FULL neighbors. Explicit costs make the experiment independent of automatic bandwidth-derived cost on the transit links. R1 normally reaches R2's remote LAN over its cost-10 direct link instead of the cost-60 transit path through R3. R1 normally reaches R3's additional LAN through R2 (transit cost 20) instead of the direct cost-50 R1–R3 link. The advertised destination interface cost is added to these transit costs.</p>
+<p>Record the current <code>show ip route</code> next hops and a trace to both PCs. Shut <strong>only R1 G0/1</strong> through its console. After link detection and OSPF convergence, the remote LAN should be reached through R3 via next hop <code>.182</code>. Expect a convergence interval and possible packet loss. Restore the interface with <code>no shutdown</code>, verify the adjacency returns and confirm that the lower-cost route is selected again. Do not assume the first trace accurately represents the converged state.</p>
+<p>Repeat using loss of R2 G0/2 while the direct R1–R2 link is working: the additional R3 LAN remains reachable over the more expensive R1–R3 link. Draw each path and distinguish link redundancy from failure of R1, which still owns every original VLAN gateway. This design still has single points of failure and is a teaching model rather than a production data centre architecture.</p>
+<h2 id="9-apply-a-limited-router-acl-and-understand-its-limits">9. Apply a limited router ACL and understand its limits</h2>
+<p>Policy example: users in VLAN 10 may reach a lab web service on server <code>.70</code> using TCP 80/443, but may not reach other VLAN 20 hosts, storage VLAN 30 or management VLAN 99. Other destinations remain allowed for this exercise.</p>
+<p>On R1:</p>
+<pre><code class="language-text">configure terminal
+ip access-list extended USERS_IN
+ permit tcp 10.44.0.0 0.0.0.63 host 10.44.0.70 eq 80
+ permit tcp 10.44.0.0 0.0.0.63 host 10.44.0.70 eq 443
+ deny ip 10.44.0.0 0.0.0.63 10.44.0.64 0.0.0.63
+ deny ip 10.44.0.0 0.0.0.63 10.44.0.128 0.0.0.31
+ deny ip 10.44.0.0 0.0.0.63 10.44.0.160 0.0.0.15
+ permit ip 10.44.0.0 0.0.0.63 any
+exit
+interface gigabitethernet 0/0.10
+ ip access-group USERS_IN in
+end
+</code></pre>
+<p>Rules are processed in order, first match wins, with an implicit deny at the end. The final permit is intentionally broad for other destinations; it is <strong>not</strong> a production least-privilege policy. The source restriction also drops packets using unexpected sources that fail to match any rule, but this does not replace a complete anti-spoofing design.</p>
+<p>Enable the simulated server's web service, then test browser access to <code>.70</code>. A ping to <code>.70</code> is now supposed to fail: TCP web access is allowed while ICMP is denied. Verify counters with <code>show access-lists USERS_IN</code> and the binding/direction with <code>show ip interface gigabitethernet 0/0.10</code>.</p>
+<p>This is a stateless ingress ACL. It does not track sessions, and devices inside VLAN 10 can communicate locally without passing this routed interface. A TCP <code>established</code> ACL keyword checks selected TCP flags; it is not equivalent to a stateful connection table.</p>
+<p><strong>Rollback:</strong> <code>no ip access-group USERS_IN in</code> under the same subinterface removes the binding. Confirm access and investigate the rules before deleting the ACL itself.</p>
+<h2 id="10-stateful-firewall-lab-with-linux-namespaces">10. Stateful firewall lab with Linux namespaces</h2>
+<p>This separate topology makes the firewall behaviour observable without depending on a commercial appliance image:</p>
+<pre><code class="language-text">az-client                 az-fw                       az-server
+10.60.10.2/24 -- c0 : fwc 10.60.10.1
+                         fws 10.60.20.1 : s0 -- 10.60.20.2/24
+</code></pre>
+<p>Use a dedicated disposable Linux VM. Do not replace the VM's host firewall or flush its ruleset. The <code>nft</code> commands below run only inside <code>az-fw</code>. If any of these namespace names already exist, choose different names consistently instead of deleting an unknown namespace.</p>
+<h3 id="build-the-topology">Build the topology</h3>
+<p>Run the following commands one at a time and stop if any command fails. Resolve the failure before continuing. The veth pairs are created inside the newly created lab namespaces, so an existing host interface with a similar name is never moved.</p>
+<pre><code class="language-bash">sudo ip netns add az-client
+sudo ip netns add az-fw
+sudo ip netns add az-server
+sudo ip -n az-client link add c0 type veth peer name fwc
+sudo ip -n az-client link set fwc netns az-fw
+sudo ip -n az-server link add s0 type veth peer name fws
+sudo ip -n az-server link set fws netns az-fw
+sudo ip -n az-client addr add 10.60.10.2/24 dev c0
+sudo ip -n az-fw addr add 10.60.10.1/24 dev fwc
+sudo ip -n az-fw addr add 10.60.20.1/24 dev fws
+sudo ip -n az-server addr add 10.60.20.2/24 dev s0
+sudo ip -n az-client link set lo up
+sudo ip -n az-fw link set lo up
+sudo ip -n az-server link set lo up
+sudo ip -n az-client link set c0 up
+sudo ip -n az-fw link set fwc up
+sudo ip -n az-fw link set fws up
+sudo ip -n az-server link set s0 up
+sudo ip -n az-client route add default via 10.60.10.1
+sudo ip -n az-server route add default via 10.60.20.1
+sudo ip netns exec az-fw sysctl -w net.ipv4.ip_forward=1
+</code></pre>
+<p>Before installing the firewall rules, verify <code>sudo ip netns exec az-client ping -c 2 10.60.20.2</code>. If it fails, resolve the routing/interface issue first.</p>
+<p>In two additional VM terminals, start these disposable test services and keep the terminals open:</p>
+<pre><code class="language-bash"># Terminal A: the service that will be allowed.
+sudo ip netns exec az-server python3 -m http.server 8080 --bind 10.60.20.2
+</code></pre>
+<pre><code class="language-bash"># Terminal B: a working service that will deliberately be blocked.
+sudo ip netns exec az-server python3 -m http.server 8081 --bind 10.60.20.2
+</code></pre>
+<p>Python's development web server is a lab test service, not a production deployment. Confirm both URLs work from <code>az-client</code> before filtering. Using two running services avoids confusing a closed listening port with a firewall denial.</p>
+<h3 id="define-the-policy">Define the policy</h3>
+<p>Allow new client-to-server TCP 8080 sessions. Permit established/related return traffic. Deny other forwarded traffic and unexpected traffic addressed to the firewall itself. This exercise is IPv4 only: the veth endpoints receive no routed IPv6 design and the <code>inet</code> policy also defaults to dropping unapproved IPv6 forwarding.</p>
+<pre><code class="language-bash">sudo ip netns exec az-fw nft -f - &lt;&lt;'NFT'
+table inet az_lab {
+  chain input {
+    type filter hook input priority 0; policy drop;
+    iifname &quot;lo&quot; accept
+    ct state invalid drop
+    ct state established,related accept
+  }
+  chain forward {
+    type filter hook forward priority 0; policy drop;
+    ct state invalid counter drop
+    ct state established,related counter accept
+    iifname &quot;fwc&quot; oifname &quot;fws&quot; ip saddr 10.60.10.0/24 ip daddr 10.60.20.2 tcp dport 8080 ct state new counter accept
+    counter drop
+  }
+  chain output {
+    type filter hook output priority 0; policy accept;
+  }
+}
+NFT
+</code></pre>
+<p>Run the load once. A second load of an identical table definition can conflict with or append to existing state depending on what is loaded; inspect it first. To replace this particular lab table, delete only <code>table inet az_lab</code> inside <code>az-fw</code>, then reload it. Do not issue a host-wide <code>flush ruleset</code>.</p>
+<pre><code class="language-bash">sudo ip netns exec az-client curl --noproxy '*' --max-time 3 http://10.60.20.2:8080/
+sudo ip netns exec az-client curl --noproxy '*' --max-time 3 http://10.60.20.2:8081/
+sudo ip netns exec az-client ping -c 2 -W 1 10.60.20.2
+sudo ip netns exec az-fw nft list table inet az_lab
+</code></pre>
+<p><code>--noproxy '*'</code> keeps these private lab requests on the direct namespace path even if the VM inherits HTTP proxy variables.</p>
+<p><strong>Expected:</strong> 8080 returns an HTTP directory page; 8081 times out; ICMP echo receives no reply. The explicit drop counter increments for denied traffic. Established replies succeed because the connection tracker recognises the reverse traffic, not because a broad server-to-client allow rule was added.</p>
+<p>The input chain protects the firewall's own addresses. The forward chain controls traffic passing through it. Adding an SSH rule only to input would not permit SSH to a server behind it. A router doing no local DNS service should not receive arbitrary DNS queries just because clients need DNS elsewhere.</p>
+<h3 id="inspect-the-path">Inspect the path</h3>
+<pre><code class="language-bash">sudo ip -n az-client route get 10.60.20.2
+sudo ip -n az-fw route
+sudo ip -n az-fw neigh
+sudo ip netns exec az-server ss -lnt
+sudo ip netns exec az-fw tcpdump -ni fwc 'tcp port 8080 or tcp port 8081'
+</code></pre>
+<p><code>route get</code> should select the client interface and next hop <code>10.60.10.1</code>. <code>ss</code> should show listeners on both test ports. Capture briefly while repeating a request; stop with Ctrl+C. Do not collect workplace traffic or secrets for this exercise.</p>
+<p>A packet capture on the client-side interface can see a denied SYN before it is dropped. Compare server-side <code>fws</code> if needed: seeing a frame at an ingress interface is not proof it was forwarded.</p>
+<h3 id="nat-is-a-separate-decision">NAT is a separate decision</h3>
+<p>The namespace networks have working return routes, so they need <strong>no NAT</strong>. Address translation changes addressing; it is not an access-control rule and is not encryption.</p>
+<p>For a separate extension with a deliberately created external uplink named <code>fwout</code>, a masquerade rule could have the following shape:</p>
+<pre><code class="language-text">table ip az_nat {
+  chain postrouting {
+    type nat hook postrouting priority srcnat; policy accept;
+    oifname &quot;fwout&quot; ip saddr 10.60.10.0/24 masquerade
+  }
+}
+</code></pre>
+<p>Do not apply this fragment to the current two-interface lab: <code>fwout</code> does not exist. First design the external subnet, default route, explicit permitted forwarding, source translation and return path. Distinguish source NAT for outbound sessions from destination NAT/port forwarding for an inbound service. A destination NAT mapping alone must not accidentally grant access through the forwarding policy.</p>
+<h3 id="cleanup">Cleanup</h3>
+<p>Stop the two Python servers using Ctrl+C in their own terminals and stop packet captures. Exit shells that are still inside a namespace. Then remove only the namespaces created for this exercise:</p>
+<pre><code class="language-bash">sudo ip netns del az-client
+sudo ip netns del az-server
+sudo ip netns del az-fw
+</code></pre>
+<p>The veth interfaces disappear with their namespaces. A namespace can remain alive while a process still holds it, which is why stopping the test services comes first. Confirm <code>ip netns list</code> no longer includes the lab names. No host interfaces, host firewall rules or host forwarding setting were changed by this procedure.</p>
+<h2 id="11-translate-the-design-to-managed-switches-and-firewalls">11. Translate the design to managed switches and firewalls</h2>
+<h3 id="netgear-managed-switches">NETGEAR managed switches</h3>
+<p>Use the manual for the exact model and firmware. Unmanaged, smart managed and fully managed families do not expose identical features or syntax. A web UI feature name can differ from its Cisco counterpart.</p>
+<ol>
+<li>Discover the current management address through the approved local method and back up the configuration.</li>
+<li>Change credentials and configure a dedicated management VLAN/address with a recovery path.</li>
+<li>Create VLAN membership. Identify each access port's untagged membership and PVID; confirm that ingress classification and egress tagging agree.</li>
+<li>Mark uplinks as tagged members of the required VLANs. Match the peer's handling of native/untagged frames.</li>
+<li>Configure LACP on matching member ports at both ends; inspect the operational bundle.</li>
+<li>Set supported RSTP/MSTP behaviour deliberately. Do not assume it implements Cisco Rapid PVST+ identically.</li>
+<li>Limit management services/source networks, configure time/logging and verify access from the authorised admin host.</li>
+<li>Save persistent configuration and export a fresh backup after verification.</li>
+</ol>
+<p>A port in the correct VLAN membership table but with the wrong PVID can still put incoming untagged traffic into the wrong VLAN. Show both settings in your evidence.</p>
+<h3 id="fortigate-and-fortiswitch">FortiGate and FortiSwitch</h3>
+<p>FortiOS, hardware switch interfaces, software switches, VDOMs and FortiLink-managed switches have version-specific behaviour. Follow the installed release's administration guide. Do not attach an experimental FortiLink or HA configuration to an operational fabric.</p>
+<p>Translate each intended flow into a matrix before using the UI:</p>
+<table>
+<thead>
+<tr>
+<th>Source zone</th>
+<th>Destination</th>
+<th>Service</th>
+<th>Decision</th>
+<th>Verification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lab users</td>
+<td>Designated web server</td>
+<td>HTTPS</td>
+<td>Allow</td>
+<td>Valid TLS/application response and policy log</td>
+</tr>
+<tr>
+<td>Lab users</td>
+<td>Management subnet</td>
+<td>Any</td>
+<td>Deny</td>
+<td>Failed test plus matching deny observation</td>
+</tr>
+<tr>
+<td>Admin host</td>
+<td>Switch management</td>
+<td>SSH/HTTPS as required</td>
+<td>Allow</td>
+<td>Named account and recorded successful login</td>
+</tr>
+<tr>
+<td>Application servers</td>
+<td>Approved DNS resolvers</td>
+<td>UDP/TCP 53</td>
+<td>Allow if required</td>
+<td>Query and response, including TCP fallback test</td>
+</tr>
+<tr>
+<td>Untrusted zone</td>
+<td>Internal servers</td>
+<td>Unrequested new sessions</td>
+<td>Deny</td>
+<td>Explicit negative tests</td>
+</tr>
+</tbody>
+</table>
+<p>Then:</p>
+<ol>
+<li>Back up and record the release, operating mode and administrative recovery method.</li>
+<li>Define physical/VLAN interfaces, zones and connected addressing from the diagram.</li>
+<li>Verify routing and return routes; consider asymmetric paths that affect stateful inspection.</li>
+<li>Define address/service objects with clear ownership and purpose.</li>
+<li>Add the narrow required policies in the correct order, then verify the platform's default-deny behaviour.</li>
+<li>Decide explicitly whether NAT belongs on each flow. Internal segmentation often needs routing without translation.</li>
+<li>Enable suitable allowed/denied traffic logging without exposing sensitive payloads.</li>
+<li>Test allowed and denied traffic, inspect policy hits and the session view, then save evidence and a rollback point.</li>
+</ol>
+<p>FortiSwitch standalone management and FortiLink-managed configuration are different workflows. In a managed deployment, confirm where VLAN/port configuration is controlled before changing the switch directly. A GUI screenshot is not sufficient evidence of forwarding: test the path and inspect counters.</p>
+<h2 id="12-linux-network-troubleshooting-reference">12. Linux network troubleshooting reference</h2>
+<p>Use these commands in a lab VM or the relevant namespace. Some tools/packages have different names between distributions. Read-only observation should come before a disruptive change.</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Linux command</th>
+<th>What to look for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Is the interface present and up?</td>
+<td><code>ip -br link</code></td>
+<td>Administrative and link state; virtual NIC attachment</td>
+</tr>
+<tr>
+<td>Is the address/prefix correct?</td>
+<td><code>ip -br address</code></td>
+<td>Correct subnet, duplicate/unexpected addresses</td>
+</tr>
+<tr>
+<td>Which route will this destination use?</td>
+<td><code>ip route get 10.44.0.70</code></td>
+<td>Selected interface, source and next hop</td>
+</tr>
+<tr>
+<td>Can the next hop resolve at Layer 2?</td>
+<td><code>ip neigh</code></td>
+<td>Reachable/stale entries vs repeated failed resolution</td>
+</tr>
+<tr>
+<td>Is the service listening?</td>
+<td><code>ss -lntup</code></td>
+<td>Bind address, port and protocol; elevated rights may reveal process details</td>
+</tr>
+<tr>
+<td>Is name resolution working?</td>
+<td><code>getent hosts example.com</code></td>
+<td>Application-facing resolution, including local policy</td>
+</tr>
+<tr>
+<td>What did a DNS resolver return?</td>
+<td><code>dig @&lt;lab-resolver-ip&gt; &lt;lab-name&gt; A</code></td>
+<td>Response code, answer, server and query time</td>
+</tr>
+<tr>
+<td>Is HTTPS working?</td>
+<td><code>curl -v --max-time 5 https://&lt;lab-hostname&gt;/</code></td>
+<td>DNS, TCP, TLS and HTTP stages; use the lab's trusted CA</td>
+</tr>
+<tr>
+<td>Is the firewall matching?</td>
+<td><code>sudo nft list ruleset</code></td>
+<td>Inspect host rules only when authorised; never flush to diagnose</td>
+</tr>
+<tr>
+<td>Are packets entering/leaving?</td>
+<td><code>sudo tcpdump -ni &lt;lab-interface&gt; host &lt;lab-peer-ip&gt;</code></td>
+<td>Direction, retransmissions and observable handshakes</td>
+</tr>
+<tr>
+<td>Did the service fail?</td>
+<td><code>systemctl status &lt;lab-service&gt;</code> / <code>journalctl -u &lt;lab-service&gt;</code></td>
+<td>Status, recent errors, timestamps and relevant logs</td>
+</tr>
+</tbody>
+</table>
+<p>Do not use <code>curl -k</code> as the default response to certificate errors. Check hostname, trust chain, validity period and system time. Do not paste verbose output containing tokens into public repositories.</p>
+<p>For a failure, record: symptom, affected scope, known working comparison, hypothesis, observation, one controlled change, result and rollback. Distinguish a DNS name failure from an IP routing failure and an HTTP error from a TCP connection failure.</p>
+<h2 id="13-controlled-fault-exercises">13. Controlled fault exercises</h2>
+<p>Use a saved simulator checkpoint. Introduce one fault at a time and write the expected evidence before testing.</p>
+<table>
+<thead>
+<tr>
+<th>Injected fault</th>
+<th>Likely observation</th>
+<th>Confirmatory checks</th>
+<th>Recovery</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Server port assigned to VLAN 10</td>
+<td>Server loses its intended gateway path</td>
+<td>Access VLAN, host mask/gateway, MAC table</td>
+<td>Restore VLAN 20</td>
+</tr>
+<tr>
+<td>VLAN 99 omitted from Port-channel1 allowed list</td>
+<td>SW2 admin loses the R1 gateway and SW1 management path; its local SW2 management SVI remains reachable</td>
+<td>Trunk allowed/active VLANs on both peers</td>
+<td>Restore matching VLAN list through console</td>
+</tr>
+<tr>
+<td>Native VLAN mismatch</td>
+<td>Warnings and possible untagged traffic misclassification</td>
+<td>Native VLAN at both ends</td>
+<td>Restore native 999; inspect allowed list</td>
+</tr>
+<tr>
+<td>One LACP member shut</td>
+<td>Bundle remains usable with reduced member count</td>
+<td>EtherChannel flags and interface counters</td>
+<td><code>no shutdown</code>, confirm rebundling</td>
+</tr>
+<tr>
+<td>Both LACP members shut</td>
+<td>SW2 becomes isolated from R1/SW1</td>
+<td>Port-channel state and physical member state</td>
+<td>Restore at least one valid member</td>
+</tr>
+<tr>
+<td>Wrong <code>/24</code> mask on server</td>
+<td>Some destinations work while others fail unexpectedly</td>
+<td>Compare exact subnet calculation and route selection</td>
+<td>Restore <code>/26</code></td>
+</tr>
+<tr>
+<td>R2 return route removed in static variant</td>
+<td>Outbound request may arrive but reply cannot return</td>
+<td>R2 route lookup, captures/trace</td>
+<td>Restore exact reverse route</td>
+</tr>
+<tr>
+<td>OSPF transit interface made passive</td>
+<td>Neighbor disappears and learned routes withdraw</td>
+<td>Passive list, adjacency, routing table</td>
+<td>Restore non-passive transit interface</td>
+</tr>
+<tr>
+<td>ACL web permit placed after a broader deny</td>
+<td>Required web session fails</td>
+<td>Ordered ACL and hit counters</td>
+<td>Reorder with narrow permits first</td>
+</tr>
+<tr>
+<td>Firewall allows input instead of forward</td>
+<td>Firewall management works, transit service fails</td>
+<td>Interface path and relevant chain counters</td>
+<td>Correct forward policy</td>
+</tr>
+<tr>
+<td>Service binds only to loopback</td>
+<td>Local request works; network request fails</td>
+<td><code>ss -lnt</code>, bind address</td>
+<td>Bind intentionally to lab service address</td>
+</tr>
+<tr>
+<td>Wrong DNS record</td>
+<td>IP access works; name points elsewhere</td>
+<td><code>dig</code>, resolver used, record/TTL</td>
+<td>Correct lab DNS record and observe cache behaviour</td>
+</tr>
+</tbody>
+</table>
+<p>Never resolve an access failure by repeatedly adding broad <code>permit any</code> rules without understanding which layer failed. In the simulator, restore the known working checkpoint if the experiment becomes unclear.</p>
+<h2 id="14-design-extension-resilient-segmented-data-centre-network">14. Design extension: resilient, segmented data centre network</h2>
+<p>Before adding commands, produce a design that answers these questions:</p>
+<ul>
+<li>Which traffic belongs in management, tenant/application, storage and backup networks? Which boundaries require a firewall?</li>
+<li>Where do default gateways live? Which links are Layer 2 and which are routed? Which device owns each IP address?</li>
+<li>What survives a single cable, NIC, power supply, switch, router or firewall failure? Which shared dependencies remain?</li>
+<li>Does the platform support the intended multi-chassis aggregation/stacking? Two independent switches cannot simply share a conventional LACP bundle without an appropriate supported mechanism.</li>
+<li>If using HSRP/VRRP, are the virtual IP, physical IPs, priorities, tracking and upstream paths defined? A first-hop redundancy protocol alone does not guarantee end-to-end reachability.</li>
+<li>Are MTU and encapsulation overhead consistent, especially for storage or overlay traffic? Jumbo frames need end-to-end support, not a single changed port.</li>
+<li>Are optics, fibre type, wavelength, speed, distance and connector polarity compatible? Do not look into a fibre or transceiver; follow the equipment handling procedure.</li>
+<li>Is time synchronised? Where do logs, SNMPv3/telemetry, configuration backups and alerts go? Who reviews failures and configuration drift?</li>
+<li>How will capacity be measured? Separate link speed, aggregate offered load, latency, loss and per-flow throughput.</li>
+<li>How will IPv6 be routed and filtered? Ignoring it does not establish that it is absent.</li>
+<li>Can a new operator recover management access and restore the last approved configuration?</li>
+</ul>
+<p>For a design review, include the physical diagram, logical VLAN/subnet map, routing design, flow matrix, management controls, failure matrix, monitoring plan, change sequence, validation and rollback. State simulator limitations and platform dependencies explicitly.</p>
+<h2 id="15-completion-evidence-and-reflection">15. Completion evidence and reflection</h2>
+<p>Create your own evidence rather than treating the expected results above as observations:</p>
+<pre><code class="language-text">Lab / date / simulator or OS version:
+Starting checkpoint and topology:
+Objective and expected required/prohibited flows:
+Address plan and calculations:
+Commands or changes made:
+Observed results and relevant counters:
+Fault introduced and explanation:
+Recovery and final verification:
+Remaining limitations / questions:
+Official sources consulted:
+What I would improve next time:
+</code></pre>
+<p>Explain at least one successful application flow hop by hop, one blocked flow, one failure recovery and one residual single point of failure. Save sanitised configuration snippets rather than passwords or private infrastructure details.</p>
+<h2 id="official-reference-starting-points">Official reference starting points</h2>
+<p>Use the release/model-specific guide linked from these portals; a general portal is a starting point rather than evidence that a particular command exists on every device.</p>
+<ul>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/15-2_1_e/configuration/guide/2960_scg/swvlan.html">Cisco: VLAN trunking concepts and configuration</a></li>
+<li><a href="https://www.cisco.com/c/en/us/support/docs/lan-switching/etherchannel/12023-4.html">Cisco: EtherChannel support and troubleshooting</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/routers/ios-xe/ip-routing/b-ip-routing/m_iro-cfg-0.html">Cisco: OSPF design guide</a></li>
+<li><a href="https://www.cisco.com/c/en/us/support/docs/security/ios-firewall/23602-confaccesslists.html">Cisco: IP access lists</a></li>
+<li><a href="https://www.netgear.com/support/">NETGEAR product documentation and support</a></li>
+<li><a href="https://docs.fortinet.com/">Fortinet documentation: select the installed FortiOS/FortiSwitch release</a></li>
+<li><a href="https://wiki.nftables.org/">nftables documentation and examples</a></li>
+<li><a href="https://man7.org/linux/man-pages/man8/ip-netns.8.html">ip-netns manual</a></li>
+<li><a href="https://man7.org/linux/man-pages/man8/ip-route.8.html">ip-route manual</a></li>
+<li><a href="https://csrc.nist.gov/pubs/sp/800/41/r1/final">NIST SP 800-41 Rev. 1: firewall policy guidance</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc1918">RFC 1918: private IPv4 address space</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc5737">RFC 5737: IPv4 documentation address ranges</a></li>
+</ul>
+</main></body></html>
