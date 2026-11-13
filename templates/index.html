@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AZ4CAF L4 Data Centre Operations Study Hub</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #111; }
+      header { background: #1f3c88; color: #fff; padding: 1rem 1.2rem; }
+      main { padding: 1rem 1.2rem; display: grid; gap: 1rem; }
+      .panel { background: #fff; border-radius: 10px; padding: 1rem; box-shadow: 0 1px 5px rgba(0,0,0,.08); }
+      .grid { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+      .note { border: 1px solid #e3e9f4; border-radius: 8px; padding: .75rem; }
+      .meta { font-size: .85rem; color: #444; }
+      .source { font-size: .9rem; }
+      .flashcard { perspective: 1000px; height: 170px; cursor: pointer; }
+      .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform .45s; transform-style: preserve-3d; }
+      .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+      .face { position: absolute; inset: 0; border: 1px solid #cdd7eb; border-radius: 8px; padding: .75rem; backface-visibility: hidden; background: #fff; }
+      .back { transform: rotateY(180deg); background: #edf3ff; }
+      select { margin-right: .5rem; padding: .35rem; }
+      .controls { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin-bottom: .75rem; }
+      button { padding: .35rem .6rem; border-radius: 6px; border: 1px solid #bcc9e5; background: #fff; cursor: pointer; }
+      .speak-btn { margin-top: .5rem; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>AZ4CAF_UXA_1_UC_COMP_L4 Study Notes & Flip Cards</h1>
+      <p>Level 4 Data Centre Operations (AZ) 2026/27</p>
+    </header>
+    <main>
+      <section class="panel">
+        <h2>About the Programme</h2>
+        <p>
+          Semester 1: Fundamentals of Computer Science, Computer Systems Architecture (A+), Core Networking (CCNA), Applied Networking (CCNA).<br />
+          Semester 2: Operating Systems, Core AI, Work Based Learning, Professional Practice, and optional Designing a Computing Project.
+        </p>
+        <p>Vendor certifications: Cisco CCNA v7 and CompTIA A+.</p>
+      </section>
+
+      <section class="panel">
+        <h2>Interactive Book View</h2>
+        <div class="controls">
+          <label>Chapter (Unit): <select id="unitFilter"><option value="">All</option></select></label>
+          <button id="prevUnitBtn" type="button">Previous Chapter</button>
+          <button id="nextUnitBtn" type="button">Next Chapter</button>
+        </div>
+        <label>Semester: <select id="semesterFilter"><option value="">All</option><option value="1">1</option><option value="2">2</option></select></label>
+        <label>Category: <select id="categoryFilter"><option value="">All</option></select></label>
+        <label>Vendor: <select id="vendorFilter"><option value="">All</option></select></label>
+        <div id="notes" class="grid"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Flip Cards</h2>
+        <div id="cards" class="grid"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Referenced Sources (Case Study Evidence)</h2>
+        <ul id="references"></ul>
+      </section>
+    </main>
+
+    <script>
+      const notesEl = document.getElementById('notes');
+      const cardsEl = document.getElementById('cards');
+      const referencesEl = document.getElementById('references');
+      const unitFilter = document.getElementById('unitFilter');
+      const semesterFilter = document.getElementById('semesterFilter');
+      const categoryFilter = document.getElementById('categoryFilter');
+      const vendorFilter = document.getElementById('vendorFilter');
+      const prevUnitBtn = document.getElementById('prevUnitBtn');
+      const nextUnitBtn = document.getElementById('nextUnitBtn');
+      let units = [];
+
+      const speak = (text) => {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+      };
+
+      const setOptions = (select, values) => {
+        const existing = new Set(['']);
+        for (const opt of select.options) existing.add(opt.value);
+        values.forEach(v => {
+          if (!existing.has(v)) {
+            const option = document.createElement('option');
+            option.value = v;
+            option.textContent = v;
+            select.appendChild(option);
+          }
+        });
+      };
+
+      const renderNotes = (notes) => {
+        notesEl.innerHTML = '';
+        notes.forEach(note => {
+          const div = document.createElement('article');
+          div.className = 'note';
+          div.innerHTML = `
+            <h3>${note.topic}</h3>
+            <p class="meta">${note.unit} | Semester ${note.semester} | ${note.category} | ${note.vendor}</p>
+            <p>${note.content}</p>
+            <p><strong>Case study:</strong> ${note.case_study}</p>
+            <p class="source"><strong>Source:</strong> <a href="${note.source_url}" target="_blank" rel="noopener noreferrer">${note.source_title}</a></p>
+            <button class="speak-btn" type="button">Read this note aloud</button>
+          `;
+          div.querySelector('.speak-btn').addEventListener('click', () => {
+            speak(`${note.topic}. ${note.content}. ${note.case_study}`);
+          });
+          notesEl.appendChild(div);
+        });
+      };
+
+      const renderReferences = (notes) => {
+        referencesEl.innerHTML = '';
+        const refs = new Map();
+        notes.forEach(note => refs.set(note.source_url, note.source_title));
+        [...refs.entries()].sort((a, b) => a[1].localeCompare(b[1])).forEach(([url, title]) => {
+          const li = document.createElement('li');
+          li.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">${title}</a>`;
+          referencesEl.appendChild(li);
+        });
+      };
+
+      const renderCards = (cards) => {
+        cardsEl.innerHTML = '';
+        cards.forEach(card => {
+          const div = document.createElement('article');
+          div.className = 'flashcard';
+          div.innerHTML = `
+            <div class="flashcard-inner">
+              <div class="face front"><h3>Q</h3><p>${card.question}</p></div>
+              <div class="face back"><h3>A</h3><p>${card.answer}</p><p class="meta">${card.unit}</p></div>
+            </div>
+            <button class="speak-btn" type="button">Read card aloud</button>
+          `;
+          div.addEventListener('click', () => div.classList.toggle('flipped'));
+          div.querySelector('.speak-btn').addEventListener('click', (event) => {
+            event.stopPropagation();
+            speak(`Question: ${card.question}. Answer: ${card.answer}`);
+          });
+          cardsEl.appendChild(div);
+        });
+      };
+
+      const buildFilters = () => {
+        const params = new URLSearchParams();
+        if (unitFilter.value) params.set('unit', unitFilter.value);
+        if (semesterFilter.value) params.set('semester', semesterFilter.value);
+        if (categoryFilter.value) params.set('category', categoryFilter.value);
+        if (vendorFilter.value) params.set('vendor', vendorFilter.value);
+        return params;
+      };
+
+      const refreshContent = async () => {
+        const params = buildFilters();
+        const res = await fetch(`/api/notes?${params.toString()}`);
+        const notes = await res.json();
+        const cardRes = await fetch(`/api/flashcards?${params.toString()}`);
+        const cards = await cardRes.json();
+        renderNotes(notes);
+        renderCards(cards);
+        renderReferences(notes);
+      };
+
+      const navigateUnit = (direction) => {
+        if (!units.length) return;
+        const currentIndex = units.findIndex(unit => unit.name === unitFilter.value);
+        const startIndex = currentIndex === -1 ? 0 : currentIndex;
+        const nextIndex = (startIndex + direction + units.length) % units.length;
+        unitFilter.value = units[nextIndex].name;
+        refreshContent();
+      };
+
+      const init = async () => {
+        const [unitsRes, notesRes, cardsRes] = await Promise.all([fetch('/api/units'), fetch('/api/notes'), fetch('/api/flashcards')]);
+        units = await unitsRes.json();
+        const notes = await notesRes.json();
+        const cards = await cardsRes.json();
+
+        setOptions(unitFilter, units.map(u => u.name));
+        setOptions(categoryFilter, [...new Set(notes.map(n => n.category))].sort());
+        setOptions(vendorFilter, [...new Set(notes.map(n => n.vendor))].sort());
+        renderNotes(notes);
+        renderReferences(notes);
+        renderCards(cards);
+      };
+
+      [unitFilter, semesterFilter, categoryFilter, vendorFilter].forEach(el => el.addEventListener('change', refreshContent));
+      prevUnitBtn.addEventListener('click', () => navigateUnit(-1));
+      nextUnitBtn.addEventListener('click', () => navigateUnit(1));
+      init();
+    </script>
+  </body>
+</html>

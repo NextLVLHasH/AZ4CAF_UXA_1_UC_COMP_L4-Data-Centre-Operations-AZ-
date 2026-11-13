@@ -1,1 +1,95 @@
 # AZ4CAF_UXA_1_UC_COMP_L4-Data-Centre-Operations-AZ-
+
+Interactive study note and flip-card website for the **AZ4CAF Level 4 Data Centre Operations** programme.
+
+## Coverage
+
+The study content includes all listed programme units:
+
+- Semester 1 (Sep 2026 - Feb 2027):
+  - Fundamentals of Computer Science
+  - Computer Systems Architecture (A+)
+  - Core Networking (CCNA)
+  - Applied Networking (CCNA)
+- Semester 2 (Feb 2027 - Jul 2027):
+  - Operating Systems
+  - Core AI
+  - Work Based Learning
+  - Professional Practice
+  - Designing a Computing Project (optional)
+
+It also includes focused notes and flashcards for:
+
+- Switches and switch management (Cisco, Netgear, Fortinet)
+- Firewalls
+- Fiber networking concepts
+- Transferable professional skills and experiential learning context
+
+## Distinction+ comprehensive scope
+
+- Central curriculum dataset: `/docs/data/study_content.json`
+- Covers all core units with expanded topic depth for:
+  - theory
+  - practical operations
+  - case-study evidence
+  - source-backed revision points
+- The backend app and GitHub Pages site both use this comprehensive content model.
+
+## Referencing and academic integrity
+
+- Every study note includes:
+  - a **source title**
+  - a **source URL**
+  - a short **case-study evidence note** showing how the concept is applied
+- Sources are linked in the UI under **Referenced Sources (Case Study Evidence)**.
+- Sources are intentionally non-Wikipedia, prioritising vendor, standards, and official guidance.
+
+## Tech stack
+
+- **Backend:** Python (Flask)
+- **Database style:** MySQL (`db/schema.sql`, `db/seed.sql`)
+- **Frontend:** HTML/CSS/JavaScript (interactive filtering + flip cards)
+- **Interaction model:** chapter-style unit navigation + text-to-speech controls for notes and flip cards
+
+## Run locally
+
+1. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+2. (Optional, for MySQL-backed mode) create and seed the database:
+
+```bash
+mysql -u root -p < db/schema.sql
+mysql -u root -p < db/seed.sql
+```
+
+3. Set database environment variables as needed:
+
+```bash
+export MYSQL_HOST=127.0.0.1
+export MYSQL_PORT=3306
+export MYSQL_USER=root
+export MYSQL_PASSWORD=your_password
+export MYSQL_DATABASE=az4caf_study
+```
+
+4. Start the app:
+
+```bash
+python app.py
+```
+
+Open `http://127.0.0.1:5000`.
+
+> If MySQL is unavailable, the app serves built-in fallback study notes and flashcards.
+
+## GitHub Pages support
+
+- A fully static, GitHub Pages-compatible interactive version is available at:
+  - `/docs/index.html`
+- To publish on GitHub Pages, set the repository Pages source to **Deploy from a branch** and choose:
+  - Branch: `main` (or your default branch)
+  - Folder: `/docs`

@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AZ4CAF Interactive Study Book</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #111; }
+      header { background: #1f3c88; color: #fff; padding: 1rem 1.2rem; }
+      main { padding: 1rem 1.2rem; display: grid; gap: 1rem; }
+      .panel { background: #fff; border-radius: 10px; padding: 1rem; box-shadow: 0 1px 5px rgba(0,0,0,.08); }
+      .grid { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+      .note { border: 1px solid #e3e9f4; border-radius: 8px; padding: .75rem; }
+      .meta { font-size: .85rem; color: #444; }
+      .source { font-size: .9rem; }
+      .flashcard { perspective: 1000px; min-height: 190px; cursor: pointer; }
+      .flashcard-inner { position: relative; width: 100%; height: 100%; min-height: 190px; transition: transform .45s; transform-style: preserve-3d; }
+      .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+      .face { position: absolute; inset: 0; border: 1px solid #cdd7eb; border-radius: 8px; padding: .75rem; backface-visibility: hidden; background: #fff; overflow: auto; }
+      .back { transform: rotateY(180deg); background: #edf3ff; }
+      select, button { margin-right: .5rem; padding: .35rem; }
+      .controls { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin-bottom: .75rem; }
+      .speak-btn { margin-top: .5rem; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>AZ4CAF Interactive Study Book (GitHub Pages)</h1>
+      <p>Distinction-level comprehensive notes and flip cards across all core subjects</p>
+    </header>
+    <main>
+      <section class="panel">
+        <h2>Interactive Book View</h2>
+        <div class="controls">
+          <label>Chapter (Unit): <select id="unitFilter"><option value="">All</option></select></label>
+          <button id="prevUnitBtn" type="button">Previous Chapter</button>
+          <button id="nextUnitBtn" type="button">Next Chapter</button>
+        </div>
+        <label>Semester: <select id="semesterFilter"><option value="">All</option><option value="1">1</option><option value="2">2</option></select></label>
+        <label>Category: <select id="categoryFilter"><option value="">All</option></select></label>
+        <label>Vendor: <select id="vendorFilter"><option value="">All</option></select></label>
+        <div id="notes" class="grid"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Flip Cards</h2>
+        <div id="cards" class="grid"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Referenced Sources (Case Study Evidence)</h2>
+        <ul id="references"></ul>
+      </section>
+    </main>
+
+    <script>
+      const notesEl = document.getElementById('notes');
+      const cardsEl = document.getElementById('cards');
+      const referencesEl = document.getElementById('references');
+      const unitFilter = document.getElementById('unitFilter');
+      const semesterFilter = document.getElementById('semesterFilter');
+      const categoryFilter = document.getElementById('categoryFilter');
+      const vendorFilter = document.getElementById('vendorFilter');
+      const prevUnitBtn = document.getElementById('prevUnitBtn');
+      const nextUnitBtn = document.getElementById('nextUnitBtn');
+      let UNITS = [];
+      let NOTES = [];
+      let CARDS = [];
+
+      const setOptions = (select, values) => {
+        const existing = new Set(['']);
+        for (const opt of select.options) existing.add(opt.value);
+        values.forEach((value) => {
+          if (!existing.has(value)) {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = value;
+            select.appendChild(option);
+          }
+        });
+      };
+
+      const speak = (text) => {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+      };
+
+      const applyFilters = () => {
+        let filteredNotes = [...NOTES];
+        let filteredCards = [...CARDS];
+
+        if (unitFilter.value) {
+          filteredNotes = filteredNotes.filter((item) => item.unit === unitFilter.value);
+          filteredCards = filteredCards.filter((item) => item.unit === unitFilter.value);
+        }
+        if (semesterFilter.value) {
+          filteredNotes = filteredNotes.filter((item) => String(item.semester) === semesterFilter.value);
+          filteredCards = filteredCards.filter((item) => String(item.semester) === semesterFilter.value);
+        }
+        if (categoryFilter.value) {
+          filteredNotes = filteredNotes.filter((item) => item.category === categoryFilter.value);
+          filteredCards = filteredCards.filter((item) => item.category === categoryFilter.value);
+        }
+        if (vendorFilter.value) {
+          filteredNotes = filteredNotes.filter((item) => item.vendor === vendorFilter.value);
+        }
+
+        return { filteredNotes, filteredCards };
+      };
+
+      const renderNotes = (notes) => {
+        notesEl.innerHTML = '';
+        notes.forEach((note) => {
+          const div = document.createElement('article');
+          div.className = 'note';
+          div.innerHTML = `
+            <h3>${note.topic}</h3>
+            <p class="meta">${note.unit} | Semester ${note.semester} | ${note.category} | ${note.vendor}</p>
+            <p>${note.content}</p>
+            <p><strong>Case study:</strong> ${note.case_study}</p>
+            <p class="source"><strong>Source:</strong> <a href="${note.source_url}" target="_blank" rel="noopener noreferrer">${note.source_title}</a></p>
+            <button class="speak-btn" type="button">Read this note aloud</button>
+          `;
+          div.querySelector('.speak-btn').addEventListener('click', () => speak(`${note.topic}. ${note.content}. ${note.case_study}`));
+          notesEl.appendChild(div);
+        });
+      };
+
+      const renderReferences = (notes) => {
+        referencesEl.innerHTML = '';
+        const refs = new Map();
+        notes.forEach((note) => refs.set(note.source_url, note.source_title));
+        [...refs.entries()].sort((a, b) => a[1].localeCompare(b[1])).forEach(([url, title]) => {
+          const li = document.createElement('li');
+          li.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">${title}</a>`;
+          referencesEl.appendChild(li);
+        });
+      };
+
+      const renderCards = (cards) => {
+        cardsEl.innerHTML = '';
+        cards.forEach((card) => {
+          const div = document.createElement('article');
+          div.className = 'flashcard';
+          div.innerHTML = `
+            <div class="flashcard-inner">
+              <div class="face front"><h3>Q</h3><p>${card.question}</p></div>
+              <div class="face back"><h3>A</h3><p>${card.answer}</p><p class="meta">${card.unit}</p></div>
+            </div>
+            <button class="speak-btn" type="button">Read card aloud</button>
+          `;
+          div.addEventListener('click', () => div.classList.toggle('flipped'));
+          div.querySelector('.speak-btn').addEventListener('click', (event) => {
+            event.stopPropagation();
+            speak(`Question: ${card.question}. Answer: ${card.answer}`);
+          });
+          cardsEl.appendChild(div);
+        });
+      };
+
+      const refresh = () => {
+        const { filteredNotes, filteredCards } = applyFilters();
+        renderNotes(filteredNotes);
+        renderCards(filteredCards);
+        renderReferences(filteredNotes);
+      };
+
+      const navigateUnit = (direction) => {
+        if (!UNITS.length) return;
+        const currentIndex = UNITS.findIndex((unit) => unit.name === unitFilter.value);
+        const baseIndex = currentIndex === -1 ? 0 : currentIndex;
+        const nextIndex = (baseIndex + direction + UNITS.length) % UNITS.length;
+        unitFilter.value = UNITS[nextIndex].name;
+        refresh();
+      };
+
+      const init = async () => {
+        const response = await fetch('./data/study_content.json');
+        const content = await response.json();
+        UNITS = content.units || [];
+        NOTES = (content.notes || []).map((note) => ({
+          ...note,
+          semester: note.semester || (UNITS.find((unit) => unit.name === note.unit)?.semester ?? 1),
+        }));
+        CARDS = (content.flashcards || []).map((card) => ({
+          ...card,
+          semester: card.semester || (UNITS.find((unit) => unit.name === card.unit)?.semester ?? 1),
+        }));
+
+        setOptions(unitFilter, UNITS.map((unit) => unit.name));
+        setOptions(categoryFilter, [...new Set(NOTES.map((note) => note.category))].sort());
+        setOptions(vendorFilter, [...new Set(NOTES.map((note) => note.vendor))].sort());
+
+        [unitFilter, semesterFilter, categoryFilter, vendorFilter].forEach((element) => element.addEventListener('change', refresh));
+        prevUnitBtn.addEventListener('click', () => navigateUnit(-1));
+        nextUnitBtn.addEventListener('click', () => navigateUnit(1));
+
+        refresh();
+      };
+
+      init();
+    </script>
+  </body>
+</html>
