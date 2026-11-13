@@ -19,6 +19,9 @@
       .face { position: absolute; inset: 0; border: 1px solid #cdd7eb; border-radius: 8px; padding: .75rem; backface-visibility: hidden; background: #fff; }
       .back { transform: rotateY(180deg); background: #edf3ff; }
       select { margin-right: .5rem; padding: .35rem; }
+      .controls { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin-bottom: .75rem; }
+      button { padding: .35rem .6rem; border-radius: 6px; border: 1px solid #bcc9e5; background: #fff; cursor: pointer; }
+      .speak-btn { margin-top: .5rem; }
     </style>
   </head>
   <body>
@@ -37,7 +40,12 @@
       </section>
 
       <section class="panel">
-        <h2>Study Notes</h2>
+        <h2>Interactive Book View</h2>
+        <div class="controls">
+          <label>Chapter (Unit): <select id="unitFilter"><option value="">All</option></select></label>
+          <button id="prevUnitBtn" type="button">Previous Chapter</button>
+          <button id="nextUnitBtn" type="button">Next Chapter</button>
+        </div>
         <label>Semester: <select id="semesterFilter"><option value="">All</option><option value="1">1</option><option value="2">2</option></select></label>
         <label>Category: <select id="categoryFilter"><option value="">All</option></select></label>
         <label>Vendor: <select id="vendorFilter"><option value="">All</option></select></label>
@@ -59,9 +67,19 @@
       const notesEl = document.getElementById('notes');
       const cardsEl = document.getElementById('cards');
       const referencesEl = document.getElementById('references');
+      const unitFilter = document.getElementById('unitFilter');
       const semesterFilter = document.getElementById('semesterFilter');
       const categoryFilter = document.getElementById('categoryFilter');
       const vendorFilter = document.getElementById('vendorFilter');
+      const prevUnitBtn = document.getElementById('prevUnitBtn');
+      const nextUnitBtn = document.getElementById('nextUnitBtn');
+      let units = [];
+
+      const speak = (text) => {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+      };
 
       const setOptions = (select, values) => {
         const existing = new Set(['']);
@@ -87,7 +105,11 @@
             <p>${note.content}</p>
             <p><strong>Case study:</strong> ${note.case_study}</p>
             <p class="source"><strong>Source:</strong> <a href="${note.source_url}" target="_blank" rel="noopener noreferrer">${note.source_title}</a></p>
+            <button class="speak-btn" type="button">Read this note aloud</button>
           `;
+          div.querySelector('.speak-btn').addEventListener('click', () => {
+            speak(`${note.topic}. ${note.content}. ${note.case_study}`);
+          });
           notesEl.appendChild(div);
         });
       };
@@ -113,27 +135,53 @@
               <div class="face front"><h3>Q</h3><p>${card.question}</p></div>
               <div class="face back"><h3>A</h3><p>${card.answer}</p><p class="meta">${card.unit}</p></div>
             </div>
+            <button class="speak-btn" type="button">Read card aloud</button>
           `;
           div.addEventListener('click', () => div.classList.toggle('flipped'));
+          div.querySelector('.speak-btn').addEventListener('click', (event) => {
+            event.stopPropagation();
+            speak(`Question: ${card.question}. Answer: ${card.answer}`);
+          });
           cardsEl.appendChild(div);
         });
       };
 
-      const refreshNotes = async () => {
+      const buildFilters = () => {
         const params = new URLSearchParams();
+        if (unitFilter.value) params.set('unit', unitFilter.value);
         if (semesterFilter.value) params.set('semester', semesterFilter.value);
         if (categoryFilter.value) params.set('category', categoryFilter.value);
         if (vendorFilter.value) params.set('vendor', vendorFilter.value);
+        return params;
+      };
+
+      const refreshContent = async () => {
+        const params = buildFilters();
         const res = await fetch(`/api/notes?${params.toString()}`);
         const notes = await res.json();
+        const cardRes = await fetch(`/api/flashcards?${params.toString()}`);
+        const cards = await cardRes.json();
         renderNotes(notes);
+        renderCards(cards);
+        renderReferences(notes);
+      };
+
+      const navigateUnit = (direction) => {
+        if (!units.length) return;
+        const currentIndex = units.findIndex(unit => unit.name === unitFilter.value);
+        const startIndex = currentIndex === -1 ? 0 : currentIndex;
+        const nextIndex = (startIndex + direction + units.length) % units.length;
+        unitFilter.value = units[nextIndex].name;
+        refreshContent();
       };
 
       const init = async () => {
-        const [notesRes, cardsRes] = await Promise.all([fetch('/api/notes'), fetch('/api/flashcards')]);
+        const [unitsRes, notesRes, cardsRes] = await Promise.all([fetch('/api/units'), fetch('/api/notes'), fetch('/api/flashcards')]);
+        units = await unitsRes.json();
         const notes = await notesRes.json();
         const cards = await cardsRes.json();
 
+        setOptions(unitFilter, units.map(u => u.name));
         setOptions(categoryFilter, [...new Set(notes.map(n => n.category))].sort());
         setOptions(vendorFilter, [...new Set(notes.map(n => n.vendor))].sort());
         renderNotes(notes);
@@ -141,7 +189,9 @@
         renderCards(cards);
       };
 
-      [semesterFilter, categoryFilter, vendorFilter].forEach(el => el.addEventListener('change', refreshNotes));
+      [unitFilter, semesterFilter, categoryFilter, vendorFilter].forEach(el => el.addEventListener('change', refreshContent));
+      prevUnitBtn.addEventListener('click', () => navigateUnit(-1));
+      nextUnitBtn.addEventListener('click', () => navigateUnit(1));
       init();
     </script>
   </body>

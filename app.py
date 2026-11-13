@@ -241,6 +241,12 @@ def api_notes():
 
 @app.route("/api/flashcards")
 def api_flashcards():
+    filters = {
+        "semester": request.args.get("semester"),
+        "unit": request.args.get("unit"),
+        "category": request.args.get("category"),
+    }
+
     rows = fetch_all(
         """
         SELECT f.question, f.answer, f.category, u.name AS unit, u.semester
@@ -249,11 +255,21 @@ def api_flashcards():
         ORDER BY u.semester, u.name, f.id
         """
     )
-    return jsonify(rows if rows is not None else [
+    cards = rows if rows is not None else [
         {**c, "semester": next((u["semester"] for u in FALLBACK_UNITS if u["name"] == c["unit"]), 1)}
         for c in FALLBACK_FLASHCARDS
-    ])
+    ]
+
+    for key, value in filters.items():
+        if not value:
+            continue
+        if key == "semester":
+            cards = [c for c in cards if str(c.get("semester")) == str(value)]
+        else:
+            cards = [c for c in cards if str(c.get(key, "")).lower() == value.lower()]
+
+    return jsonify(cards)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=os.getenv("FLASK_DEBUG", "0") == "1")

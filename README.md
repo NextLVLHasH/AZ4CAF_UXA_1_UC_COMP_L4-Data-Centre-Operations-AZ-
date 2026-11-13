@@ -39,6 +39,7 @@ It also includes focused notes and flashcards for:
 - **Backend:** Python (Flask)
 - **Database style:** MySQL (`db/schema.sql`, `db/seed.sql`)
 - **Frontend:** HTML/CSS/JavaScript (interactive filtering + flip cards)
+- **Interaction model:** chapter-style unit navigation + text-to-speech controls for notes and flip cards
 
 ## Run locally
 
