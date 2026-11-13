@@ -9,14 +9,14 @@
       header { background: #1f3c88; color: #fff; padding: 1rem 1.2rem; }
       main { padding: 1rem 1.2rem; display: grid; gap: 1rem; }
       .panel { background: #fff; border-radius: 10px; padding: 1rem; box-shadow: 0 1px 5px rgba(0,0,0,.08); }
-      .grid { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+      .grid { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
       .note { border: 1px solid #e3e9f4; border-radius: 8px; padding: .75rem; }
       .meta { font-size: .85rem; color: #444; }
       .source { font-size: .9rem; }
-      .flashcard { perspective: 1000px; height: 170px; cursor: pointer; }
-      .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform .45s; transform-style: preserve-3d; }
+      .flashcard { perspective: 1000px; min-height: 190px; cursor: pointer; }
+      .flashcard-inner { position: relative; width: 100%; height: 100%; min-height: 190px; transition: transform .45s; transform-style: preserve-3d; }
       .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
-      .face { position: absolute; inset: 0; border: 1px solid #cdd7eb; border-radius: 8px; padding: .75rem; backface-visibility: hidden; background: #fff; }
+      .face { position: absolute; inset: 0; border: 1px solid #cdd7eb; border-radius: 8px; padding: .75rem; backface-visibility: hidden; background: #fff; overflow: auto; }
       .back { transform: rotateY(180deg); background: #edf3ff; }
       select, button { margin-right: .5rem; padding: .35rem; }
       .controls { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin-bottom: .75rem; }
@@ -26,7 +26,7 @@
   <body>
     <header>
       <h1>AZ4CAF Interactive Study Book (GitHub Pages)</h1>
-      <p>Level 4 Data Centre Operations (AZ) 2026/27</p>
+      <p>Distinction-level comprehensive notes and flip cards across all core subjects</p>
     </header>
     <main>
       <section class="panel">
@@ -54,39 +54,6 @@
     </main>
 
     <script>
-      const UNITS = [
-        { name: 'Fundamentals of Computer Science', semester: 1 },
-        { name: 'Computer Systems Architecture (A+)', semester: 1 },
-        { name: 'Core Networking (CCNA)', semester: 1 },
-        { name: 'Applied Networking (CCNA)', semester: 1 },
-        { name: 'Operating Systems', semester: 2 },
-        { name: 'Core AI', semester: 2 },
-        { name: 'Work Based Learning', semester: 2 },
-        { name: 'Professional Practice', semester: 2 },
-        { name: 'Designing a Computing Project (Optional)', semester: 2 }
-      ];
-
-      const NOTES = [
-        { unit: 'Core Networking (CCNA)', semester: 1, topic: 'VLANs and Trunking', category: 'switching', vendor: 'Cisco', content: 'Configure access/trunk ports, VLAN IDs, and inter-VLAN routing basics.', source_title: 'Cisco: Configure VLANs on Catalyst switches', source_url: 'https://www.cisco.com/c/en/us/support/docs/lan-switching/vlan/10023-3.html', case_study: 'Case study: segmented a shared lab network into role-based VLANs and reduced broadcast spill-over.' },
-        { unit: 'Applied Networking (CCNA)', semester: 1, topic: 'Managed Switching', category: 'switching', vendor: 'Netgear', content: 'Use web and CLI tools to set port isolation, STP, and link aggregation.', source_title: 'NETGEAR Support: Managed switch user guides', source_url: 'https://www.netgear.com/support/', case_study: 'Case study: improved rack uplink resilience by enabling LAG and RSTP on edge switches.' },
-        { unit: 'Applied Networking (CCNA)', semester: 1, topic: 'FortiSwitch Integration', category: 'switching', vendor: 'Fortinet', content: 'Manage FortiSwitch from FortiGate/FortiLink for policy-driven segmentation.', source_title: 'Fortinet Docs: FortiSwitch management via FortiLink', source_url: 'https://docs.fortinet.com/document/fortiswitch/', case_study: 'Case study: centralized switch policy updates through FortiLink to standardize port security at scale.' },
-        { unit: 'Applied Networking (CCNA)', semester: 1, topic: 'Firewall Policy', category: 'firewall', vendor: 'Multi-vendor', content: 'Apply least privilege ACLs, zones, NAT, and logging for incident response.', source_title: 'NIST SP 800-41 Rev.1: Guidelines on Firewalls and Firewall Policy', source_url: 'https://csrc.nist.gov/publications/detail/sp/800-41/rev-1/final', case_study: 'Case study: reduced lateral risk by replacing broad allow rules with zone-based least-privilege policies.' },
-        { unit: 'Core Networking (CCNA)', semester: 1, topic: 'Fiber Optics', category: 'fiber', vendor: 'Generic', content: 'Understand SMF vs MMF, connectors, transceivers (SFP/SFP+/QSFP), and budgets.', source_title: 'Cisco Optics-to-Device Compatibility Matrix', source_url: 'https://tmgmatrix.cisco.com/', case_study: 'Case study: eliminated intermittent uplink errors by matching optics, fiber type, and distance budget.' },
-        { unit: 'Operating Systems', semester: 2, topic: 'Linux and Windows Ops', category: 'systems', vendor: 'Generic', content: 'Process/service management, patching, hardening, and access control.', source_title: 'Microsoft Learn: Windows Server security baseline', source_url: 'https://learn.microsoft.com/windows/security/operating-system-security/device-management/windows-security-configuration-framework/windows-security-baselines', case_study: 'Case study: improved patch compliance and service uptime with scheduled maintenance and rollback plans.' },
-        { unit: 'Computer Systems Architecture (A+)', semester: 1, topic: 'CompTIA A+ Hardware', category: 'hardware', vendor: 'CompTIA', content: 'Motherboards, CPUs, memory, storage RAID, and maintenance workflows.', source_title: 'CompTIA A+ Core Series certification objectives', source_url: 'https://www.comptia.org/certifications/a', case_study: 'Case study: cut mean-time-to-repair by standardizing hardware diagnostics and parts documentation.' },
-        { unit: 'Core AI', semester: 2, topic: 'AI Foundations', category: 'ai', vendor: 'Generic', content: 'Data lifecycle, model evaluation, ethics, and practical AI operations.', source_title: 'NIST AI Risk Management Framework (AI RMF 1.0)', source_url: 'https://www.nist.gov/itl/ai-risk-management-framework', case_study: 'Case study: introduced model monitoring checkpoints to catch data drift in operations dashboards.' },
-        { unit: 'Work Based Learning', semester: 2, topic: 'Amazon Data Centre Internship', category: 'professional', vendor: 'Amazon', content: '14-week experiential placement from Jan 2027 focused on operational readiness.', source_title: 'Issue brief: AZ4CAF programme statement', source_url: 'https://github.com/NextLVLHasH/AZ4CAF_UXA_1_UC_COMP_L4-Data-Centre-Operations-AZ-', case_study: 'Case study: structured internship rotations across operations, safety, and incident response workflows.' },
-        { unit: 'Professional Practice', semester: 2, topic: 'Transferable Skills', category: 'professional', vendor: 'Generic', content: 'Communication, teamwork, planning, problem-solving, and numerical techniques.', source_title: 'SFIA Foundation Skills Framework', source_url: 'https://sfia-online.org/en/sfia-9', case_study: 'Case study: used shift handover templates to improve communication quality and reduce task misses.' }
-      ];
-
-      const CARDS = [
-        { question: 'Which semester includes Core Networking and Applied Networking?', answer: 'Semester 1 (Sep 2026 to Feb 2027).', unit: 'Core Networking (CCNA)', category: 'programme', semester: 1 },
-        { question: 'What switching standards prevent loops in switched networks?', answer: 'Spanning Tree Protocol family (STP/RSTP/MSTP).', unit: 'Applied Networking (CCNA)', category: 'switching', semester: 1 },
-        { question: 'How are Fortinet switches commonly centrally managed?', answer: 'Using FortiLink integration with FortiGate.', unit: 'Applied Networking (CCNA)', category: 'switching', semester: 1 },
-        { question: 'Name two common firewall controls in data centres.', answer: 'Stateful policy rules and network address translation (NAT).', unit: 'Applied Networking (CCNA)', category: 'firewall', semester: 1 },
-        { question: 'What is a key difference between SMF and MMF fiber?', answer: 'SMF supports longer distances with a smaller core; MMF is shorter-range and lower cost.', unit: 'Core Networking (CCNA)', category: 'fiber', semester: 1 }
-      ];
-
       const notesEl = document.getElementById('notes');
       const cardsEl = document.getElementById('cards');
       const referencesEl = document.getElementById('references');
@@ -96,15 +63,18 @@
       const vendorFilter = document.getElementById('vendorFilter');
       const prevUnitBtn = document.getElementById('prevUnitBtn');
       const nextUnitBtn = document.getElementById('nextUnitBtn');
+      let UNITS = [];
+      let NOTES = [];
+      let CARDS = [];
 
       const setOptions = (select, values) => {
         const existing = new Set(['']);
         for (const opt of select.options) existing.add(opt.value);
-        values.forEach((v) => {
-          if (!existing.has(v)) {
+        values.forEach((value) => {
+          if (!existing.has(value)) {
             const option = document.createElement('option');
-            option.value = v;
-            option.textContent = v;
+            option.value = value;
+            option.textContent = value;
             select.appendChild(option);
           }
         });
@@ -119,21 +89,23 @@
       const applyFilters = () => {
         let filteredNotes = [...NOTES];
         let filteredCards = [...CARDS];
+
         if (unitFilter.value) {
-          filteredNotes = filteredNotes.filter((n) => n.unit === unitFilter.value);
-          filteredCards = filteredCards.filter((c) => c.unit === unitFilter.value);
+          filteredNotes = filteredNotes.filter((item) => item.unit === unitFilter.value);
+          filteredCards = filteredCards.filter((item) => item.unit === unitFilter.value);
         }
         if (semesterFilter.value) {
-          filteredNotes = filteredNotes.filter((n) => String(n.semester) === semesterFilter.value);
-          filteredCards = filteredCards.filter((c) => String(c.semester) === semesterFilter.value);
+          filteredNotes = filteredNotes.filter((item) => String(item.semester) === semesterFilter.value);
+          filteredCards = filteredCards.filter((item) => String(item.semester) === semesterFilter.value);
         }
         if (categoryFilter.value) {
-          filteredNotes = filteredNotes.filter((n) => n.category === categoryFilter.value);
-          filteredCards = filteredCards.filter((c) => c.category === categoryFilter.value);
+          filteredNotes = filteredNotes.filter((item) => item.category === categoryFilter.value);
+          filteredCards = filteredCards.filter((item) => item.category === categoryFilter.value);
         }
         if (vendorFilter.value) {
-          filteredNotes = filteredNotes.filter((n) => n.vendor === vendorFilter.value);
+          filteredNotes = filteredNotes.filter((item) => item.vendor === vendorFilter.value);
         }
+
         return { filteredNotes, filteredCards };
       };
 
@@ -158,7 +130,7 @@
       const renderReferences = (notes) => {
         referencesEl.innerHTML = '';
         const refs = new Map();
-        notes.forEach((n) => refs.set(n.source_url, n.source_title));
+        notes.forEach((note) => refs.set(note.source_url, note.source_title));
         [...refs.entries()].sort((a, b) => a[1].localeCompare(b[1])).forEach(([url, title]) => {
           const li = document.createElement('li');
           li.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">${title}</a>`;
@@ -195,20 +167,39 @@
       };
 
       const navigateUnit = (direction) => {
-        const idx = UNITS.findIndex((u) => u.name === unitFilter.value);
-        const current = idx === -1 ? 0 : idx;
-        const next = (current + direction + UNITS.length) % UNITS.length;
-        unitFilter.value = UNITS[next].name;
+        if (!UNITS.length) return;
+        const currentIndex = UNITS.findIndex((unit) => unit.name === unitFilter.value);
+        const baseIndex = currentIndex === -1 ? 0 : currentIndex;
+        const nextIndex = (baseIndex + direction + UNITS.length) % UNITS.length;
+        unitFilter.value = UNITS[nextIndex].name;
         refresh();
       };
 
-      setOptions(unitFilter, UNITS.map((u) => u.name));
-      setOptions(categoryFilter, [...new Set(NOTES.map((n) => n.category))].sort());
-      setOptions(vendorFilter, [...new Set(NOTES.map((n) => n.vendor))].sort());
-      [unitFilter, semesterFilter, categoryFilter, vendorFilter].forEach((el) => el.addEventListener('change', refresh));
-      prevUnitBtn.addEventListener('click', () => navigateUnit(-1));
-      nextUnitBtn.addEventListener('click', () => navigateUnit(1));
-      refresh();
+      const init = async () => {
+        const response = await fetch('./data/study_content.json');
+        const content = await response.json();
+        UNITS = content.units || [];
+        NOTES = (content.notes || []).map((note) => ({
+          ...note,
+          semester: note.semester || (UNITS.find((unit) => unit.name === note.unit)?.semester ?? 1),
+        }));
+        CARDS = (content.flashcards || []).map((card) => ({
+          ...card,
+          semester: card.semester || (UNITS.find((unit) => unit.name === card.unit)?.semester ?? 1),
+        }));
+
+        setOptions(unitFilter, UNITS.map((unit) => unit.name));
+        setOptions(categoryFilter, [...new Set(NOTES.map((note) => note.category))].sort());
+        setOptions(vendorFilter, [...new Set(NOTES.map((note) => note.vendor))].sort());
+
+        [unitFilter, semesterFilter, categoryFilter, vendorFilter].forEach((element) => element.addEventListener('change', refresh));
+        prevUnitBtn.addEventListener('click', () => navigateUnit(-1));
+        nextUnitBtn.addEventListener('click', () => navigateUnit(1));
+
+        refresh();
+      };
+
+      init();
     </script>
   </body>
 </html>

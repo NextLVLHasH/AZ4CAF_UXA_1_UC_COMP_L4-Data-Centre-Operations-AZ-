@@ -1,0 +1,806 @@
+{
+  "units": [
+    {
+      "name": "Fundamentals of Computer Science",
+      "semester": 1
+    },
+    {
+      "name": "Computer Systems Architecture (A+)",
+      "semester": 1
+    },
+    {
+      "name": "Core Networking (CCNA)",
+      "semester": 1
+    },
+    {
+      "name": "Applied Networking (CCNA)",
+      "semester": 1
+    },
+    {
+      "name": "Operating Systems",
+      "semester": 2
+    },
+    {
+      "name": "Core AI",
+      "semester": 2
+    },
+    {
+      "name": "Work Based Learning",
+      "semester": 2
+    },
+    {
+      "name": "Professional Practice",
+      "semester": 2
+    },
+    {
+      "name": "Designing a Computing Project (Optional)",
+      "semester": 2
+    }
+  ],
+  "notes": [
+    {
+      "unit": "Fundamentals of Computer Science",
+      "topic": "Binary, Hex and Data Representation",
+      "category": "computer-science",
+      "vendor": "Generic",
+      "content": "Convert between binary, hexadecimal and decimal; explain signed numbers, character encoding, and storage implications for operational tooling.",
+      "source_title": "Pearson BTEC Higher Nationals in Computing specification",
+      "source_url": "https://qualifications.pearson.com/en/qualifications/btec-higher-nationals/computing-for-england-2022.html",
+      "case_study": "Case study: trainee analysts decoded hex logs from device telemetry to identify malformed packet signatures."
+    },
+    {
+      "unit": "Fundamentals of Computer Science",
+      "topic": "Algorithm Design and Complexity",
+      "category": "computer-science",
+      "vendor": "Generic",
+      "content": "Design flowcharts/pseudocode, evaluate algorithmic complexity, and choose practical trade-offs for performance and maintainability.",
+      "source_title": "NIST DADS: algorithm and complexity definitions",
+      "source_url": "https://xlinux.nist.gov/dads/",
+      "case_study": "Case study: replacing nested lookups with hash maps reduced script runtime during inventory reconciliation."
+    },
+    {
+      "unit": "Fundamentals of Computer Science",
+      "topic": "Data Structures in Operations Automation",
+      "category": "computer-science",
+      "vendor": "Generic",
+      "content": "Apply arrays, stacks, queues, dictionaries and sets to automate ticket triage and maintenance workflows.",
+      "source_title": "Python documentation: data structures",
+      "source_url": "https://docs.python.org/3/tutorial/datastructures.html",
+      "case_study": "Case study: queue-based job scheduling prevented overlapping maintenance jobs on shared racks."
+    },
+    {
+      "unit": "Fundamentals of Computer Science",
+      "topic": "Programming Fundamentals with Python",
+      "category": "programming",
+      "vendor": "Python",
+      "content": "Use variables, functions, modules, error handling, and file processing to build supportable scripts for infrastructure operations.",
+      "source_title": "Python documentation: tutorial",
+      "source_url": "https://docs.python.org/3/tutorial/",
+      "case_study": "Case study: a scripted log parser reduced manual incident triage effort during shift handover."
+    },
+    {
+      "unit": "Fundamentals of Computer Science",
+      "topic": "Version Control and Collaboration",
+      "category": "computer-science",
+      "vendor": "Git",
+      "content": "Use branching, pull requests, and commit hygiene to manage change safely in team-based infrastructure code.",
+      "source_title": "Git documentation",
+      "source_url": "https://git-scm.com/docs",
+      "case_study": "Case study: controlled branch workflows reduced configuration rollback events in shared repos."
+    },
+    {
+      "unit": "Fundamentals of Computer Science",
+      "topic": "Testing and Debugging Methodology",
+      "category": "computer-science",
+      "vendor": "Generic",
+      "content": "Build repeatable tests, isolate faults, and validate expected outcomes before promoting changes into production-like environments.",
+      "source_title": "ISTQB Foundation syllabus resources",
+      "source_url": "https://www.istqb.org/certifications/certified-tester-foundation-level",
+      "case_study": "Case study: adding structured pre-deploy tests caught malformed alert rules before rollout."
+    },
+    {
+      "unit": "Computer Systems Architecture (A+)",
+      "topic": "Motherboards, Chipsets and Buses",
+      "category": "hardware",
+      "vendor": "CompTIA",
+      "content": "Map motherboard components, bus standards, and chipset roles that influence compatibility and troubleshooting paths.",
+      "source_title": "CompTIA A+ certification page and objectives",
+      "source_url": "https://www.comptia.org/certifications/a",
+      "case_study": "Case study: compatibility checks prevented procurement mismatch between CPU generation and motherboard socket."
+    },
+    {
+      "unit": "Computer Systems Architecture (A+)",
+      "topic": "CPU Architecture and Virtualization Extensions",
+      "category": "hardware",
+      "vendor": "Intel/AMD",
+      "content": "Explain cores, threads, cache hierarchy and hardware virtualization support impacting VM density and workload placement.",
+      "source_title": "Intel architecture documentation hub",
+      "source_url": "https://www.intel.com/content/www/us/en/developer/topic-technology/intel-architecture/documentation.html",
+      "case_study": "Case study: enabling virtualization extensions improved deployment consistency for nested lab environments."
+    },
+    {
+      "unit": "Computer Systems Architecture (A+)",
+      "topic": "Memory Technologies and Sizing",
+      "category": "hardware",
+      "vendor": "CompTIA",
+      "content": "Differentiate DDR generations, ECC vs non-ECC memory, capacity planning, and failure indicators.",
+      "source_title": "JEDEC memory standards overview",
+      "source_url": "https://www.jedec.org/standards-documents/focus/memory-module-design-standards",
+      "case_study": "Case study: ECC alert trend analysis identified failing DIMMs before service impact."
+    },
+    {
+      "unit": "Computer Systems Architecture (A+)",
+      "topic": "Storage Systems and RAID Strategy",
+      "category": "hardware",
+      "vendor": "Generic",
+      "content": "Compare HDD/SSD/NVMe behavior and RAID levels, balancing performance, availability and recovery constraints.",
+      "source_title": "SNIA storage dictionary and resources",
+      "source_url": "https://www.snia.org/education",
+      "case_study": "Case study: redesigning RAID profiles reduced rebuild time and improved operational resilience."
+    },
+    {
+      "unit": "Computer Systems Architecture (A+)",
+      "topic": "Power, Cooling and Environmental Controls",
+      "category": "datacentre",
+      "vendor": "ASHRAE",
+      "content": "Apply airflow principles, thermal thresholds and power planning for stable hardware operation in dense racks.",
+      "source_title": "ASHRAE data center thermal guidelines",
+      "source_url": "https://www.ashrae.org/technical-resources/bookstore/datacom-series",
+      "case_study": "Case study: hot-aisle/cold-aisle rebalancing reduced thermal alarms during peak load windows."
+    },
+    {
+      "unit": "Computer Systems Architecture (A+)",
+      "topic": "Hardware Fault Diagnostics",
+      "category": "hardware",
+      "vendor": "CompTIA",
+      "content": "Use POST codes, SMART data, and staged replacement techniques to isolate root cause safely.",
+      "source_title": "CompTIA troubleshooting approach resources",
+      "source_url": "https://www.comptia.org/certifications/a",
+      "case_study": "Case study: methodical component swap testing reduced mean time to repair in lab incidents."
+    },
+    {
+      "unit": "Core Networking (CCNA)",
+      "topic": "OSI and TCP/IP Operational Mapping",
+      "category": "networking",
+      "vendor": "Cisco",
+      "content": "Map packet flow across layers and identify failure domains for faster incident triage.",
+      "source_title": "Cisco CCNA exam topics",
+      "source_url": "https://learningnetwork.cisco.com/s/ccna-exam-topics",
+      "case_study": "Case study: layer-based triage cut diagnosis time during intermittent application outages."
+    },
+    {
+      "unit": "Core Networking (CCNA)",
+      "topic": "IPv4 Subnetting and Address Planning",
+      "category": "networking",
+      "vendor": "Cisco",
+      "content": "Design subnet allocations for scalability, summarization, and operational readability.",
+      "source_title": "Cisco IP addressing guidance",
+      "source_url": "https://www.cisco.com/c/en/us/solutions/enterprise-networks/ip-networking.html",
+      "case_study": "Case study: address plan rationalization reduced overlap conflicts during expansion."
+    },
+    {
+      "unit": "Core Networking (CCNA)",
+      "topic": "IPv6 Fundamentals and Transition",
+      "category": "networking",
+      "vendor": "IETF",
+      "content": "Explain IPv6 addressing, neighbor discovery and coexistence strategies in mixed environments.",
+      "source_title": "IETF IPv6 specifications index",
+      "source_url": "https://www.ietf.org/standards/rfcs/",
+      "case_study": "Case study: dual-stack pilot identified legacy monitoring assumptions before broad deployment."
+    },
+    {
+      "unit": "Core Networking (CCNA)",
+      "topic": "Switching: VLAN, Trunking, STP",
+      "category": "switching",
+      "vendor": "Cisco",
+      "content": "Implement VLAN segmentation, 802.1Q trunks, STP variants and loop prevention controls.",
+      "source_title": "Cisco VLAN and STP documentation",
+      "source_url": "https://www.cisco.com/c/en/us/support/docs/lan-switching/vlan/10023-3.html",
+      "case_study": "Case study: segmented management and server networks to contain broadcast storms."
+    },
+    {
+      "unit": "Core Networking (CCNA)",
+      "topic": "Routing Basics and Static/Dynamic Choice",
+      "category": "networking",
+      "vendor": "Cisco",
+      "content": "Select static routes or dynamic protocols based on topology, resiliency and operational complexity.",
+      "source_title": "Cisco routing protocol guidance",
+      "source_url": "https://www.cisco.com/c/en/us/support/docs/ip/open-shortest-path-first-ospf/7039-1.html",
+      "case_study": "Case study: replacing static-only routing improved failover after link disruption."
+    },
+    {
+      "unit": "Core Networking (CCNA)",
+      "topic": "Network Services: DHCP, DNS, NTP",
+      "category": "networking",
+      "vendor": "IETF",
+      "content": "Operate core services securely and validate service dependencies for reliable endpoint onboarding.",
+      "source_title": "IETF protocol RFC repository",
+      "source_url": "https://www.ietf.org/standards/rfcs/",
+      "case_study": "Case study: NTP drift correction resolved certificate and logging timestamp inconsistencies."
+    },
+    {
+      "unit": "Core Networking (CCNA)",
+      "topic": "Wireless Fundamentals for Enterprise",
+      "category": "networking",
+      "vendor": "Cisco",
+      "content": "Understand RF basics, SSID segmentation, and secure WLAN integration with wired infrastructure.",
+      "source_title": "Cisco wireless networking documentation",
+      "source_url": "https://www.cisco.com/c/en/us/solutions/enterprise-networks/wireless.html",
+      "case_study": "Case study: dedicated management SSID reduced unauthorized access attempts in staging areas."
+    },
+    {
+      "unit": "Core Networking (CCNA)",
+      "topic": "Fiber Optics and Transceivers",
+      "category": "fiber",
+      "vendor": "Cisco",
+      "content": "Compare SMF/MMF, connector standards, optics classes and link budget calculations.",
+      "source_title": "Cisco transceiver compatibility matrix",
+      "source_url": "https://tmgmatrix.cisco.com/",
+      "case_study": "Case study: matching optics to distance budget removed intermittent CRC uplink errors."
+    },
+    {
+      "unit": "Applied Networking (CCNA)",
+      "topic": "Cisco Switch Hardening and Access Security",
+      "category": "switching",
+      "vendor": "Cisco",
+      "content": "Use AAA, port security, BPDU guard, storm control and secure management planes.",
+      "source_title": "Cisco campus security configuration guides",
+      "source_url": "https://www.cisco.com/c/en/us/support/security/secure-configuration-guides.html",
+      "case_study": "Case study: implementing BPDU guard prevented accidental loop creation during rack provisioning."
+    },
+    {
+      "unit": "Applied Networking (CCNA)",
+      "topic": "Netgear Managed Switch Operations",
+      "category": "switching",
+      "vendor": "Netgear",
+      "content": "Apply VLAN policies, monitoring, firmware lifecycle and redundancy controls in smart switch environments.",
+      "source_title": "NETGEAR support portal",
+      "source_url": "https://www.netgear.com/support/",
+      "case_study": "Case study: lifecycle firmware governance reduced switch instability during maintenance windows."
+    },
+    {
+      "unit": "Applied Networking (CCNA)",
+      "topic": "Fortinet FortiSwitch + FortiLink Management",
+      "category": "switching",
+      "vendor": "Fortinet",
+      "content": "Centralize policy, segmentation and NAC decisions using FortiLink integrated management.",
+      "source_title": "Fortinet FortiSwitch documentation",
+      "source_url": "https://docs.fortinet.com/document/fortiswitch/",
+      "case_study": "Case study: centralized templates reduced configuration drift across multi-rack estates."
+    },
+    {
+      "unit": "Applied Networking (CCNA)",
+      "topic": "Firewall Architecture and Rule Design",
+      "category": "firewall",
+      "vendor": "Multi-vendor",
+      "content": "Design zone-based firewall policies, NAT, and logging with least-privilege and change control.",
+      "source_title": "NIST SP 800-41 Rev.1",
+      "source_url": "https://csrc.nist.gov/publications/detail/sp/800-41/rev-1/final",
+      "case_study": "Case study: rulebase cleanup reduced implicit allow pathways and improved audit outcomes."
+    },
+    {
+      "unit": "Applied Networking (CCNA)",
+      "topic": "High Availability and First-Hop Redundancy",
+      "category": "networking",
+      "vendor": "Cisco",
+      "content": "Use HSRP/VRRP concepts, redundant uplinks and failover validation for service continuity.",
+      "source_title": "Cisco high availability documentation",
+      "source_url": "https://www.cisco.com/c/en/us/solutions/high-availability/index.html",
+      "case_study": "Case study: failover drills exposed asymmetric routing and improved outage readiness."
+    },
+    {
+      "unit": "Applied Networking (CCNA)",
+      "topic": "QoS for Critical Infrastructure Traffic",
+      "category": "networking",
+      "vendor": "Cisco",
+      "content": "Classify and prioritize latency-sensitive traffic while protecting control-plane and management channels.",
+      "source_title": "Cisco QoS design guides",
+      "source_url": "https://www.cisco.com/c/en/us/solutions/enterprise-networks/quality-of-service-qos/index.html",
+      "case_study": "Case study: queue policy tuning stabilized VoIP/operations bridge quality during incidents."
+    },
+    {
+      "unit": "Applied Networking (CCNA)",
+      "topic": "Network Monitoring and Telemetry",
+      "category": "networking",
+      "vendor": "Generic",
+      "content": "Collect SNMP/syslog/flow telemetry, define thresholds, and build actionable dashboards.",
+      "source_title": "IETF SNMP standards overview",
+      "source_url": "https://www.ietf.org/standards/rfcs/",
+      "case_study": "Case study: trend dashboards detected interface saturation before customer-visible impact."
+    },
+    {
+      "unit": "Applied Networking (CCNA)",
+      "topic": "Change Management and MOP Execution",
+      "category": "professional",
+      "vendor": "ITIL",
+      "content": "Create method of procedure (MOP) runbooks, rollback plans and communication checkpoints.",
+      "source_title": "AXELOS ITIL guidance portal",
+      "source_url": "https://www.axelos.com/certifications/itil-service-management",
+      "case_study": "Case study: formal MOP templates improved maintenance success rate and reduced emergency rollbacks."
+    },
+    {
+      "unit": "Operating Systems",
+      "topic": "Linux Process, Service and Package Management",
+      "category": "systems",
+      "vendor": "Linux",
+      "content": "Manage processes, systemd services, package lifecycle and secure repositories for stable operations.",
+      "source_title": "Red Hat system administration documentation",
+      "source_url": "https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/",
+      "case_study": "Case study: standardized service restart and dependency checks reduced post-patch incidents."
+    },
+    {
+      "unit": "Operating Systems",
+      "topic": "Windows Server Administration and Hardening",
+      "category": "systems",
+      "vendor": "Microsoft",
+      "content": "Apply role-based configuration, update orchestration and baseline hardening practices.",
+      "source_title": "Microsoft Learn: Windows security baselines",
+      "source_url": "https://learn.microsoft.com/windows/security/operating-system-security/device-management/windows-security-configuration-framework/windows-security-baselines",
+      "case_study": "Case study: baseline enforcement improved compliance and reduced privilege misconfigurations."
+    },
+    {
+      "unit": "Operating Systems",
+      "topic": "Identity, Authentication and Authorization",
+      "category": "systems",
+      "vendor": "Microsoft/Linux",
+      "content": "Implement least privilege with AD/LDAP integration, MFA patterns and privileged access workflows.",
+      "source_title": "NIST SP 800-63 Digital Identity Guidelines",
+      "source_url": "https://pages.nist.gov/800-63-3/",
+      "case_study": "Case study: tiered admin accounts reduced blast radius during credential exposure events."
+    },
+    {
+      "unit": "Operating Systems",
+      "topic": "Filesystem, Storage and Backup Operations",
+      "category": "systems",
+      "vendor": "Generic",
+      "content": "Operate filesystems, snapshots, backup policies and restoration drills to meet recovery targets.",
+      "source_title": "NIST SP 800-34 Contingency Planning",
+      "source_url": "https://csrc.nist.gov/publications/detail/sp/800-34/rev-1/final",
+      "case_study": "Case study: scheduled restore testing validated backup integrity before audit reviews."
+    },
+    {
+      "unit": "Operating Systems",
+      "topic": "Scripting for OS Automation",
+      "category": "systems",
+      "vendor": "Python/Bash/PowerShell",
+      "content": "Use scripting for repeatable provisioning, compliance checks and evidence capture.",
+      "source_title": "Microsoft PowerShell documentation",
+      "source_url": "https://learn.microsoft.com/powershell/",
+      "case_study": "Case study: nightly compliance scripts flagged unauthorized service state changes."
+    },
+    {
+      "unit": "Operating Systems",
+      "topic": "Logging, Auditing and Incident Response",
+      "category": "systems",
+      "vendor": "Generic",
+      "content": "Centralize OS logs, define retention and triage patterns, and support forensic-ready investigations.",
+      "source_title": "NIST Computer Security Incident Handling Guide",
+      "source_url": "https://csrc.nist.gov/publications/detail/sp/800-61/rev-2/final",
+      "case_study": "Case study: unified log retention accelerated root-cause analysis after authentication failures."
+    },
+    {
+      "unit": "Core AI",
+      "topic": "AI Fundamentals and Terminology",
+      "category": "ai",
+      "vendor": "Generic",
+      "content": "Distinguish AI, ML and deep learning and identify suitable use cases for operations teams.",
+      "source_title": "NIST AI RMF 1.0",
+      "source_url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "case_study": "Case study: teams prioritized predictive maintenance use-cases over unsuitable automation candidates."
+    },
+    {
+      "unit": "Core AI",
+      "topic": "Data Preparation and Feature Engineering",
+      "category": "ai",
+      "vendor": "Generic",
+      "content": "Clean, transform and validate operational datasets while preserving reproducibility and governance.",
+      "source_title": "Google ML data preparation guidance",
+      "source_url": "https://developers.google.com/machine-learning/data-prep",
+      "case_study": "Case study: feature cleanup reduced false-positive risk in anomaly scoring experiments."
+    },
+    {
+      "unit": "Core AI",
+      "topic": "Model Evaluation and Metrics",
+      "category": "ai",
+      "vendor": "Generic",
+      "content": "Interpret precision, recall, F1, ROC-AUC and business impact before deployment decisions.",
+      "source_title": "scikit-learn model evaluation docs",
+      "source_url": "https://scikit-learn.org/stable/modules/model_evaluation.html",
+      "case_study": "Case study: metric alignment prevented deployment of a high-accuracy but low-recall incident classifier."
+    },
+    {
+      "unit": "Core AI",
+      "topic": "Responsible AI, Bias and Ethics",
+      "category": "ai",
+      "vendor": "NIST",
+      "content": "Assess bias, transparency and accountability to align AI outcomes with organizational and legal expectations.",
+      "source_title": "NIST AI RMF Playbook",
+      "source_url": "https://airc.nist.gov/AI_RMF_Knowledge_Base/Playbook",
+      "case_study": "Case study: fairness review flagged underrepresented failure categories in training data."
+    },
+    {
+      "unit": "Core AI",
+      "topic": "MLOps and Model Lifecycle",
+      "category": "ai",
+      "vendor": "Generic",
+      "content": "Track model versions, monitor drift, and define retraining and rollback controls.",
+      "source_title": "Google Cloud MLOps maturity framework",
+      "source_url": "https://cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning",
+      "case_study": "Case study: drift alerting enabled proactive retraining before alert quality degraded."
+    },
+    {
+      "unit": "Core AI",
+      "topic": "AI in Data Centre Operations",
+      "category": "ai",
+      "vendor": "Generic",
+      "content": "Apply AI to capacity forecasting, fault prediction and ticket enrichment while retaining human oversight.",
+      "source_title": "Uptime Institute research resources",
+      "source_url": "https://uptimeinstitute.com/resources",
+      "case_study": "Case study: predictive cooling insights reduced temperature excursions during peak cycles."
+    },
+    {
+      "unit": "Work Based Learning",
+      "topic": "Internship Orientation and Safety Culture",
+      "category": "professional",
+      "vendor": "Amazon",
+      "content": "Understand operational safety norms, escalation paths and professional conduct in production environments.",
+      "source_title": "HSE workplace health and safety guidance",
+      "source_url": "https://www.hse.gov.uk/simple-health-safety/",
+      "case_study": "Case study: pre-task safety briefings reduced near-miss incidents during supervised activities."
+    },
+    {
+      "unit": "Work Based Learning",
+      "topic": "Shift Operations and Handover Excellence",
+      "category": "professional",
+      "vendor": "Generic",
+      "content": "Run clear shift handovers with evidence, risk status and pending action ownership.",
+      "source_title": "ITIL incident and operations practices",
+      "source_url": "https://www.axelos.com/certifications/itil-service-management",
+      "case_study": "Case study: structured handover notes eliminated duplicated troubleshooting effort across shifts."
+    },
+    {
+      "unit": "Work Based Learning",
+      "topic": "Incident Triage and Escalation",
+      "category": "professional",
+      "vendor": "Generic",
+      "content": "Classify priority, coordinate stakeholders and execute escalation criteria under time pressure.",
+      "source_title": "NIST SP 800-61 incident handling",
+      "source_url": "https://csrc.nist.gov/publications/detail/sp/800-61/rev-2/final",
+      "case_study": "Case study: severity matrix adoption reduced delayed escalations during network outages."
+    },
+    {
+      "unit": "Work Based Learning",
+      "topic": "Operational Documentation and Evidence",
+      "category": "professional",
+      "vendor": "Generic",
+      "content": "Maintain accurate maintenance logs, ticket evidence and post-incident summaries.",
+      "source_title": "ISO/IEC 20000 overview",
+      "source_url": "https://www.iso.org/standard/70636.html",
+      "case_study": "Case study: better evidence capture improved audit readiness and post-mortem quality."
+    },
+    {
+      "unit": "Work Based Learning",
+      "topic": "Stakeholder Communication in Live Environments",
+      "category": "professional",
+      "vendor": "Generic",
+      "content": "Communicate risk, impact and progress clearly to technical and non-technical stakeholders.",
+      "source_title": "PMI communication management resources",
+      "source_url": "https://www.pmi.org/learning/library",
+      "case_study": "Case study: concise status updates reduced confusion during planned service interventions."
+    },
+    {
+      "unit": "Work Based Learning",
+      "topic": "Reflective Practice and Skill Growth",
+      "category": "professional",
+      "vendor": "Generic",
+      "content": "Use reflective logs to identify competence gaps and create targeted development goals.",
+      "source_title": "Gibbs reflective cycle educational resources",
+      "source_url": "https://www.ed.ac.uk/reflection/reflectors-toolkit/reflecting-on-experience/gibbs-reflective-cycle",
+      "case_study": "Case study: weekly reflection identified confidence gaps in firewall change planning and drove targeted mentoring."
+    },
+    {
+      "unit": "Professional Practice",
+      "topic": "Professional Behaviours and Ethics",
+      "category": "professional",
+      "vendor": "SFIA",
+      "content": "Demonstrate accountability, integrity and ethical decision-making in technical operations.",
+      "source_title": "SFIA framework",
+      "source_url": "https://sfia-online.org/en/sfia-9",
+      "case_study": "Case study: ethics review prevented unsafe shortcut during urgent maintenance scheduling."
+    },
+    {
+      "unit": "Professional Practice",
+      "topic": "Teamwork and Conflict Resolution",
+      "category": "professional",
+      "vendor": "Generic",
+      "content": "Apply collaboration frameworks, active listening and conflict de-escalation in high-pressure teams.",
+      "source_title": "CIPD teamwork and communication resources",
+      "source_url": "https://www.cipd.org/uk/knowledge/",
+      "case_study": "Case study: structured retrospectives reduced recurring misunderstandings between operations and networking teams."
+    },
+    {
+      "unit": "Professional Practice",
+      "topic": "Problem Solving and Root Cause Analysis",
+      "category": "professional",
+      "vendor": "Generic",
+      "content": "Use 5 Whys, fishbone and evidence-led reasoning to remove recurring operational failures.",
+      "source_title": "ASQ root cause analysis guidance",
+      "source_url": "https://asq.org/quality-resources/root-cause-analysis",
+      "case_study": "Case study: RCA identified recurring cable strain as the source of intermittent link drops."
+    },
+    {
+      "unit": "Professional Practice",
+      "topic": "Planning, Prioritisation and Time Management",
+      "category": "professional",
+      "vendor": "Generic",
+      "content": "Prioritise operational workloads using risk, dependency and business criticality.",
+      "source_title": "APM project planning resources",
+      "source_url": "https://www.apm.org.uk/resources/",
+      "case_study": "Case study: dependency-based work planning prevented overlapping risky changes in a single window."
+    },
+    {
+      "unit": "Professional Practice",
+      "topic": "Numerical and Analytical Techniques",
+      "category": "professional",
+      "vendor": "Generic",
+      "content": "Apply trend analysis, baseline comparison and KPI interpretation for decision support.",
+      "source_title": "Office for National Statistics methodology guides",
+      "source_url": "https://www.ons.gov.uk/methodology",
+      "case_study": "Case study: KPI trend analysis justified proactive expansion of cooling capacity."
+    },
+    {
+      "unit": "Professional Practice",
+      "topic": "Presentation and Technical Reporting",
+      "category": "professional",
+      "vendor": "Generic",
+      "content": "Produce concise technical reports and stakeholder presentations with actionable recommendations.",
+      "source_title": "British Computer Society professional development resources",
+      "source_url": "https://www.bcs.org/get-qualified/",
+      "case_study": "Case study: evidence-backed reporting accelerated approval for network segmentation improvements."
+    },
+    {
+      "unit": "Designing a Computing Project (Optional)",
+      "topic": "Project Scoping and Requirements",
+      "category": "project",
+      "vendor": "Pearson",
+      "content": "Define a realistic project scope, user requirements and acceptance criteria aligned with programme outcomes.",
+      "source_title": "Pearson project unit guidance",
+      "source_url": "https://qualifications.pearson.com/en/qualifications/btec-higher-nationals/computing-for-england-2022.html",
+      "case_study": "Case study: clear scope boundaries prevented requirement creep in a monitoring dashboard project."
+    },
+    {
+      "unit": "Designing a Computing Project (Optional)",
+      "topic": "Research Methods and Source Evaluation",
+      "category": "project",
+      "vendor": "Academic",
+      "content": "Use credible technical sources, compare alternatives and document evidence for design decisions.",
+      "source_title": "University research skills guidance",
+      "source_url": "https://www.ucl.ac.uk/library/students/research-skills",
+      "case_study": "Case study: source comparison justified selection of open telemetry tooling over ad-hoc scripts."
+    },
+    {
+      "unit": "Designing a Computing Project (Optional)",
+      "topic": "System Design and Architecture",
+      "category": "project",
+      "vendor": "Generic",
+      "content": "Create architecture diagrams, interface definitions and risk controls before implementation.",
+      "source_title": "C4 model documentation",
+      "source_url": "https://c4model.com/",
+      "case_study": "Case study: architecture-first approach reduced rework during integration testing."
+    },
+    {
+      "unit": "Designing a Computing Project (Optional)",
+      "topic": "Implementation Planning and Sprint Delivery",
+      "category": "project",
+      "vendor": "Agile",
+      "content": "Break scope into sprint goals, define done criteria and track delivery evidence.",
+      "source_title": "Scrum Guide",
+      "source_url": "https://scrumguides.org/",
+      "case_study": "Case study: sprint cadence exposed blockers early and improved milestone predictability."
+    },
+    {
+      "unit": "Designing a Computing Project (Optional)",
+      "topic": "Testing Strategy and Quality Assurance",
+      "category": "project",
+      "vendor": "Generic",
+      "content": "Design unit/integration/user acceptance testing and map findings to remediation actions.",
+      "source_title": "ISTQB Foundation resources",
+      "source_url": "https://www.istqb.org/certifications/certified-tester-foundation-level",
+      "case_study": "Case study: defined regression tests prevented repeated defects across release iterations."
+    },
+    {
+      "unit": "Designing a Computing Project (Optional)",
+      "topic": "Evaluation and Future Improvements",
+      "category": "project",
+      "vendor": "Academic",
+      "content": "Evaluate outcomes against requirements, reflect on constraints and propose measurable next steps.",
+      "source_title": "QAA guidance on reflective evaluation",
+      "source_url": "https://www.qaa.ac.uk/quality-code",
+      "case_study": "Case study: post-project evaluation identified observability gaps and informed roadmap priorities."
+    }
+  ],
+  "flashcards": [
+    {
+      "unit": "Fundamentals of Computer Science",
+      "semester": 1,
+      "category": "computer-science",
+      "question": "Why is hexadecimal commonly used in operations tooling?",
+      "answer": "It provides a compact human-readable representation of binary values used in memory addresses, packets and logs."
+    },
+    {
+      "unit": "Fundamentals of Computer Science",
+      "semester": 1,
+      "category": "computer-science",
+      "question": "What does O(n log n) indicate?",
+      "answer": "The runtime grows proportionally to n log n, typical of efficient divide-and-conquer algorithms."
+    },
+    {
+      "unit": "Fundamentals of Computer Science",
+      "semester": 1,
+      "category": "programming",
+      "question": "Why use version control for scripts?",
+      "answer": "It preserves history, supports peer review, and enables safe rollback of operational automation."
+    },
+    {
+      "unit": "Computer Systems Architecture (A+)",
+      "semester": 1,
+      "category": "hardware",
+      "question": "What is ECC memory used for?",
+      "answer": "It detects and corrects certain memory errors, improving reliability in critical systems."
+    },
+    {
+      "unit": "Computer Systems Architecture (A+)",
+      "semester": 1,
+      "category": "hardware",
+      "question": "Why choose RAID 10 over RAID 5 for some workloads?",
+      "answer": "RAID 10 often offers better write performance and resilience for latency-sensitive workloads."
+    },
+    {
+      "unit": "Computer Systems Architecture (A+)",
+      "semester": 1,
+      "category": "datacentre",
+      "question": "What is the purpose of hot-aisle/cold-aisle design?",
+      "answer": "To improve airflow efficiency and reduce recirculation of hot exhaust air."
+    },
+    {
+      "unit": "Core Networking (CCNA)",
+      "semester": 1,
+      "category": "networking",
+      "question": "What does subnetting primarily achieve?",
+      "answer": "Efficient address allocation, smaller broadcast domains, and easier route summarization."
+    },
+    {
+      "unit": "Core Networking (CCNA)",
+      "semester": 1,
+      "category": "switching",
+      "question": "What does STP prevent?",
+      "answer": "Layer 2 loops that can create broadcast storms and MAC table instability."
+    },
+    {
+      "unit": "Core Networking (CCNA)",
+      "semester": 1,
+      "category": "fiber",
+      "question": "When is single-mode fiber preferred?",
+      "answer": "For long-distance, high-bandwidth links with lower attenuation requirements."
+    },
+    {
+      "unit": "Core Networking (CCNA)",
+      "semester": 1,
+      "category": "networking",
+      "question": "What role does NTP play in operations?",
+      "answer": "It synchronizes time across systems, critical for logging, security, and correlation."
+    },
+    {
+      "unit": "Applied Networking (CCNA)",
+      "semester": 1,
+      "category": "switching",
+      "question": "What does BPDU Guard protect against?",
+      "answer": "Unexpected switches introducing spanning-tree loops on edge ports."
+    },
+    {
+      "unit": "Applied Networking (CCNA)",
+      "semester": 1,
+      "category": "switching",
+      "question": "How does FortiLink help operations?",
+      "answer": "It centralizes FortiSwitch management and policy orchestration through FortiGate."
+    },
+    {
+      "unit": "Applied Networking (CCNA)",
+      "semester": 1,
+      "category": "firewall",
+      "question": "What is least-privilege firewall design?",
+      "answer": "Only explicitly required traffic is allowed; everything else is denied by policy."
+    },
+    {
+      "unit": "Applied Networking (CCNA)",
+      "semester": 1,
+      "category": "networking",
+      "question": "Why are rollback steps required in a MOP?",
+      "answer": "They enable safe recovery if a planned change causes service risk."
+    },
+    {
+      "unit": "Operating Systems",
+      "semester": 2,
+      "category": "systems",
+      "question": "Why centralize OS logs?",
+      "answer": "To improve monitoring, forensic analysis, and incident response consistency."
+    },
+    {
+      "unit": "Operating Systems",
+      "semester": 2,
+      "category": "systems",
+      "question": "What is the value of patch windows?",
+      "answer": "They reduce risk by coordinating updates, validation checks and rollback planning."
+    },
+    {
+      "unit": "Operating Systems",
+      "semester": 2,
+      "category": "systems",
+      "question": "Why practice restore drills?",
+      "answer": "To verify backup integrity and confirm recovery objectives are achievable."
+    },
+    {
+      "unit": "Core AI",
+      "semester": 2,
+      "category": "ai",
+      "question": "Why can accuracy alone be misleading?",
+      "answer": "Class imbalance may hide poor recall/precision for critical incident classes."
+    },
+    {
+      "unit": "Core AI",
+      "semester": 2,
+      "category": "ai",
+      "question": "What is model drift?",
+      "answer": "A decline in model performance as data patterns change over time."
+    },
+    {
+      "unit": "Core AI",
+      "semester": 2,
+      "category": "ai",
+      "question": "Why is responsible AI important in operations?",
+      "answer": "It reduces bias, strengthens trust, and supports accountable decision-making."
+    },
+    {
+      "unit": "Work Based Learning",
+      "semester": 2,
+      "category": "professional",
+      "question": "What makes a strong shift handover?",
+      "answer": "Clear status, risk summary, pending actions, owners, and supporting evidence."
+    },
+    {
+      "unit": "Work Based Learning",
+      "semester": 2,
+      "category": "professional",
+      "question": "Why use severity matrices in incident triage?",
+      "answer": "They standardize escalation decisions and speed response under pressure."
+    },
+    {
+      "unit": "Professional Practice",
+      "semester": 2,
+      "category": "professional",
+      "question": "What does root cause analysis aim to do?",
+      "answer": "Eliminate underlying causes so incidents do not repeatedly recur."
+    },
+    {
+      "unit": "Professional Practice",
+      "semester": 2,
+      "category": "professional",
+      "question": "Why are communication skills critical for operations engineers?",
+      "answer": "Effective communication reduces misalignment and accelerates coordinated response."
+    },
+    {
+      "unit": "Designing a Computing Project (Optional)",
+      "semester": 2,
+      "category": "project",
+      "question": "Why define acceptance criteria early?",
+      "answer": "They provide objective measures for validating project success."
+    },
+    {
+      "unit": "Designing a Computing Project (Optional)",
+      "semester": 2,
+      "category": "project",
+      "question": "What is the purpose of post-project evaluation?",
+      "answer": "To compare outcomes to requirements and identify actionable improvements."
+    }
+  ]
+}

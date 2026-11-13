@@ -25,6 +25,16 @@ It also includes focused notes and flashcards for:
 - Fiber networking concepts
 - Transferable professional skills and experiential learning context
 
+## Distinction+ comprehensive scope
+
+- Central curriculum dataset: `/docs/data/study_content.json`
+- Covers all core units with expanded topic depth for:
+  - theory
+  - practical operations
+  - case-study evidence
+  - source-backed revision points
+- The backend app and GitHub Pages site both use this comprehensive content model.
+
 ## Referencing and academic integrity
 
 - Every study note includes:
