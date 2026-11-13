@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research sources and verification · AZ4CAF</title><style>
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #182b3a; background: #f4f6f7; }
+body { margin: 0; line-height: 1.75; }
+nav, main { max-width: 1000px; margin: auto; padding: 1.5rem; }
+nav { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; }
+main { background: white; border-top: 4px solid #237b69; padding-bottom: 4rem; overflow-wrap: anywhere; }
+a { color: #145e80; text-underline-offset: .2em; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #ca691b; outline-offset: 3px; }
+h1,h2,h3,h4 { line-height: 1.25; color: #143c38; scroll-margin-top: 1rem; }
+h1 { font-size: clamp(1.8rem, 4vw, 2.7rem); }
+h2 { margin-top: 2.5rem; border-bottom: 1px solid #dce7e4; padding-bottom: .6rem; }
+pre { padding: 1rem; border-radius: .4rem; background: #152a32; color: #e7f3ed; overflow: auto; line-height: 1.6; font-size: .9rem; }
+code { font-family: ui-monospace, monospace; } p code, li code { background: #edf2f2; padding: .1rem .25rem; }
+table { display: block; overflow: auto; border-collapse: collapse; font-size: .9rem; }
+th,td { padding: .6rem; border: 1px solid #d2dfdc; text-align: left; min-width: 5rem; }
+th { background: #edf4f0; } blockquote { border-left: 3px solid #c18c40; margin-left: 0; padding-left: 1rem; }
+details { margin: 1rem 0; padding: 1rem; background: #f0f5f2; } summary { cursor: pointer; font-weight: 600; }
+@media print { nav, .toc { display: none; } :root { background: white; } main { max-width: none; padding: 0; } pre { white-space: pre-wrap; color: black; background: #eee; } a { color: black; } }
+</style></head>
+<body><nav aria-label="Study resources"><a href="../index.html">← Study notebook</a><a href="study-guide.html">Study and revision guide</a><a href="labs.html">Practical lab workbook</a><a href="network-labs.html">Switches, firewalls and complex networks</a><a href="data-tools.html">Access, MongoDB, Python and Node.js</a><a href="ai-guide.html">Using AI and understanding AI firewalls</a><a href="research.html">Research sources and verification</a></nav><main>
+<details class="toc"><summary>On this page</summary><div class="toc">
+<ul>
+<li><a href="#research-sources-findings-and-verification">Research sources, findings and verification</a><ul>
+<li><a href="#method-and-scope">Method and scope</a></li>
+<li><a href="#programme-and-certification-sources">Programme and certification sources</a></li>
+<li><a href="#switching-routing-linux-and-firewalls">Switching, routing, Linux and firewalls</a></li>
+<li><a href="#ai-agents-and-truefalse-decisions">AI, agents and true/false decisions</a></li>
+<li><a href="#databases-and-programming">Databases and programming</a></li>
+<li><a href="#corrections-and-checks-resulting-from-review">Corrections and checks resulting from review</a></li>
+<li><a href="#what-was-verified">What was verified</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</details>
+<h1 id="research-sources-findings-and-verification">Research sources, findings and verification</h1>
+<p><strong>Research checked: 13 November 2026.</strong> This register records a multi-source web review of primary documentation used to improve this study companion. It separates inspected sources from further-reading links and distinguishes documentation review from executing a lab. The examples and explanations are original teaching material; they are not copied assessment answers or reported workplace incidents.</p>
+<h2 id="method-and-scope">Method and scope</h2>
+<ol>
+<li>Check the supplied programme outline against the college's published course page.</li>
+<li>Consult vendor, standards, language and operating-system documentation for important technical claims.</li>
+<li>Compare the material with the platform and version named in each source. A portal, search snippet or redirect is not confirmation that a particular command exists.</li>
+<li>Turn findings into bounded explanations, worked examples, exercises and recall questions.</li>
+<li>Execute suitable local examples and application checks; identify exercises needing unavailable simulators, operating systems or privileged environments.</li>
+</ol>
+<p>This is a targeted research review across the programme and the requested extensions. It does not claim that every external link in the inherited repository has been revalidated, that every command was run on vendor hardware, or that the notes cover every current certification objective. Recheck documentation when using a different software release.</p>
+<h2 id="programme-and-certification-sources">Programme and certification sources</h2>
+<table>
+<thead>
+<tr>
+<th>Inspected source</th>
+<th>What it supports</th>
+<th>Application and limits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.uxbridgecollege.ac.uk/courses/computing-information-technology/level-4-data-centre-operations-az4caf">HRUC/Uxbridge: AZ4CAF course</a></td>
+<td>The named units, semester dates, optional project, certification support and conditional 14-week placement opportunity.</td>
+<td>The programme structure follows this page and the supplied outline. Placement dates from January overlap the listed semester boundaries; an individual placement remains subject to arrangements.</td>
+</tr>
+<tr>
+<td><a href="https://qualifications.pearson.com/en/qualifications/btec-higher-nationals/computing-for-england-2022.html">Pearson: Computing for England (2022)</a></td>
+<td>The published Level 4/5 qualification family and links to its specification.</td>
+<td>Background for qualification context. This general landing page does not replace the student's specific HRUC unit brief or establish that every added topic is assessed.</td>
+</tr>
+<tr>
+<td><a href="https://www.cisco.com/site/us/en/learn/training-certifications/exams/ccna.html">Cisco: CCNA exam overview</a></td>
+<td>CCNA is a certification exam covering several networking domains.</td>
+<td>Distinguish completing course material from earning certification.</td>
+</tr>
+<tr>
+<td><a href="https://learningcontent.cisco.com/documents/marketing/exam-topics/200-301-CCNA-v1.1.pdf">Cisco: 200-301 v1.1 objectives PDF</a></td>
+<td>A dated exam blueprint including VLANs, LACP, OSPF, ACLs and automation.</td>
+<td>Useful topic mapping, with a stated version. <strong>CCNA v7 course content and exam blueprint version numbers describe different things.</strong> Check the blueprint applicable to the intended exam date.</td>
+</tr>
+</tbody>
+</table>
+<p>The HRUC page contains differing timetable/fee presentations in separate sections. This site uses the supplied academic dates and the page's employer-sponsored-course description rather than attempting to resolve a personal timetable or funding entitlement. Confirm administrative arrangements with the college.</p>
+<p>CompTIA's certification landing pages could not be retrieved successfully during this research pass. The site therefore retains the supplied description of A+ support and directs learners to the current official objectives, without asserting a newly verified exam series, retirement date or complete exam coverage. Cisco Learning Network's live topics page returned a rendering error; the accessible versioned PDF above was inspected instead. Search-result snippets were not treated as enough evidence for an exam transition date.</p>
+<h2 id="switching-routing-linux-and-firewalls">Switching, routing, Linux and firewalls</h2>
+<table>
+<thead>
+<tr>
+<th>Inspected primary source</th>
+<th>Supported teaching point</th>
+<th>Version or verification boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/15-2_1_e/configuration/guide/2960_scg/swvlan.html">Cisco Catalyst 2960 VLAN configuration, IOS 15.2(1)E</a></td>
+<td>VLAN membership, access ports, trunking and native-VLAN configuration.</td>
+<td>Family/release-specific reference for the IOS-style training examples; simulator features can differ.</td>
+</tr>
+<tr>
+<td><a href="https://www.cisco.com/c/en/us/support/docs/lan-switching/etherchannel/12023-4.html">Cisco EtherChannel load balance and redundancy</a></td>
+<td>Multiple links form a logical channel and traffic distribution depends on the platform's hashing.</td>
+<td>Supports the warning that one flow does not ordinarily gain the sum of all member speeds. This article is conceptual, not the lab's complete configuration procedure.</td>
+</tr>
+<tr>
+<td><a href="https://www.cisco.com/c/en/us/support/docs/security/ios-firewall/23602-confaccesslists.html">Cisco IP access lists</a></td>
+<td>Wildcard matching, ordered rules and applying ACLs to the intended traffic direction.</td>
+<td>Used for positive/negative flow tests and the distinction between a routed ACL and stateful inspection.</td>
+</tr>
+<tr>
+<td><a href="https://www.cisco.com/c/en/us/td/docs/routers/ios-xe/ip-routing/b-ip-routing/m_iro-cfg-0.html">Cisco IOS XE OSPF configuration</a></td>
+<td>OSPF configuration, interface participation and verification concepts.</td>
+<td>Current IOS XE documentation is not a guarantee of identical syntax on the workbook's simulated older router. The retired design-guide URL redirected to a general list and was replaced.</td>
+</tr>
+<tr>
+<td><a href="https://documentation.ubuntu.com/security/security-features/network/firewall/nftables/">Ubuntu nftables documentation</a></td>
+<td>Netfilter filtering, base-chain hooks and connection-state rules.</td>
+<td>The workbook uses a separate namespace forwarding policy; this vendor page's host example must not be pasted over a shared host firewall.</td>
+</tr>
+<tr>
+<td><a href="https://man7.org/linux/man-pages/man8/ip-link.8.html">ip-link manual</a></td>
+<td>Link creation and moving links into named network namespaces.</td>
+<td>Used to keep the exercise's veth creation inside lab namespaces and avoid collisions with host interface names.</td>
+</tr>
+<tr>
+<td><a href="https://man7.org/linux/man-pages/man8/ip-netns.8.html">ip-netns manual</a></td>
+<td>Namespace-local network state and namespace/process lifecycle.</td>
+<td>Supports the cleanup requirement to stop namespace processes first. These privileged exercises were reviewed, not executed here.</td>
+</tr>
+<tr>
+<td><a href="https://csrc.nist.gov/pubs/sp/800/41/r1/final">NIST SP 800-41 Rev. 1</a></td>
+<td>Firewall policy, selection, deployment and testing principles.</td>
+<td>A 2009 foundational publication, not a current product command reference or proof of AI detection accuracy.</td>
+</tr>
+</tbody>
+</table>
+<p>The nftables wiki's connection-state page timed out; Ubuntu's maintained documentation supplied an accessible corroborating reference. The FortiGate release-specific guide returned HTTP 403, so Fortinet/NETGEAR material remains an explicitly model-dependent workflow, not a claim that a portal verified specific commands. Select the installed model and release before attempting vendor exercises.</p>
+<h2 id="ai-agents-and-truefalse-decisions">AI, agents and true/false decisions</h2>
+<table>
+<thead>
+<tr>
+<th>Inspected primary source</th>
+<th>Supported teaching point</th>
+<th>Application and limits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://developers.google.com/machine-learning/crash-course/llm">Google: introduction to LLMs</a></td>
+<td>Language models estimate token sequences using context.</td>
+<td>Explains why fluent output and next-token likelihood are different from independent factual verification.</td>
+</tr>
+<tr>
+<td><a href="https://agents.md/">AGENTS.md format</a></td>
+<td>A project guidance convention for coding agents.</td>
+<td>Supports setup/test/style guidance. Product support and discovery behaviour still need checking.</td>
+</tr>
+<tr>
+<td><a href="https://developers.openai.com/codex/guides/agents-md">OpenAI: AGENTS.md discovery</a></td>
+<td>Global/project guidance, override filenames, directory order and size limits.</td>
+<td>The inspected URL redirected to OpenAI's ChatGPT Learn documentation. The guide keeps discovery tool-specific rather than declaring a universal agent-file rule.</td>
+</tr>
+<tr>
+<td><a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/">OWASP LLM01:2025 Prompt Injection</a></td>
+<td>Direct and indirect injection can alter model behaviour through untrusted input.</td>
+<td>Supports layered controls and the warning that retrieval and filtering do not eliminate the problem.</td>
+</tr>
+<tr>
+<td><a href="https://learn.microsoft.com/en-us/azure/api-management/genai-gateway-capabilities">Azure API Management AI gateway</a></td>
+<td>Authentication, authorisation, moderation, routing and governance around AI endpoints.</td>
+<td>Gives a concrete example of an AI gateway, distinct from a packet firewall. Features vary by tier and release.</td>
+</tr>
+<tr>
+<td><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI Risk Management Framework</a></td>
+<td>Lifecycle risk management and evaluation of AI systems.</td>
+<td>The inspected page notes revision work; RMF 1.0 is identified as a versioned framework, not a guarantee of safe output.</td>
+</tr>
+<tr>
+<td><a href="https://docs.python.org/3/library/stdtypes.html#truth-value-testing">Python truth-value and Boolean operations</a></td>
+<td>Empty/nonempty truth values and the operand-return behaviour of <code>and</code>/<code>or</code>.</td>
+<td>Explains why the text <code>"false"</code> must not be accepted as a trusted Boolean policy input.</td>
+</tr>
+<tr>
+<td><a href="https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall">Google classification metrics</a></td>
+<td>Precision, recall, accuracy and threshold-dependent evaluation.</td>
+<td>The numerical confusion matrices are independently worked synthetic examples, not measured vendor performance.</td>
+</tr>
+</tbody>
+</table>
+<p>The research-informed distinction is central: <strong>Boolean logic expresses a policy decision; a classifier score expresses a model signal. Neither is an automatic truth detector.</strong> The AI workbook's Python policy demo uses manually supplied synthetic inputs. It has no trained model, no network enforcement and no authority to approve real actions. Unknown/error states pause the simulated protected action rather than silently treating unavailable evidence as permission.</p>
+<h2 id="databases-and-programming">Databases and programming</h2>
+<table>
+<thead>
+<tr>
+<th>Inspected primary source</th>
+<th>Supported teaching point</th>
+<th>Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://learn.microsoft.com/en-us/office/client-developer/access/desktop-database-reference/create-table-statement-microsoft-access-sql">Microsoft Access CREATE TABLE</a></td>
+<td>Access-specific DDL and constraints.</td>
+<td>The page names Access 2013; verify against the installed Access engine. The SQL was reviewed, not executed on Windows here.</td>
+</tr>
+<tr>
+<td><a href="https://learn.microsoft.com/en-us/office/client-developer/access/desktop-database-reference/parameters-declaration-microsoft-access-sql">Microsoft Access PARAMETERS</a></td>
+<td>Typed parameters preceding the query.</td>
+<td>Supports the parameter-query example; it does not imply that string concatenation becomes safe in application code.</td>
+</tr>
+<tr>
+<td><a href="https://www.mongodb.com/docs/manual/core/schema-validation/">MongoDB schema validation</a></td>
+<td>Flexible documents can still have field/type/range validation.</td>
+<td>A validator does not automatically enforce the lab's real-world rack relationships.</td>
+</tr>
+<tr>
+<td><a href="https://www.mongodb.com/docs/manual/administration/security-checklist/">MongoDB security checklist</a></td>
+<td>Authentication, least privilege and protected communication.</td>
+<td>Loopback binding, identity and authorisation are separate controls.</td>
+</tr>
+<tr>
+<td><a href="https://www.mongodb.com/docs/database-tools/mongodump/">MongoDB mongodump</a> and <a href="https://www.mongodb.com/docs/database-tools/mongorestore/">mongorestore</a></td>
+<td>Logical export/restore tools and compatibility constraints.</td>
+<td>The local lab stops writes and restores to a separate namespace; it does not claim a live dump is automatically consistent across a distributed system.</td>
+</tr>
+<tr>
+<td><a href="https://docs.python.org/3.12/library/csv.html">Python 3.12 csv</a></td>
+<td>CSV parsing with dialect/quoting support.</td>
+<td>Used instead of splitting lines on commas. Input schema and semantic validation remain application responsibilities.</td>
+</tr>
+<tr>
+<td><a href="https://docs.python.org/3.12/library/ipaddress.html">Python 3.12 ipaddress</a></td>
+<td>IPv4/IPv6 parsing, host/network checks and strict network validation.</td>
+<td>Used to independently check examples; a syntactically valid address does not establish network reachability.</td>
+</tr>
+<tr>
+<td><a href="https://nodejs.org/api/http.html">Node.js HTTP</a> and <a href="https://nodejs.org/api/globals.html">global APIs</a></td>
+<td>Local HTTP service, fetch and timeout primitives.</td>
+<td>Check supported release documentation. The examples run on loopback and are learning services, not production deployment templates.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="corrections-and-checks-resulting-from-review">Corrections and checks resulting from review</h2>
+<ul>
+<li>Replaced fictional “case study” achievements with explicitly illustrative scenarios.</li>
+<li>Expanded topic summaries into explanations, worked examples, practice tasks and suggested answers.</li>
+<li>Separated current programme facts from supplementary subject coverage and vendor exam requirements.</li>
+<li>Kept switch management, route selection, traffic permission and application health as separate checks.</li>
+<li>Corrected the injected wrong server mask to <code>/24</code>; <code>/26</code> is the expected server subnet in that lab.</li>
+<li>Clarified that removing VLAN 99 from the inter-switch trunk breaks remote management paths while a same-switch management SVI can remain reachable.</li>
+<li>Kept namespace veth creation local to the new lab namespaces, and bypassed inherited HTTP proxy settings for direct lab traffic tests.</li>
+<li>Made the AI demo reject non-Boolean identity inputs, invalid scores, unavailable scores and threshold-boundary cases explicitly.</li>
+<li>Preserved rich JSON teaching fields when optional database rows override basic content.</li>
+</ul>
+<h2 id="what-was-verified">What was verified</h2>
+<p>Backend tests exercise JSON mode, optional-database failures, rich-field merging, combined filters and API behaviour. Browser checks exercise both Flask and static views, search/empty/error states, navigation, card reveal/rating, local progress persistence/reset and mobile layout. Python calculation examples, the synthetic AI policy demo, the unprivileged Linux archive/restore exercise, and the Python/Node examples were executed with appropriate success/failure checks.</p>
+<p>Cisco/Packet Tracer configurations, privileged namespace firewall rules, Windows PowerShell, Microsoft Access and MongoDB server exercises were reviewed but not executed in this environment. A reviewed example's <strong>expected result</strong> is a prediction for the stated lab, not an observation that the lab was run. MySQL query behaviour is covered using mocks; a live MySQL import was not performed.</p>
+</main></body></html>

@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Access, MongoDB, Python and Node.js · AZ4CAF</title><style>
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #182b3a; background: #f4f6f7; }
+body { margin: 0; line-height: 1.75; }
+nav, main { max-width: 1000px; margin: auto; padding: 1.5rem; }
+nav { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; }
+main { background: white; border-top: 4px solid #237b69; padding-bottom: 4rem; overflow-wrap: anywhere; }
+a { color: #145e80; text-underline-offset: .2em; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #ca691b; outline-offset: 3px; }
+h1,h2,h3,h4 { line-height: 1.25; color: #143c38; scroll-margin-top: 1rem; }
+h1 { font-size: clamp(1.8rem, 4vw, 2.7rem); }
+h2 { margin-top: 2.5rem; border-bottom: 1px solid #dce7e4; padding-bottom: .6rem; }
+pre { padding: 1rem; border-radius: .4rem; background: #152a32; color: #e7f3ed; overflow: auto; line-height: 1.6; font-size: .9rem; }
+code { font-family: ui-monospace, monospace; } p code, li code { background: #edf2f2; padding: .1rem .25rem; }
+table { display: block; overflow: auto; border-collapse: collapse; font-size: .9rem; }
+th,td { padding: .6rem; border: 1px solid #d2dfdc; text-align: left; min-width: 5rem; }
+th { background: #edf4f0; } blockquote { border-left: 3px solid #c18c40; margin-left: 0; padding-left: 1rem; }
+details { margin: 1rem 0; padding: 1rem; background: #f0f5f2; } summary { cursor: pointer; font-weight: 600; }
+@media print { nav, .toc { display: none; } :root { background: white; } main { max-width: none; padding: 0; } pre { white-space: pre-wrap; color: black; background: #eee; } a { color: black; } }
+</style></head>
+<body><nav aria-label="Study resources"><a href="../index.html">← Study notebook</a><a href="study-guide.html">Study and revision guide</a><a href="labs.html">Practical lab workbook</a><a href="network-labs.html">Switches, firewalls and complex networks</a><a href="data-tools.html">Access, MongoDB, Python and Node.js</a><a href="ai-guide.html">Using AI and understanding AI firewalls</a><a href="research.html">Research sources and verification</a></nav><main>
+<details class="toc"><summary>On this page</summary><div class="toc">
+<ul>
+<li><a href="#databases-and-automation-access-mongodb-python-and-nodejs">Databases and automation: Access, MongoDB, Python and Node.js</a><ul>
+<li><a href="#1-choose-a-data-model-before-choosing-a-tool">1. Choose a data model before choosing a tool</a></li>
+<li><a href="#2-microsoft-access-a-useful-asset-inventory">2. Microsoft Access: a useful asset inventory</a><ul>
+<li><a href="#relationships-and-integrity">Relationships and integrity</a></li>
+<li><a href="#queries-that-answer-an-operational-question">Queries that answer an operational question</a></li>
+</ul>
+</li>
+<li><a href="#3-mongodb-documents-indexes-and-controlled-access">3. MongoDB: documents, indexes and controlled access</a><ul>
+<li><a href="#local-lab-and-document-validation">Local lab and document validation</a></li>
+<li><a href="#crud-with-a-deliberate-selector">CRUD with a deliberate selector</a></li>
+<li><a href="#authentication-bind-addresses-and-backups">Authentication, bind addresses and backups</a></li>
+</ul>
+</li>
+<li><a href="#4-python-validate-inventory-before-automating-changes">4. Python: validate inventory before automating changes</a><ul>
+<li><a href="#environment-and-input-contract">Environment and input contract</a></li>
+</ul>
+</li>
+<li><a href="#5-nodejs-a-small-local-health-service-and-report">5. Node.js: a small local health service and report</a><ul>
+<li><a href="#what-the-result-proves">What the result proves</a></li>
+</ul>
+</li>
+<li><a href="#6-combine-the-skills-into-a-reviewable-operations-record">6. Combine the skills into a reviewable operations record</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</details>
+<h1 id="databases-and-automation-access-mongodb-python-and-nodejs">Databases and automation: Access, MongoDB, Python and Node.js</h1>
+<p>These are supplementary study notes requested for this repository. They support data handling, Operating Systems, Computer Science and practical operations; they are not an assertion that HRUC assesses these specific tools. Here, <strong>Access means Microsoft Access</strong>. For remote access to Linux and network devices, use the SSH and management-network exercises in the <a href="labs.html">practical lab guide</a>.</p>
+<p>Use synthetic asset records in the examples. Record the command, expected result, actual result and explanation in your own lab notebook.</p>
+<h2 id="1-choose-a-data-model-before-choosing-a-tool">1. Choose a data model before choosing a tool</h2>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Relational model, including Access</th>
+<th>Document model, including MongoDB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>What is a record?</td>
+<td>A row with values in defined columns</td>
+<td>A BSON document with fields and potentially nested objects/arrays</td>
+</tr>
+<tr>
+<td>How are relationships represented?</td>
+<td>Primary keys and foreign keys; join tables for many-to-many relationships</td>
+<td>Embedded documents or references; choose according to access patterns and update boundaries</td>
+</tr>
+<tr>
+<td>What enforces structure?</td>
+<td>Column types, constraints and relationships</td>
+<td>Collection validation plus application rules; validation is worth configuring</td>
+</tr>
+<tr>
+<td>Where does consistency matter?</td>
+<td>A foreign key can prevent a device referring to a nonexistent rack</td>
+<td>A referenced rack is not automatically checked like a SQL foreign key; the application or a transaction must enforce the intended rule</td>
+</tr>
+<tr>
+<td>Typical learning exercise</td>
+<td>Inventory tables, parameter queries and reports</td>
+<td>Flexible device telemetry or inventory documents with indexes</td>
+</tr>
+</tbody>
+</table>
+<p>Neither model automatically provides good backups, good access control or a good schema. MongoDB supports multi-document transactions, but they have costs and do not remove the need to design document boundaries. Access is a desktop database application; use a licensed Windows environment to run it. These notes do not require installing Access on Linux. A shared Access file also has different concurrency, availability and operational characteristics from a managed database server.</p>
+<p><strong>Recall:</strong> Is a device serial number a good relationship key? It can be a useful unique business identifier, but an internal immutable DeviceID avoids tying all relationships to a potentially corrected serial number. Enforce uniqueness on the serial number separately.</p>
+<h2 id="2-microsoft-access-a-useful-asset-inventory">2. Microsoft Access: a useful asset inventory</h2>
+<h3 id="relationships-and-integrity">Relationships and integrity</h3>
+<p>Use a <code>Rack</code> table and a <code>Device</code> table. One rack can contain many devices; each device belongs to one rack in this exercise. <code>Rack.RackID</code> is the primary key. <code>Device.RackID</code> is the foreign key, and must have the same underlying integer size as the referenced key. An Access AutoNumber uses Long Integer in this common case, so its corresponding foreign key is a Number with Field Size <strong>Long Integer</strong>.</p>
+<p>In a new empty <code>.accdb</code> file, create a query, switch to SQL View, and run <strong>each statement separately</strong>. Access does not execute this whole script as one batch in the query designer.</p>
+<pre><code class="language-sql">CREATE TABLE Rack (
+    RackID COUNTER CONSTRAINT PK_Rack PRIMARY KEY,
+    RackName TEXT(30) NOT NULL,
+    LocationName TEXT(80) NOT NULL
+);
+</code></pre>
+<pre><code class="language-sql">CREATE UNIQUE INDEX UX_RackName ON Rack (RackName);
+</code></pre>
+<pre><code class="language-sql">CREATE TABLE Device (
+    DeviceID COUNTER CONSTRAINT PK_Device PRIMARY KEY,
+    SerialNumber TEXT(40) NOT NULL,
+    HostName TEXT(63) NOT NULL,
+    RackID LONG NOT NULL,
+    DeviceStatus TEXT(20) NOT NULL,
+    CONSTRAINT FK_Device_Rack FOREIGN KEY (RackID) REFERENCES Rack (RackID)
+);
+</code></pre>
+<pre><code class="language-sql">CREATE UNIQUE INDEX UX_DeviceSerial ON Device (SerialNumber);
+</code></pre>
+<pre><code class="language-sql">INSERT INTO Rack (RackName, LocationName) VALUES ('LAB-R01', 'Training room');
+</code></pre>
+<p>Look up the generated RackID with <code>SELECT * FROM Rack;</code>. The following statements assume it is <strong>1</strong> in this fresh database. Substitute the actual value if different.</p>
+<pre><code class="language-sql">INSERT INTO Device (SerialNumber, HostName, RackID, DeviceStatus)
+VALUES ('LAB-01', 'lab-sw01', 1, 'Ready');
+</code></pre>
+<pre><code class="language-sql">INSERT INTO Device (SerialNumber, HostName, RackID, DeviceStatus)
+VALUES ('LAB-02', 'lab-fw01', 1, 'Investigate');
+</code></pre>
+<p>In the Relationships window, inspect the one-to-many relationship and referential integrity. Attempting to insert a device with a nonexistent RackID should fail. Reusing a SerialNumber should fail. A primary key prevents duplicate row identity; a foreign key prevents an orphan relationship. Neither verifies that someone physically installed the device in that rack.</p>
+<p>Do not enable cascading deletes casually: deleting a rack should not silently erase operational history. A status field or archived record is often more suitable. In Table Design, consider validation such as <code>In ("Ready","Investigate","Retired")</code> for DeviceStatus and disallow zero-length text where appropriate. <code>NOT NULL</code> alone does not impose a useful text format or a list of allowed statuses.</p>
+<h3 id="queries-that-answer-an-operational-question">Queries that answer an operational question</h3>
+<p>Save this query as <code>DevicesToInvestigate</code>:</p>
+<pre><code class="language-sql">SELECT Device.HostName, Device.SerialNumber, Rack.RackName
+FROM Rack INNER JOIN Device ON Rack.RackID = Device.RackID
+WHERE Device.DeviceStatus = 'Investigate'
+ORDER BY Rack.RackName, Device.HostName;
+</code></pre>
+<p>Expected: one row, <code>lab-fw01 | LAB-02 | LAB-R01</code>.</p>
+<p>A parameter query separates the selected value from SQL text. Save this as <code>DevicesByStatus</code>:</p>
+<pre><code class="language-sql">PARAMETERS [Target status] Text (20);
+SELECT Device.HostName, Device.DeviceStatus
+FROM Device
+WHERE Device.DeviceStatus = [Target status]
+ORDER BY Device.HostName;
+</code></pre>
+<p>Enter <code>Ready</code> at the prompt. Expected: <code>lab-sw01 | Ready</code>. In an application, bind query parameters through its driver; do not build SQL by concatenating user input.</p>
+<p>To include empty racks in a count, use a left join and count the child primary key:</p>
+<pre><code class="language-sql">SELECT Rack.RackName, Count(Device.DeviceID) AS DeviceCount
+FROM Rack LEFT JOIN Device ON Rack.RackID = Device.RackID
+GROUP BY Rack.RackName
+ORDER BY Rack.RackName;
+</code></pre>
+<p>Expected: <code>LAB-R01 | 2</code>. A second rack with no devices should show zero. <code>Count(*)</code> counts the retained rack row and would give the wrong result for an empty rack.</p>
+<p><strong>Practical task:</strong> Add a second rack, move LAB-02 to it, and create a report based on <code>DevicesToInvestigate</code>. Include HostName, SerialNumber, RackName and an export date. Explain which fields identify a device and which merely describe its current location.</p>
+<p><strong>Check your answer:</strong> Only Device.RackID needs changing; duplicating the device creates competing records. Refresh the query and confirm the new rack name appears. A report layout does not change the underlying data. Keep a backup copy and verify that it opens with its relationships and queries intact; a successful file-copy message alone is not a restore test.</p>
+<p>Sources: <a href="https://support.microsoft.com/en-us/office/guide-to-table-relationships-30446197-4fbe-457b-b992-2f6fb812b58f">Access relationships</a>, <a href="https://learn.microsoft.com/en-us/office/client-developer/access/desktop-database-reference/create-table-statement-microsoft-access-sql">Access CREATE TABLE</a>, <a href="https://learn.microsoft.com/en-us/office/client-developer/access/desktop-database-reference/parameters-declaration-microsoft-access-sql">Access PARAMETERS</a>, <a href="https://learn.microsoft.com/en-us/office/client-developer/access/desktop-database-reference/sql-data-types">Access SQL data types</a>.</p>
+<h2 id="3-mongodb-documents-indexes-and-controlled-access">3. MongoDB: documents, indexes and controlled access</h2>
+<h3 id="local-lab-and-document-validation">Local lab and document validation</h3>
+<p>Use a disposable local MongoDB Community instance and <code>mongosh</code>, following the official installation instructions for your operating system. Bind the training instance to loopback (<code>127.0.0.1</code>), and configure authentication before permitting other hosts to reach it. The examples below run inside <code>mongosh</code> as a user permitted to create collections, indexes and documents in <code>az4caf_lab</code>.</p>
+<pre><code class="language-javascript">use az4caf_lab
+
+db.createCollection(&quot;devices&quot;, {
+  validator: {
+    $jsonSchema: {
+      bsonType: &quot;object&quot;,
+      required: [&quot;serial&quot;, &quot;hostname&quot;, &quot;status&quot;],
+      properties: {
+        serial: { bsonType: &quot;string&quot;, minLength: 1 },
+        hostname: { bsonType: &quot;string&quot;, minLength: 1 },
+        status: { enum: [&quot;ready&quot;, &quot;investigate&quot;, &quot;retired&quot;] },
+        rack: { bsonType: &quot;string&quot; }
+      }
+    }
+  }
+})
+
+db.devices.createIndex({ serial: 1 }, { unique: true })
+db.devices.insertMany([
+  { serial: &quot;LAB-01&quot;, hostname: &quot;lab-sw01&quot;, status: &quot;ready&quot;, rack: &quot;LAB-R01&quot; },
+  { serial: &quot;LAB-02&quot;, hostname: &quot;lab-fw01&quot;, status: &quot;ready&quot;, rack: &quot;LAB-R01&quot; }
+])
+</code></pre>
+<p>Expected: an acknowledged insert containing two generated IDs. The unique index enforces serial uniqueness. The validator enforces the declared types/statuses, but does not validate DNS names, check a real rack, or forbid additional fields in this example.</p>
+<p>MongoDB documents use BSON, which supports more types than JSON. <code>_id</code> values commonly use ObjectId; account for this when exporting to JSON rather than assuming every value is a plain string.</p>
+<h3 id="crud-with-a-deliberate-selector">CRUD with a deliberate selector</h3>
+<pre><code class="language-javascript">db.devices.find({ status: &quot;ready&quot; }, { _id: 0, serial: 1, hostname: 1 }).sort({ serial: 1 })
+
+db.devices.updateOne(
+  { serial: &quot;LAB-02&quot; },
+  { $set: { status: &quot;investigate&quot; } }
+)
+
+db.devices.find({ status: &quot;investigate&quot; }, { _id: 0 })
+</code></pre>
+<p>Expected: the first query returns two records; the update reports one matched and one modified document; the last query returns LAB-02. Repeating the identical update should match one and modify zero because the value is already set.</p>
+<p><code>updateOne</code> with <code>$set</code> changes named fields. Replacing a document is a different operation and may remove fields you intended to keep. Omitting a selector from a broad update/delete can affect the whole collection. Inspect the matching records and intended scope before a write.</p>
+<p>For a deletion exercise, create and remove a separate disposable record:</p>
+<pre><code class="language-javascript">db.devices.insertOne({ serial: &quot;LAB-TEMP&quot;, hostname: &quot;lab-temp&quot;, status: &quot;retired&quot; })
+db.devices.deleteOne({ serial: &quot;LAB-TEMP&quot; })
+db.devices.countDocuments({ serial: &quot;LAB-TEMP&quot; })
+</code></pre>
+<p>Expected final count: <code>0</code>; the two main devices remain.</p>
+<p><strong>Index task:</strong> Create <code>db.devices.createIndex({ status: 1, hostname: 1 })</code>, then inspect:</p>
+<pre><code class="language-javascript">db.devices.find({ status: &quot;investigate&quot; }).sort({ hostname: 1 }).explain(&quot;executionStats&quot;)
+</code></pre>
+<p><strong>Check your answer:</strong> Compare returned rows, examined documents/keys and the winning plan. On two documents, a collection scan may be a sensible planner choice; do not claim a speedup from an index existing. Indexes consume storage and add write work. A compound index's leading fields affect which queries and sorts it can support.</p>
+<h3 id="authentication-bind-addresses-and-backups">Authentication, bind addresses and backups</h3>
+<p>Network binding and authentication solve different problems. Binding determines where a server listens; authentication identifies a connecting user; role-based authorisation controls that user's actions. A firewall further limits which connections can reach the listener. Loopback binding does not replace authentication for a shared or exposed service.</p>
+<p>An administrator can create a database-scoped training account with a prompted password:</p>
+<pre><code class="language-javascript">use az4caf_lab
+db.createUser({
+  user: &quot;az4caf_lab_user&quot;,
+  pwd: passwordPrompt(),
+  roles: [{ role: &quot;readWrite&quot;, db: &quot;az4caf_lab&quot; }]
+})
+</code></pre>
+<p>Run this through an authenticated administrator session, or follow the documented localhost bootstrap process on a fresh instance. Then enable access control in the appropriate service configuration and reconnect. Do not lock yourself out by enabling authentication without establishing the required administrator accounts.</p>
+<p>For a local configuration, the relevant settings are:</p>
+<pre><code class="language-yaml">net:
+  bindIp: 127.0.0.1
+  port: 27017
+security:
+  authorization: enabled
+</code></pre>
+<p>Restart the local service using your operating system's service manager and verify the effective configuration. From a terminal, connect without putting a password in the command line:</p>
+<pre><code class="language-bash">mongosh --host 127.0.0.1 --port 27017 --username az4caf_lab_user --authenticationDatabase az4caf_lab --password
+</code></pre>
+<p>Expected: an authenticated session with access to the lab database. Check an authorised read and confirm an unauthenticated attempt cannot read protected data. Do not paste passwords, connection strings or real asset records into submitted evidence.</p>
+<p>For backup practice, an administrator should provision a <code>backup_operator</code> account with the appropriate <code>backup</code> role and a <code>restore_operator</code> with the appropriate <code>restore</code> role in <code>admin</code>. These commands assume those local accounts exist; both prompt for a password when needed:</p>
+<pre><code class="language-bash">mongodump --host 127.0.0.1 --port 27017 --username backup_operator --authenticationDatabase admin --db az4caf_lab --archive=az4caf-lab.archive.gz --gzip
+mongorestore --host 127.0.0.1 --port 27017 --username restore_operator --authenticationDatabase admin --archive=az4caf-lab.archive.gz --gzip --nsFrom='az4caf_lab.*' --nsTo='az4caf_restore.*'
+</code></pre>
+<p>Restore into the separate disposable <code>az4caf_restore</code> namespace. Have an authorised reader verify document counts, known serials, index definitions and validator configuration against the original. Do not use <code>--drop</code> for this exercise. Document the tool/server versions and supported compatibility for the versions being used.</p>
+<p>A logical dump taken while writes continue does <strong>not automatically guarantee a consistent point-in-time view across collections</strong>. For this standalone lab, stop application writes before the dump and keep them stopped until it completes. A replica-set backup may require an oplog-based or coordinated snapshot strategy; sharded clusters require a suitable coordinated method. Backup completion, archive integrity and application recovery are separate checks. Practise a restore and measure the time it takes.</p>
+<p><strong>Recall:</strong> Why might an application embed a small set of interface details inside a device document? They may be read together and updated within one document's atomic boundary. Unbounded event history is a poor candidate for an ever-growing embedded array. A single-document write is atomic; a sequence of independent writes is not automatically one atomic transaction.</p>
+<p>Sources: <a href="https://www.mongodb.com/docs/manual/installation/">MongoDB installation</a>, <a href="https://www.mongodb.com/docs/manual/crud/">CRUD</a>, <a href="https://www.mongodb.com/docs/manual/core/schema-validation/">schema validation</a>, <a href="https://www.mongodb.com/docs/manual/indexes/">indexes</a>, <a href="https://www.mongodb.com/docs/manual/administration/security-checklist/">security checklist</a>, <a href="https://www.mongodb.com/docs/manual/tutorial/enable-authentication/">enable access control</a>, <a href="https://www.mongodb.com/docs/database-tools/mongodump/">mongodump</a>, <a href="https://www.mongodb.com/docs/database-tools/mongorestore/">mongorestore</a>.</p>
+<h2 id="4-python-validate-inventory-before-automating-changes">4. Python: validate inventory before automating changes</h2>
+<h3 id="environment-and-input-contract">Environment and input contract</h3>
+<p>Use Python 3 in an isolated project folder. A virtual environment separates this project's installed packages from others; it does not sandbox the script's filesystem or network access.</p>
+<pre><code class="language-bash">python3 -m venv .venv
+. .venv/bin/activate
+python --version
+</code></pre>
+<p>On Windows PowerShell, use <code>py -m venv .venv</code>, then <code>.venv\Scripts\Activate.ps1</code> according to the machine's execution policy. The following script uses only the Python standard library, so no package installation is required.</p>
+<p>Save this as <code>inventory.csv</code>:</p>
+<pre><code class="language-csv">serial,hostname,management_ip,status
+LAB-01,lab-sw01,192.0.2.10,ready
+LAB-02,lab-fw01,192.0.2.20,investigate
+</code></pre>
+<p><code>192.0.2.0/24</code> is a documentation address range. These are sample values, not addresses to scan or configure on a live network.</p>
+<p>Save as <code>validate_inventory.py</code>:</p>
+<pre><code class="language-python">import csv
+import ipaddress
+import json
+import re
+import sys
+from pathlib import Path
+
+FIELDS = {&quot;serial&quot;, &quot;hostname&quot;, &quot;management_ip&quot;, &quot;status&quot;}
+STATUSES = {&quot;ready&quot;, &quot;investigate&quot;, &quot;retired&quot;}
+HOSTNAME = re.compile(r&quot;[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?&quot;)
+
+
+def read_inventory(path):
+    devices = []
+    seen_serials, seen_hosts, seen_ips = set(), set(), set()
+    with path.open(newline=&quot;&quot;, encoding=&quot;utf-8&quot;) as source:
+        reader = csv.DictReader(source)
+        if len(reader.fieldnames or []) != len(FIELDS) or set(reader.fieldnames or []) != FIELDS:
+            raise ValueError(&quot;expected headers: serial,hostname,management_ip,status&quot;)
+        for line, row in enumerate(reader, start=2):
+            if None in row or any(value is None for value in row.values()):
+                raise ValueError(f&quot;line {line}: incorrect number of fields&quot;)
+            device = {key: value.strip() for key, value in row.items()}
+            device[&quot;hostname&quot;] = device[&quot;hostname&quot;].lower()
+            device[&quot;status&quot;] = device[&quot;status&quot;].lower()
+            if not device[&quot;serial&quot;] or not HOSTNAME.fullmatch(device[&quot;hostname&quot;]):
+                raise ValueError(f&quot;line {line}: missing serial or invalid hostname label&quot;)
+            if device[&quot;status&quot;] not in STATUSES:
+                raise ValueError(f&quot;line {line}: unrecognised status&quot;)
+            try:
+                device[&quot;management_ip&quot;] = str(ipaddress.ip_address(device[&quot;management_ip&quot;]))
+            except ValueError as error:
+                raise ValueError(f&quot;line {line}: invalid IP address&quot;) from error
+            serial, host, address = device[&quot;serial&quot;], device[&quot;hostname&quot;], device[&quot;management_ip&quot;]
+            if serial in seen_serials or host in seen_hosts or address in seen_ips:
+                raise ValueError(f&quot;line {line}: duplicate serial, hostname or management IP&quot;)
+            seen_serials.add(serial)
+            seen_hosts.add(host)
+            seen_ips.add(address)
+            devices.append(device)
+    return sorted(devices, key=lambda device: device[&quot;serial&quot;])
+
+
+if __name__ == &quot;__main__&quot;:
+    if len(sys.argv) != 2:
+        print(&quot;usage: python validate_inventory.py inventory.csv&quot;, file=sys.stderr)
+        sys.exit(2)
+    try:
+        devices = read_inventory(Path(sys.argv[1]))
+    except (OSError, UnicodeError, csv.Error, ValueError) as error:
+        print(f&quot;inventory error: {error}&quot;, file=sys.stderr)
+        sys.exit(1)
+    print(json.dumps({&quot;count&quot;: len(devices), &quot;devices&quot;: devices}, indent=2))
+</code></pre>
+<p>Run:</p>
+<pre><code class="language-bash">python validate_inventory.py inventory.csv
+</code></pre>
+<p>Expected JSON: <code>count</code> is <code>2</code>; the <code>devices</code> array contains LAB-01 and LAB-02 with their four fields. Exit status is <code>0</code>. This validates format and uniqueness according to the exercise's policy; it does not prove a device exists, owns the IP, or is healthy.</p>
+<p>To save a report after reviewing the output:</p>
+<pre><code class="language-bash">python validate_inventory.py inventory.csv &gt; inventory.json
+</code></pre>
+<p>Shell redirection creates/truncates the output file before the program runs. If validation fails, the report may therefore be empty: check the exit status before consuming it, or write to a temporary file and rename it only on success. A production pipeline should also protect an existing last-known-good report.</p>
+<p><strong>Tasks and expected results:</strong></p>
+<ol>
+<li>Change LAB-02's IP to <code>192.0.2.999</code>: expect a nonzero exit and <code>invalid IP address</code> on stderr.</li>
+<li>Give both records <code>lab-sw01</code>: expect a duplicate error.</li>
+<li>Change a serial value to <code>"LAB,03"</code>, keeping exactly four CSV columns: Python's CSV reader handles quoting; splitting a line on commas by hand would not.</li>
+<li>Explain why <code>ipaddress.ip_address()</code> accepts an address that may be unsuitable for management. Answer: syntactic validity does not establish subnet membership, uniqueness outside this file, reachability, or policy approval.</li>
+<li>Design a next step that proposes switch changes. Answer: first produce a reviewed plan from validated input; compare against current state, obtain the required change authorisation, apply only the approved differences, verify and retain a rollback. Parsing valid CSV is not authorisation to change infrastructure.</li>
+</ol>
+<p>Sources: <a href="https://docs.python.org/3/library/venv.html">venv</a>, <a href="https://docs.python.org/3/library/csv.html">csv</a>, <a href="https://docs.python.org/3/library/json.html">json</a>, <a href="https://docs.python.org/3/library/ipaddress.html">ipaddress</a>, <a href="https://docs.python.org/3/library/argparse.html">argparse for larger CLIs</a>.</p>
+<h2 id="5-nodejs-a-small-local-health-service-and-report">5. Node.js: a small local health service and report</h2>
+<p>Choose a <strong>currently supported LTS release</strong> from the <a href="https://nodejs.org/en/about/previous-releases">official release schedule</a>. Check the release's support status when installing; LTS is a support lifecycle, not a promise that every installed dependency is secure. The example uses built-in <code>fetch</code> and <code>AbortSignal.timeout</code>, available in modern supported releases.</p>
+<pre><code class="language-bash">node --version
+npm --version
+npm init -y
+npm install --package-lock-only
+</code></pre>
+<p>The example has no third-party runtime dependencies. For projects that add dependencies, commit <code>package.json</code> and <code>package-lock.json</code>; use <code>npm ci</code> in repeatable automated builds once a valid lockfile exists. A lockfile records resolved dependency versions, but is not a security review. Package installation can execute lifecycle scripts; review the packages and project policy before installing unfamiliar code.</p>
+<p>Save this local-only service as <code>server.mjs</code>:</p>
+<pre><code class="language-javascript">import { createServer } from 'node:http';
+
+const server = createServer((request, response) =&gt; {
+  const healthy = request.method === 'GET' &amp;&amp; request.url === '/health';
+  response.writeHead(healthy ? 200 : 404, { 'content-type': 'application/json' });
+  response.end(JSON.stringify(healthy
+    ? { status: 'ok', service: 'az4caf-lab' }
+    : { error: 'not found' }));
+});
+
+server.on('error', (error) =&gt; {
+  console.error(`server error: ${error.code ?? error.name}`);
+  process.exitCode = 1;
+});
+server.listen(8081, '127.0.0.1', () =&gt; {
+  console.log('Lab health service: http://127.0.0.1:8081/health');
+});
+process.once('SIGINT', () =&gt; server.close());
+</code></pre>
+<p>In one terminal, run <code>node server.mjs</code>. In a second terminal, run this checker saved as <code>check-health.mjs</code>:</p>
+<pre><code class="language-javascript">const endpoint = 'http://127.0.0.1:8081/health';
+
+try {
+  const response = await fetch(endpoint, { signal: AbortSignal.timeout(2000) });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  const result = await response.json();
+  if (result.status !== 'ok' || typeof result.service !== 'string') {
+    throw new Error('unexpected health response');
+  }
+  console.log(JSON.stringify({ endpoint, healthy: true, service: result.service }));
+} catch (error) {
+  console.error(JSON.stringify({ endpoint, healthy: false, error: error.message }));
+  process.exitCode = 1;
+}
+</code></pre>
+<pre><code class="language-bash">node check-health.mjs
+</code></pre>
+<p>Expected stdout:</p>
+<pre><code class="language-json">{&quot;endpoint&quot;:&quot;http://127.0.0.1:8081/health&quot;,&quot;healthy&quot;:true,&quot;service&quot;:&quot;az4caf-lab&quot;}
+</code></pre>
+<p>Stop the server with Ctrl+C and repeat the checker. Expected: <code>healthy:false</code> on stderr and a nonzero exit status; the precise connection-error message depends on the runtime/OS. A timeout prevents a forgotten request from waiting indefinitely. Rejecting an unsuccessful HTTP status and checking its body avoids treating any reachable web server as healthy.</p>
+<h3 id="what-the-result-proves">What the result proves</h3>
+<p>The event loop lets Node handle asynchronous I/O while other callbacks wait; <code>await</code> suspends the current async flow rather than making CPU-heavy work parallel. Large synchronous loops or filesystem operations can still block other work. Use built-in <code>node:fs/promises</code> for asynchronous file operations, and understand worker threads/processes before assigning CPU-heavy tasks.</p>
+<p>This health endpoint proves that this local process answered a defined request. It does not test a database, a switch, end-to-end application transactions or redundancy. A real readiness probe should check the dependencies needed to serve traffic and should expose only the information its audience needs.</p>
+<p><strong>Tasks and answers:</strong></p>
+<ol>
+<li>Change the checker path to <code>/missing</code>: expect HTTP 404, <code>healthy:false</code>, nonzero exit.</li>
+<li>Start two copies of the server: the second should fail to bind the already-used port, typically with <code>EADDRINUSE</code>. Diagnose the owning process; do not terminate an unknown service simply to free a port.</li>
+<li>Does wrapping <code>fetch()</code> in <code>try/catch</code> automatically treat HTTP 500 as an exception? No. Fetch can resolve successfully with an HTTP error response; check <code>response.ok</code> or the status.</li>
+<li>Why use <code>.mjs</code> here? It explicitly selects ECMAScript modules so <code>import</code> and top-level <code>await</code> work without editing <code>package.json</code>'s <code>type</code> field.</li>
+<li>Why bind <code>127.0.0.1</code>? Only local clients should reach this learning service. Binding <code>0.0.0.0</code> would listen on all IPv4 interfaces and changes who may be able to connect, subject to the network/firewall.</li>
+</ol>
+<p>Sources: <a href="https://nodejs.org/api/http.html">Node.js HTTP</a>, <a href="https://nodejs.org/api/globals.html">Node.js globals and fetch</a>, <a href="https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop">event loop guidance</a>, <a href="https://docs.npmjs.com/cli/commands/npm-ci">npm ci</a>, <a href="https://docs.npmjs.com/cli/configuring-npm/package-lock-json">package-lock.json</a>.</p>
+<h2 id="6-combine-the-skills-into-a-reviewable-operations-record">6. Combine the skills into a reviewable operations record</h2>
+<p>A useful final exercise is a synthetic inventory that links a rack and device identifier to a validated hostname/IP, a change ticket reference and a verification result. Choose Access or MongoDB according to your model, validate imported data with Python, and expose a local synthetic status report with Node.js. Keep input validation, proposed changes, authorisation, execution and verification as distinct steps.</p>
+<p>Submit a diagram of the data relationships, the sample input, successful and deliberately failed validation results, an explained database query, and a demonstrated restore. Include a short limitation statement: for example, a local health response does not prove network resilience. Explain the result in your own words and cite the relevant official documentation rather than presenting these illustrative exercises as workplace evidence.</p>
+</main></body></html>
