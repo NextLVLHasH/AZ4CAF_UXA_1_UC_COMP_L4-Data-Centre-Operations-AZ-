@@ -25,6 +25,15 @@ It also includes focused notes and flashcards for:
 - Fiber networking concepts
 - Transferable professional skills and experiential learning context
 
+## Referencing and academic integrity
+
+- Every study note includes:
+  - a **source title**
+  - a **source URL**
+  - a short **case-study evidence note** showing how the concept is applied
+- Sources are linked in the UI under **Referenced Sources (Case Study Evidence)**.
+- Sources are intentionally non-Wikipedia, prioritising vendor, standards, and official guidance.
+
 ## Tech stack
 
 - **Backend:** Python (Flask)

@@ -12,6 +12,7 @@
       .grid { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
       .note { border: 1px solid #e3e9f4; border-radius: 8px; padding: .75rem; }
       .meta { font-size: .85rem; color: #444; }
+      .source { font-size: .9rem; }
       .flashcard { perspective: 1000px; height: 170px; cursor: pointer; }
       .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform .45s; transform-style: preserve-3d; }
       .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
@@ -47,11 +48,17 @@
         <h2>Flip Cards</h2>
         <div id="cards" class="grid"></div>
       </section>
+
+      <section class="panel">
+        <h2>Referenced Sources (Case Study Evidence)</h2>
+        <ul id="references"></ul>
+      </section>
     </main>
 
     <script>
       const notesEl = document.getElementById('notes');
       const cardsEl = document.getElementById('cards');
+      const referencesEl = document.getElementById('references');
       const semesterFilter = document.getElementById('semesterFilter');
       const categoryFilter = document.getElementById('categoryFilter');
       const vendorFilter = document.getElementById('vendorFilter');
@@ -78,8 +85,21 @@
             <h3>${note.topic}</h3>
             <p class="meta">${note.unit} | Semester ${note.semester} | ${note.category} | ${note.vendor}</p>
             <p>${note.content}</p>
+            <p><strong>Case study:</strong> ${note.case_study}</p>
+            <p class="source"><strong>Source:</strong> <a href="${note.source_url}" target="_blank" rel="noopener noreferrer">${note.source_title}</a></p>
           `;
           notesEl.appendChild(div);
+        });
+      };
+
+      const renderReferences = (notes) => {
+        referencesEl.innerHTML = '';
+        const refs = new Map();
+        notes.forEach(note => refs.set(note.source_url, note.source_title));
+        [...refs.entries()].sort((a, b) => a[1].localeCompare(b[1])).forEach(([url, title]) => {
+          const li = document.createElement('li');
+          li.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">${title}</a>`;
+          referencesEl.appendChild(li);
         });
       };
 
@@ -117,6 +137,7 @@
         setOptions(categoryFilter, [...new Set(notes.map(n => n.category))].sort());
         setOptions(vendorFilter, [...new Set(notes.map(n => n.vendor))].sort());
         renderNotes(notes);
+        renderReferences(notes);
         renderCards(cards);
       };
 

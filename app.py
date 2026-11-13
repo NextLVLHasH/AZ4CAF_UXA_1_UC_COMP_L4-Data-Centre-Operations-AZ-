@@ -30,6 +30,9 @@ FALLBACK_NOTES = [
         "category": "switching",
         "vendor": "Cisco",
         "content": "Configure access/trunk ports, VLAN IDs, and inter-VLAN routing basics.",
+        "source_title": "Cisco: Configure VLANs on Catalyst switches",
+        "source_url": "https://www.cisco.com/c/en/us/support/docs/lan-switching/vlan/10023-3.html",
+        "case_study": "Case study: segmented a shared lab network into role-based VLANs and reduced broadcast spill-over.",
     },
     {
         "unit": "Applied Networking (CCNA)",
@@ -37,6 +40,9 @@ FALLBACK_NOTES = [
         "category": "switching",
         "vendor": "Netgear",
         "content": "Use web and CLI tools to set port isolation, STP, and link aggregation.",
+        "source_title": "NETGEAR Support: Managed switch user guides",
+        "source_url": "https://www.netgear.com/support/",
+        "case_study": "Case study: improved rack uplink resilience by enabling LAG and RSTP on edge switches.",
     },
     {
         "unit": "Applied Networking (CCNA)",
@@ -44,6 +50,9 @@ FALLBACK_NOTES = [
         "category": "switching",
         "vendor": "Fortinet",
         "content": "Manage FortiSwitch from FortiGate/FortiLink for policy-driven segmentation.",
+        "source_title": "Fortinet Docs: FortiSwitch management via FortiLink",
+        "source_url": "https://docs.fortinet.com/document/fortiswitch/",
+        "case_study": "Case study: centralized switch policy updates through FortiLink to standardize port security at scale.",
     },
     {
         "unit": "Applied Networking (CCNA)",
@@ -51,6 +60,9 @@ FALLBACK_NOTES = [
         "category": "firewall",
         "vendor": "Multi-vendor",
         "content": "Apply least privilege ACLs, zones, NAT, and logging for incident response.",
+        "source_title": "NIST SP 800-41 Rev.1: Guidelines on Firewalls and Firewall Policy",
+        "source_url": "https://csrc.nist.gov/publications/detail/sp/800-41/rev-1/final",
+        "case_study": "Case study: reduced lateral risk by replacing broad allow rules with zone-based least-privilege policies.",
     },
     {
         "unit": "Core Networking (CCNA)",
@@ -58,6 +70,9 @@ FALLBACK_NOTES = [
         "category": "fiber",
         "vendor": "Generic",
         "content": "Understand SMF vs MMF, connectors, transceivers (SFP/SFP+/QSFP), and budgets.",
+        "source_title": "Cisco Optics-to-Device Compatibility Matrix",
+        "source_url": "https://tmgmatrix.cisco.com/",
+        "case_study": "Case study: eliminated intermittent uplink errors by matching optics, fiber type, and distance budget.",
     },
     {
         "unit": "Operating Systems",
@@ -65,6 +80,9 @@ FALLBACK_NOTES = [
         "category": "systems",
         "vendor": "Generic",
         "content": "Process/service management, patching, hardening, and access control.",
+        "source_title": "Microsoft Learn: Windows Server security baseline",
+        "source_url": "https://learn.microsoft.com/windows/security/operating-system-security/device-management/windows-security-configuration-framework/windows-security-baselines",
+        "case_study": "Case study: improved patch compliance and service uptime with scheduled maintenance and rollback plans.",
     },
     {
         "unit": "Computer Systems Architecture (A+)",
@@ -72,6 +90,9 @@ FALLBACK_NOTES = [
         "category": "hardware",
         "vendor": "CompTIA",
         "content": "Motherboards, CPUs, memory, storage RAID, and maintenance workflows.",
+        "source_title": "CompTIA A+ Core Series certification objectives",
+        "source_url": "https://www.comptia.org/certifications/a",
+        "case_study": "Case study: cut mean-time-to-repair by standardizing hardware diagnostics and parts documentation.",
     },
     {
         "unit": "Core AI",
@@ -79,6 +100,9 @@ FALLBACK_NOTES = [
         "category": "ai",
         "vendor": "Generic",
         "content": "Data lifecycle, model evaluation, ethics, and practical AI operations.",
+        "source_title": "NIST AI Risk Management Framework (AI RMF 1.0)",
+        "source_url": "https://www.nist.gov/itl/ai-risk-management-framework",
+        "case_study": "Case study: introduced model monitoring checkpoints to catch data drift in operations dashboards.",
     },
     {
         "unit": "Work Based Learning",
@@ -86,6 +110,9 @@ FALLBACK_NOTES = [
         "category": "professional",
         "vendor": "Amazon",
         "content": "14-week experiential placement from Jan 2027 focused on operational readiness.",
+        "source_title": "Issue brief: AZ4CAF programme statement",
+        "source_url": "https://github.com/NextLVLHasH/AZ4CAF_UXA_1_UC_COMP_L4-Data-Centre-Operations-AZ-",
+        "case_study": "Case study: structured internship rotations across operations, safety, and incident response workflows.",
     },
     {
         "unit": "Professional Practice",
@@ -93,6 +120,9 @@ FALLBACK_NOTES = [
         "category": "professional",
         "vendor": "Generic",
         "content": "Communication, teamwork, planning, problem-solving, and numerical techniques.",
+        "source_title": "SFIA Foundation Skills Framework",
+        "source_url": "https://sfia-online.org/en/sfia-9",
+        "case_study": "Case study: used shift handover templates to improve communication quality and reduce task misses.",
     },
 ]
 
@@ -186,6 +216,7 @@ def api_notes():
     rows = fetch_all(
         """
         SELECT n.topic, n.content, n.category, n.vendor, u.name AS unit, u.semester
+             , n.source_title, n.source_url, n.case_study
         FROM study_notes n
         JOIN units u ON u.id = n.unit_id
         ORDER BY u.semester, u.name, n.topic

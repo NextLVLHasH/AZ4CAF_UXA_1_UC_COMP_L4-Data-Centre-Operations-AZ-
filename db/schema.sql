@@ -14,6 +14,9 @@ CREATE TABLE IF NOT EXISTS study_notes (
   category VARCHAR(100) NOT NULL,
   vendor VARCHAR(120) NOT NULL,
   content TEXT NOT NULL,
+  source_title VARCHAR(255) NOT NULL,
+  source_url VARCHAR(500) NOT NULL,
+  case_study TEXT NOT NULL,
   UNIQUE KEY uq_study_notes_unit_topic (unit_id, topic),
   FOREIGN KEY (unit_id) REFERENCES units(id)
 );
