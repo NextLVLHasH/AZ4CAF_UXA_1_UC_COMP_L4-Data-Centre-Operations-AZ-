@@ -1,6 +1,7 @@
 """Local Flask companion to the static AZ4CAF study notebook."""
 
 import json
+import hashlib
 import os
 from pathlib import Path
 from typing import Any
@@ -21,7 +22,13 @@ DATA_FILE = DOCS_DIR / "data" / "study_content.json"
 
 def load_content() -> dict[str, Any]:
     with DATA_FILE.open("r", encoding="utf-8") as file:
-        return json.load(file)
+        content = json.load(file)
+    learning_file = DOCS_DIR / "data" / "learning_content.json"
+    if learning_file.exists():
+        learning = json.loads(learning_file.read_text(encoding="utf-8"))
+        for key in ("lessons", "questions", "labs", "capstones"):
+            content[key] = learning.get(key, [])
+    return content
 
 
 CONTENT = load_content()
@@ -119,12 +126,22 @@ def merge_by_key(
     return list(merged.values())
 
 
+def identify(rows, kind, keys):
+    unit_ids = {unit["name"].casefold(): unit.get("id") for unit in FALLBACK_UNITS}
+    for row in rows:
+        identity = "|".join(str(row.get(key, "")).strip().casefold() for key in keys)
+        row.setdefault("id", f"db-{kind}-" + hashlib.sha256(identity.encode()).hexdigest()[:16])
+        if row.get("unit"):
+            row.setdefault("unit_id", unit_ids.get(row["unit"].casefold(), "db-unit-" + hashlib.sha256(row["unit"].casefold().encode()).hexdigest()[:16]))
+    return rows
+
+
 def get_units():
-    return merge_by_key(FALLBACK_UNITS, fetch_all(UNITS_QUERY), ("name",))
+    return identify(merge_by_key(FALLBACK_UNITS, fetch_all(UNITS_QUERY), ("name",)), "unit", ("name",))
 
 
 def get_notes():
-    return merge_by_key(FALLBACK_NOTES, fetch_all(NOTES_QUERY), ("unit", "topic"))
+    return identify(merge_by_key(FALLBACK_NOTES, fetch_all(NOTES_QUERY), ("unit", "topic")), "note", ("unit", "topic"))
 
 
 def get_cards(notes=None):
@@ -139,7 +156,7 @@ def get_cards(notes=None):
     for card in cards:
         group = (card.get("unit", "").casefold(), card.get("category", "").casefold())
         card["vendors"] = [card["vendor"]] if card.get("vendor") else sorted(vendors_by_group.get(group, []))
-    return cards
+    return identify(cards, "card", ("unit", "question"))
 
 
 def text_values(value):
@@ -169,7 +186,8 @@ def filter_rows(rows):
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", asset_base="/assets", content_url="/api/content",
+                           learning_url="/api/learning", search_url="/api/search-index")
 
 
 @app.route("/assets/<path:filename>")
@@ -191,6 +209,16 @@ def static_index_alias():
 def api_content():
     notes = get_notes()
     return jsonify({**CONTENT, "units": get_units(), "notes": notes, "flashcards": get_cards(notes)})
+
+
+@app.route("/api/learning")
+def api_learning():
+    return jsonify({"schema_version": 2, **{key: CONTENT.get(key, []) for key in ("lessons", "questions", "labs", "capstones")}})
+
+
+@app.route("/api/search-index")
+def api_search_index():
+    return send_from_directory(DOCS_DIR / "data", "search-index.json")
 
 
 @app.route("/api/units")
