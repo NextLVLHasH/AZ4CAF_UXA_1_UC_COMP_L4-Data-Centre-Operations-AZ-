@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hardware, power, cooling and resilience · AZ4CAF</title><style>
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #182b3a; background: #f4f6f7; }
+body { margin: 0; line-height: 1.75; }
+nav, main { max-width: 1000px; margin: auto; padding: 1.5rem; }
+nav { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; }
+main { background: white; border-top: 4px solid #1e5cc4; padding-bottom: 4rem; overflow-wrap: anywhere; }
+a { color: #145e80; text-underline-offset: .2em; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #ca691b; outline-offset: 3px; }
+h1,h2,h3,h4 { line-height: 1.25; color: #163d6e; scroll-margin-top: 1rem; }
+h1 { font-size: clamp(1.8rem, 4vw, 2.7rem); }
+h2 { margin-top: 2.5rem; border-bottom: 1px solid #d6e1ef; padding-bottom: .6rem; }
+pre { padding: 1rem; border-radius: .4rem; background: #102c52; color: #eef5ff; overflow: auto; line-height: 1.6; font-size: .9rem; }
+code { font-family: ui-monospace, monospace; } p code, li code { background: #edf2f2; padding: .1rem .25rem; }
+table { display: block; overflow: auto; border-collapse: collapse; font-size: .9rem; }
+th,td { padding: .6rem; border: 1px solid #d2dfdc; text-align: left; min-width: 5rem; }
+th { background: #edf3ff; } blockquote { border-left: 3px solid #c18c40; margin-left: 0; padding-left: 1rem; }
+details { margin: 1rem 0; padding: 1rem; background: #edf3ff; } summary { cursor: pointer; font-weight: 600; }
+@media print { nav, .toc { display: none; } :root { background: white; } main { max-width: none; padding: 0; } pre { white-space: pre-wrap; color: black; background: #eee; } a { color: black; } }
+</style></head>
+<body><nav aria-label="Study resources"><a href="../index.html">← Study notebook</a><a href="study-guide.html">Study and revision guide</a><a href="labs.html">Practical lab workbook</a><a href="network-labs.html">Switches, firewalls and complex networks</a><a href="data-tools.html">Access, MongoDB, Python and Node.js</a><a href="ai-guide.html">Using AI and understanding AI firewalls</a><a href="research.html">Research sources and verification</a><a href="facilities-guide.html">Hardware, power, cooling and resilience</a></nav><main>
+<details class="toc"><summary>On this page</summary><div class="toc">
+<ul>
+<li><a href="#hardware-and-facilities-keeping-the-whole-service-available">Hardware and facilities: keeping the whole service available</a><ul>
+<li><a href="#1-draw-the-service-dependencies-first">1. Draw the service dependencies first</a></li>
+<li><a href="#2-capacity-redundancy-and-path-redundancy">2. Capacity redundancy and path redundancy</a><ul>
+<li><a href="#failure-domain-review">Failure-domain review</a></li>
+</ul>
+</li>
+<li><a href="#3-watts-volt-amperes-current-and-energy">3. Watts, volt-amperes, current and energy</a><ul>
+<li><a href="#ab-load-transfer">A/B load transfer</a></li>
+</ul>
+</li>
+<li><a href="#4-battery-runtime-and-graceful-recovery">4. Battery runtime and graceful recovery</a></li>
+<li><a href="#5-heat-air-movement-and-environmental-readings">5. Heat, air movement and environmental readings</a></li>
+<li><a href="#6-hardware-diagnosis-without-guessing-a-replacement">6. Hardware diagnosis without guessing a replacement</a><ul>
+<li><a href="#memory-and-storage-distinctions">Memory and storage distinctions</a></li>
+<li><a href="#esd-handling-and-service-boundaries">ESD, handling and service boundaries</a></li>
+</ul>
+</li>
+<li><a href="#7-physical-access-inventory-and-controlled-changes">7. Physical access, inventory and controlled changes</a></li>
+<li><a href="#8-capacity-availability-and-recoverability">8. Capacity, availability and recoverability</a></li>
+<li><a href="#desk-lab-a-size-a-synthetic-rack-and-test-the-surviving-path">Desk lab A: size a synthetic rack and test the surviving path</a></li>
+<li><a href="#desk-lab-b-triage-a-thermal-and-hardware-alert-timeline">Desk lab B: triage a thermal and hardware alert timeline</a></li>
+<li><a href="#objective-checklist">Objective checklist</a></li>
+<li><a href="#research-and-verification-record">Research and verification record</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</details>
+<h1 id="hardware-and-facilities-keeping-the-whole-service-available">Hardware and facilities: keeping the whole service available</h1>
+<p>This supplementary workbook connects Computer Systems Architecture with data centre operations, numerical techniques and professional practice. Follow the <a href="study-guide.html">study pathway</a> and the <a href="labs.html">practical lab workbook</a> alongside it.</p>
+<p><strong>Learning boundary:</strong> the exercises use diagrams, synthetic readings and calculations. They do not authorise electrical switching, opening power supplies, removing rack feeds, handling batteries, defeating interlocks or changing a live cooling system. Electrical work requires the relevant competence and site authorisation. Report unsafe equipment through the approved process; do not investigate exposed conductors yourself. <a href="https://www.hse.gov.uk/electricity/faq.htm">HSE electrical-safety guidance</a> supports this competence-based approach.</p>
+<h2 id="1-draw-the-service-dependencies-first">1. Draw the service dependencies first</h2>
+<p>A server can be healthy while the service is unavailable. Its dependencies include power, cooling, network, storage, identity and the application. Describe the user-facing service before deciding which component to investigate.</p>
+<p>A simplified power dependency drawing is:</p>
+<pre><code class="language-text">Utility supply ── switchgear / transfer arrangement ── UPS ── distribution ── rack PDU ── server PSU
+                         ↑
+                  standby generator
+
+Example A path: UPS A ── distribution A ── rack PDU A ── server PSU A
+Example B path: UPS B ── distribution B ── rack PDU B ── server PSU B
+</code></pre>
+<p>This is a teaching drawing, not a wiring diagram. Actual arrangements may place transfer, bypass and distribution components differently. Trace an approved single-line diagram and equipment labels rather than inferring independence from the names “A” and “B”.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Question for an operator</th>
+<th>Evidence to request or inspect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Utility / generator</td>
+<td>Which source is available, and what happens during a transition?</td>
+<td>Approved power diagram, monitoring state and recent authorised test record</td>
+</tr>
+<tr>
+<td>UPS</td>
+<td>Can it support the required load and bridge the specified interruption?</td>
+<td>Both kW/kVA limits, load readings, battery condition, applicable runtime curve</td>
+</tr>
+<tr>
+<td>Distribution / rack PDU</td>
+<td>Which upstream path and capacity limit applies?</td>
+<td>Circuit/outlet mapping, measured current, alerts and approved allocation</td>
+</tr>
+<tr>
+<td>Server PSU</td>
+<td>Which feed supplies each PSU, and can one remaining PSU support this server?</td>
+<td>Model-specific PSU configuration, health and operating mode</td>
+</tr>
+<tr>
+<td>Cooling</td>
+<td>Is enough heat removal available throughout the event?</td>
+<td>Inlet readings, airflow state, cooling dependency and escalation thresholds</td>
+</tr>
+</tbody>
+</table>
+<p>A UPS commonly bridges a short interruption until another source is established or systems shut down in a controlled way. A generator is not an instantaneous substitute for a UPS. Continuing to power IT while required cooling is unavailable is also a dependency problem. Check the complete chain, including maintenance and transition states.</p>
+<p><strong>Recall:</strong> Do two server power cords prove end-to-end resilience? No. Both could lead to the same PDU, circuit, UPS or upstream dependency. A dual-cord arrangement also needs adequate surviving-path capacity.</p>
+<h2 id="2-capacity-redundancy-and-path-redundancy">2. Capacity redundancy and path redundancy</h2>
+<p>Let <strong>N</strong> be the capacity needed for the design load under stated conditions.</p>
+<ul>
+<li><strong>N:</strong> the required capacity is present, without an additional spare capacity unit in the stated scope.</li>
+<li><strong>N+1:</strong> one additional capacity unit is available beyond those required. State the unit size and the part of the system being described.</li>
+<li><strong>2N:</strong> two full-capacity systems are provided in the stated scope. Their independence and distribution paths still need examining.</li>
+</ul>
+<p>For an illustrative 120 kW design load using identical 40 kW modules, three modules supply N and four supply N+1. Removing one from four leaves 120 kW. This arithmetic says nothing about a shared downstream breaker, common cooling dependency or whether a component can safely be maintained while the load remains supported.</p>
+<p>For two 120 kW paths, each path must be able to support the whole required load when the other is unavailable. Two partially loaded systems do not automatically prove this. Test the reasoning against actual ratings, ambient conditions, derating rules and the approved operating envelope.</p>
+<p>ASHRAE explicitly distinguishes additional capacity from a complete maintainable system. Its discussion is why this guide asks learners to name the scope of each redundancy claim. <a href="https://handbook.ashrae.org/Handbooks/A23/SI/A23_Ch20/a23_ch20_si.aspx">ASHRAE Handbook 2023, Chapter 20</a>.</p>
+<h3 id="failure-domain-review">Failure-domain review</h3>
+<p>Annotate the dependency drawing with:</p>
+<ol>
+<li>Shared upstream equipment and common control systems.</li>
+<li>Shared physical routes vulnerable to the same incident.</li>
+<li>Capacity remaining after the specified failure.</li>
+<li>The maintenance state that removes an additional component.</li>
+<li>Cooling and network dependencies of the same service.</li>
+<li>The evidence needed to establish successful recovery.</li>
+</ol>
+<p>Do not translate N+1 or 2N directly into a guaranteed uptime percentage or an official facility classification. Design, implementation, operation and the scope of a particular standard all matter.</p>
+<h2 id="3-watts-volt-amperes-current-and-energy">3. Watts, volt-amperes, current and energy</h2>
+<p>Use quantities with units. A number labelled “power” is incomplete if you do not know whether it is real power, apparent power, a nameplate maximum or a measured value.</p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Meaning</th>
+<th>Useful relationship</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>W or kW</td>
+<td>Real power being used</td>
+<td>1 kW = 1,000 W</td>
+</tr>
+<tr>
+<td>VA or kVA</td>
+<td>Apparent power</td>
+<td>For the stated load, W = VA × power factor</td>
+</tr>
+<tr>
+<td>Power factor</td>
+<td>Real power divided by apparent power</td>
+<td>PF = W / VA; use a measured or documented value</td>
+</tr>
+<tr>
+<td>A</td>
+<td>Current</td>
+<td>For the simplified single-phase example, I = W / (V × PF)</td>
+</tr>
+<tr>
+<td>kWh</td>
+<td>Energy over time</td>
+<td>kWh = average kW × hours</td>
+</tr>
+<tr>
+<td>BTU/h</td>
+<td>Heat-transfer rate</td>
+<td>1 W is approximately 3.412 BTU/h</td>
+</tr>
+</tbody>
+</table>
+<p>The single-phase relationship above is not a three-phase circuit design method. Real installations require phase loading, protective devices, cable/connector ratings, inrush, harmonics and applicable electrical requirements to be assessed by competent personnel. Do not assume every IT load has PF = 1.</p>
+<p><strong>Worked example:</strong> a synthetic 4,000 W rack load at PF 0.95 represents approximately 4,210.5 VA. At a stated 230 V single-phase input, that corresponds to approximately 18.31 A. These values describe the exercise's assumptions, not permission to connect the rack to a particular circuit.</p>
+<p>A device with two 1,000 W PSUs does not necessarily consume 2,000 W continuously. PSU ratings describe capability; consumption depends on the system and workload. Use appropriate measured load profiles, documented maxima and the site's capacity method rather than simply adding every PSU nameplate.</p>
+<p>Check both the W and VA output limits of a UPS. Runtime is a separate selection requirement, dependent on load and the battery system. <a href="https://www.eaton.com/us/en-us/products/backup-power-ups-surge-it-power-distribution/backup-power-ups/ups-sizing-guide.html">Eaton UPS sizing guide</a>.</p>
+<h3 id="ab-load-transfer">A/B load transfer</h3>
+<p>If a 4 kW load normally shares equally across two feeds, each carries about 2 kW. Losing one path can transfer approximately 4 kW to the survivor for equipment designed to operate that way. Normal readings therefore cannot establish failover capacity alone.</p>
+<p>Do not assume perfectly equal sharing or identical PSU efficiency; verify the server's supported power mode. Include single-corded loads and transfer devices separately. <a href="https://www.se.com/ww/en/download/document/SPD_NRAN-5TDSPN_EN/">Schneider Electric's rack-powering paper</a> identifies feed arrangement, overload and loss of redundancy as related design questions; its landing page is a reference starting point rather than a verified site design.</p>
+<h2 id="4-battery-runtime-and-graceful-recovery">4. Battery runtime and graceful recovery</h2>
+<p>A simplified energy calculation is useful for checking units:</p>
+<pre><code class="language-text">Illustrative usable battery energy before conversion: 1.2 kWh
+Assumed conversion efficiency:                       0.90
+Illustrative load:                                   4.0 kW
+Idealised supported time: (1.2 × 0.90) / 4.0 = 0.27 h = 16.2 min
+</code></pre>
+<p>This is an idealised arithmetic exercise. It is <strong>not</strong> a prediction for an actual UPS. Battery age, temperature, discharge rate, state of charge, internal cutoff behaviour, inverter losses, auxiliary loads and manufacturer test conditions can change runtime. Use the manufacturer curve or validated sizing tool for the exact UPS, battery configuration and load, with the site's required margin.</p>
+<p>A recovery plan must also answer:</p>
+<ul>
+<li>How long is available to recognise the event and make a decision?</li>
+<li>Which shutdown sequence preserves application and storage consistency?</li>
+<li>Is cooling available during that interval?</li>
+<li>What if the generator or transfer sequence fails?</li>
+<li>Who authorises the next action, and where are its verification and rollback steps?</li>
+</ul>
+<p>Do not trigger a real battery discharge or generator transfer to complete this workbook. Those are site-managed tests with separate competence, planning and authorisation.</p>
+<h2 id="5-heat-air-movement-and-environmental-readings">5. Heat, air movement and environmental readings</h2>
+<p>Air-cooled equipment draws inlet air through the chassis and exhausts warmer air. Air supplied to a room, air entering a server and air leaving a rack are different measurement locations. A room thermostat can miss a hot inlet at the top of one rack.</p>
+<table>
+<thead>
+<tr>
+<th>Observation</th>
+<th>Possible explanation to investigate</th>
+<th>Read-only evidence first</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Top inlet hotter than bottom</td>
+<td>Hot-air recirculation or local supply restriction</td>
+<td>Compare nearby rack inlet sensors and the airflow arrangement</td>
+</tr>
+<tr>
+<td>Fan speed rises at similar workload</td>
+<td>Higher inlet temperature, obstruction or equipment control response</td>
+<td>Correlate inlet, workload and fan trends</td>
+</tr>
+<tr>
+<td>Cold supply but hot server inlet</td>
+<td>Bypass/mixing or airflow path problem</td>
+<td>Locate sensors and compare supply-to-inlet measurements</td>
+</tr>
+<tr>
+<td>One sensor jumps while others stay stable</td>
+<td>A local event, sensor placement or sensor fault</td>
+<td>Confirm its location, timestamp and independent corroboration</td>
+</tr>
+<tr>
+<td>Cooling alarm with stable current inlets</td>
+<td>A developing dependency loss rather than immediate overheating</td>
+<td>Escalate using the approved procedure; monitor trend and redundancy state</td>
+</tr>
+</tbody>
+</table>
+<p>Containment, blanking panels and cable management can help keep supply and exhaust paths separate. Their placement must fit the installed airflow direction; network equipment can have different fan/PSU airflow variants. Unused openings, incorrect covers and missing manufacturer-required blanks can alter cooling performance.</p>
+<p>Choose limits from the equipment's environmental class, vendor requirements and approved site operating policy. <strong>Recommended</strong> conditions and <strong>allowable</strong> extremes are different concepts. Do not use an allowable boundary as a universal normal setpoint or copy a temperature number without checking its equipment class and measurement location.</p>
+<p><strong>Heat estimate:</strong> nearly all the electrical power consumed by a conventional IT rack becomes heat in its local environment. The synthetic 4,000 W rack therefore gives an approximate 4 kW sensible heat load, or 13,648 BTU/h. Cooling-system input power and distribution losses are additional facility loads; do not add them twice to the rack's measured IT power.</p>
+<p>The <a href="https://www.energy.gov/sites/default/files/2024-07/best-practice-guide-data-center-design.pdf">DOE/NREL design guide, revised July 2024</a> discusses airflow management and infrastructure energy metrics. This exercise uses it to frame measurement and efficiency questions, not to prescribe a temperature change on a live site.</p>
+<h2 id="6-hardware-diagnosis-without-guessing-a-replacement">6. Hardware diagnosis without guessing a replacement</h2>
+<p>Start with identity and evidence: asset ID, location, model, firmware, symptoms, timestamps, affected service and recent changes. A warning LED is a clue requiring interpretation, not a complete diagnosis.</p>
+<p>A practical sequence is:</p>
+<ol>
+<li>Confirm impact and distinguish a host failure from an application or network problem.</li>
+<li>Read approved management logs and the platform's documented status codes.</li>
+<li>Compare temperature, power, memory and storage alerts with the event timeline.</li>
+<li>Check exact component identity and the supported configuration.</li>
+<li>Choose the least disruptive authorised diagnostic step.</li>
+<li>Define the expected result, stop condition and recovery plan before a change.</li>
+<li>Record what was actually observed and what remains uncertain.</li>
+</ol>
+<h3 id="memory-and-storage-distinctions">Memory and storage distinctions</h3>
+<p><strong>ECC memory</strong> detects and, within its supported capabilities, corrects particular error patterns. A corrected-error event is not identical to a crash, but a trend can require investigation. Record DIMM location, count, rate and vendor guidance. Never assume ECC corrects every possible fault or that replacing a DIMM is the first action in every case.</p>
+<p><strong>RAID</strong> can provide particular availability/performance characteristics across drives. It does not preserve a separate historical copy against accidental deletion, corruption, malicious changes or all controller/host/site failures. Match the array's failure tolerance to its actual level and layout; RAID 10 does not guarantee survival of every arbitrary pair of failed drives.</p>
+<p><strong>SMART/predictive alerts</strong> report signals that warrant investigation. An alert is not an exact countdown, and absence of an alert does not guarantee a drive will remain healthy. Dell's current predictive-failure guidance connects error trends with backup, logs and platform-specific action; firmware/reporting behaviour and multiple alerts can require escalation. <a href="https://www.dell.com/support/kbdoc/en-us/000126418/poweredge-hdd-what-is-predicted-drive-failure-and-how-to-solve-it?lang=en">Dell PowerEdge predictive drive failure</a>.</p>
+<p>A successful rebuild restores redundancy only within the array's intended operation. Separately check application data, error logs, backups and the cause of the event. A drive's physical slot number, controller identifier and operating-system device name are not automatically interchangeable.</p>
+<h3 id="esd-handling-and-service-boundaries">ESD, handling and service boundaries</h3>
+<p>Before a permitted hardware exercise, use the exact product service manual and the site's maintenance process. Distinguish a documented hot-plug procedure from work requiring shutdown and isolation; standby power can remain after an OS shutdown.</p>
+<p>Use the approved tested ESD system and correct static-safe packaging. Handle components by appropriate edges and avoid contacts. Touching a chassis once is not a complete ESD control. ESD controls protect components; they do not make work on dangerous electrical equipment safe. The inspected <a href="https://www.dell.com/support/manuals/en-us/poweredge-mx7000/mx7000_fsm/safety-precautions?guid=guid-58747f98-609a-4a19-a64c-bf2cf7c32135&amp;lang=en-us">Dell MX7000 service precautions</a> are product-specific and should not be treated as universal replacement instructions.</p>
+<h2 id="7-physical-access-inventory-and-controlled-changes">7. Physical access, inventory and controlled changes</h2>
+<p>Physical security and accurate records support technical resilience. Verify identity and access authorisation through the site's process, prevent unapproved access, and report a lost badge or suspicious entry promptly. A familiar person or an urgent request does not replace authorisation.</p>
+<p>For a synthetic rack inventory, record asset ID, model, serial, rack/unit location, power-feed mapping, network-port mapping, owner and lifecycle status. Store secrets separately. Track removed storage through the approved chain of custody and sanitisation/disposal process; do not carry real data-bearing drives away as coursework evidence.</p>
+<p>An equipment move affects more than available rack units. Check load/weight, mounting compatibility, power paths, airflow, cable reach, network identity, documentation and service dependencies. Plan verification before the move and update the record after the actual outcome.</p>
+<p>Use a change record that states scope, responsible roles, prerequisites, exact target, expected impact, success checks, stop conditions and recovery. A diagram annotated “B disconnected” is suitable for a desk exercise; physically disconnecting B is a different activity requiring separate authorisation.</p>
+<h2 id="8-capacity-availability-and-recoverability">8. Capacity, availability and recoverability</h2>
+<p>Capacity is not a single percentage. Space, power, cooling, ports, optics, CPU, memory, storage capacity and I/O can each be the limiting resource. Record units, measurement window, peak/average behaviour and available capacity after the defined failure.</p>
+<p><strong>Availability arithmetic:</strong> in a 365-day year, 99.9% corresponds to 8.76 hours of unavailability; 99.99% corresponds to 52.56 minutes. These are arithmetic budgets, not promises made by a redundancy label. State whether the agreement includes planned maintenance and what service is measured.</p>
+<p><strong>RPO</strong> describes the tolerated data-loss interval relative to the disruption; <strong>RTO</strong> describes the target time to restore the required service. A backup taken hourly does not automatically meet a one-hour RPO if copies fail, are inconsistent or cannot be recovered. A restore of one file does not establish the full service's RTO.</p>
+<p>A restore rehearsal should include the application's dependencies, correct recovery point, integrity checks and a usable service test. Document actual timings and exceptions. The <a href="https://csrc.nist.gov/pubs/sp/800/34/r1/upd1/final">NIST contingency-planning guide</a> supplies a planning framework; it is a versioned publication, not a site-specific recovery procedure.</p>
+<p><strong>Energy metrics:</strong> compare equal time windows and measurement boundaries. If a fictional month has 3,600 kWh total facility energy and 2,880 kWh IT energy, PUE = 3,600 / 2,880 = 1.25. It does not reveal useful computing output, carbon intensity or whether an individual application is efficient. A monthly exercise value is not an annual PUE claim.</p>
+<h2 id="desk-lab-a-size-a-synthetic-rack-and-test-the-surviving-path">Desk lab A: size a synthetic rack and test the surviving path</h2>
+<p><strong>Goal:</strong> explain power quantities and expose a failure-state capacity constraint.</p>
+<p><strong>Prerequisites:</strong> calculator or Python 3; the synthetic figures below; no equipment access.</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Quantity</th>
+<th>Average measured power per item</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Server</td>
+<td>8</td>
+<td>420 W</td>
+</tr>
+<tr>
+<td>Switch</td>
+<td>2</td>
+<td>85 W</td>
+</tr>
+<tr>
+<td>Storage unit</td>
+<td>1</td>
+<td>470 W</td>
+</tr>
+</tbody>
+</table>
+<p>Assume the aggregate PF is 0.95 and the single-phase voltage is 230 V. All loads are compatible with dual-feed failover for this exercise. Each feed has a fictional <strong>approved planning allocation of 16 A</strong>. This allocation is a supplied exercise constraint, not a universal electrical rule.</p>
+<ol>
+<li>Calculate total real power, apparent power and current.</li>
+<li>Predict normal current per feed with equal sharing, then current on the survivor.</li>
+<li>Add 20% planned growth. Check a fictional UPS rated at 6,000 VA and 5,400 W against both limits.</li>
+<li>Calculate 30-day IT energy at the original steady load.</li>
+<li>Estimate sensible heat in kW and BTU/h.</li>
+<li>Use the idealised 1.2 kWh / 90% runtime calculation from Section 4, and state why it is insufficient for UPS selection.</li>
+<li>Write a two-sentence capacity finding identifying the constraint and the evidence needed before a real change.</li>
+</ol>
+<pre><code class="language-python">rack_w = 8 * 420 + 2 * 85 + 470
+pf, voltage = 0.95, 230
+rack_va = rack_w / pf
+survivor_a = rack_w / (voltage * pf)
+growth_w = rack_w * 1.20
+growth_va = growth_w / pf
+assert rack_w == 4000
+assert round(rack_va, 1) == 4210.5
+assert round(survivor_a, 2) == 18.31
+assert growth_w &lt; 5400 and growth_va &lt; 6000
+assert survivor_a &gt; 16
+assert rack_w / 1000 * 24 * 30 == 2880
+print(&quot;Rack W / VA:&quot;, rack_w, round(rack_va, 1))
+print(&quot;Normal per-feed A:&quot;, round(survivor_a / 2, 2))
+print(&quot;Surviving-feed A:&quot;, round(survivor_a, 2))
+print(&quot;Growth W / VA:&quot;, growth_w, round(growth_va, 1))
+print(&quot;Heat BTU/h:&quot;, rack_w * 3.412)
+print(&quot;Idealised minutes:&quot;, (1.2 * 0.90) / (rack_w / 1000) * 60)
+</code></pre>
+<p><strong>Expected:</strong> 4,000 W; approximately 4,210.5 VA; 9.15 A per normal feed; 18.31 A on the survivor. Growth gives 4,800 W / approximately 5,052.6 VA, below the two example UPS ratings. Nevertheless, the original load already exceeds the supplied 16 A surviving-feed allocation. Passing the UPS checks does not resolve that downstream constraint. Energy is 2,880 kWh and approximate heat is 13,648 BTU/h. Idealised runtime is 16.2 minutes, not a product runtime guarantee.</p>
+<p><strong>Evidence:</strong> calculations with units, the annotated A/B diagram, assumptions, the limiting constraint and a request for the exact approved circuit/UPS/runtime data.</p>
+<p><strong>Troubleshooting:</strong> a result of 4,000 VA confuses W and VA at PF 0.95; 9.15 A as the final failure-state answer omits the transferred load. Do not “fix” the design by changing the stated allocation without supporting engineering approval.</p>
+<p><strong>Cleanup:</strong> remove only the synthetic worksheet/script if desired. Do not change rack cabling or UPS configuration.</p>
+<h2 id="desk-lab-b-triage-a-thermal-and-hardware-alert-timeline">Desk lab B: triage a thermal and hardware alert timeline</h2>
+<p><strong>Goal:</strong> distinguish a supported observation from an unproven cause and prepare a useful handover.</p>
+<p><strong>Prerequisites:</strong> the fictional readings below; a blank incident record; no live system access.</p>
+<table>
+<thead>
+<tr>
+<th>Time UTC</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>09:00</td>
+<td>Rack LAB-R03 lower/middle/upper inlet readings are 23 / 24 / 30°C. Neighbouring upper inlets are 24–25°C.</td>
+</tr>
+<tr>
+<td>09:01</td>
+<td>The R03 upper servers report higher fan speed. Their synthetic workload counters are unchanged.</td>
+</tr>
+<tr>
+<td>09:02</td>
+<td>A recent change record says a blanking panel was removed; its final physical position is unverified.</td>
+</tr>
+<tr>
+<td>09:03</td>
+<td>R03 upper inlet reads 32°C. No other inlet sensor has a matching increase.</td>
+</tr>
+<tr>
+<td>09:04</td>
+<td>One server reports a predictive drive alert. No evidence currently links that alert to the local inlet trend.</td>
+</tr>
+<tr>
+<td>09:05</td>
+<td>The service owner reports the application still responds. No recovery test has been performed.</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Identify the affected location, trend, current service impact and unknowns.</li>
+<li>Explain why the room-average temperature and a successful application request cannot dismiss a developing local dependency problem.</li>
+<li>List three hypotheses and a read-only observation that would help distinguish each. Include sensor validity and airflow arrangement.</li>
+<li>Identify which exact equipment/environmental policy determines escalation; do not invent a universal 32°C shutdown rule.</li>
+<li>Separate the drive alert into its own evidence trail unless a supported correlation emerges. Identify the backup/log/model information needed by its owner.</li>
+<li>Write a factual handover with owner, next update time, outstanding decision and required authorised checks.</li>
+<li>State what would demonstrate that the event is resolved: stable appropriate inlets, explained cause, verified configuration and service checks over the agreed observation period.</li>
+</ol>
+<p><strong>Suggested answer:</strong> the upper inlet at one rack is rising and corroborated by a fan response, but cause is not established. Possible recirculation after a panel change, another airflow restriction, and a sensor/placement fault each need distinguishing evidence. The predictive drive warning requires prompt platform-specific investigation and backup status review; the timeline alone does not prove heat caused it. Follow the actual site's escalation and service-ownership process.</p>
+<p><strong>Evidence:</strong> a claim/hypothesis table, two short handover updates and explicit unknowns. An entry such as “panel restored successfully” is unacceptable unless that action was authorised and actually observed.</p>
+<p><strong>Troubleshooting:</strong> replacing a drive or changing a cooling setpoint before resolving scope and evidence can introduce another fault. The desk task is complete when the next justified checks and responsible roles are clear, not when an invented cause sounds convincing.</p>
+<p><strong>Cleanup:</strong> retain synthetic records only. No equipment changes are part of this lab.</p>
+<h2 id="objective-checklist">Objective checklist</h2>
+<p>Before leaving this guide, explain or demonstrate:</p>
+<ul>
+<li>The power chain and the difference between a redundant component and an independent path.</li>
+<li>Why the surviving A/B path needs a separate capacity check.</li>
+<li>W, VA, PF, A, kWh and sensible-heat calculations with units and assumptions.</li>
+<li>Why an idealised energy/runtime calculation is not a manufacturer runtime curve.</li>
+<li>Inlet versus supply/exhaust readings, and recommended versus allowable environmental conditions.</li>
+<li>How ESD precautions differ from electrical-safety controls.</li>
+<li>RAID versus backup, corrected memory events and the limits of predictive drive warnings.</li>
+<li>Inventory identity, physical access, change records and storage custody.</li>
+<li>Availability arithmetic, RPO/RTO and the limits of a small restore test.</li>
+<li>A factual handover that separates observation, inference, authorisation and unknowns.</li>
+</ul>
+<h2 id="research-and-verification-record">Research and verification record</h2>
+<p>Sources below were opened on <strong>13 November 2026</strong>. “Document reviewed” means relevant page content was inspected; it does not mean the described hardware operation was executed. The two desk labs are original synthetic exercises. The calculation script was executed separately and rechecked on <strong>14 November 2026</strong>: all assertions passed, including the 4,000 W rack load, 18.31 A surviving-feed current and 2,880 kWh energy calculation. No electrical, cooling or hardware intervention was performed.</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Inspected scope / version</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.hse.gov.uk/electricity/faq.htm">HSE electrical FAQs</a></td>
+<td>Competence, inspection and safe-working boundaries; consult current task-specific guidance</td>
+<td>Document reviewed</td>
+</tr>
+<tr>
+<td><a href="https://handbook.ashrae.org/Handbooks/A23/SI/A23_Ch20/a23_ch20_si.aspx">ASHRAE Handbook Chapter 20</a></td>
+<td>2023 SI handbook; system dependencies and redundancy distinctions</td>
+<td>Document reviewed</td>
+</tr>
+<tr>
+<td><a href="https://www.eaton.com/us/en-us/products/backup-power-ups-surge-it-power-distribution/backup-power-ups/ups-sizing-guide.html">Eaton UPS sizing</a></td>
+<td>Capacity versus runtime, load and growth considerations</td>
+<td>Document reviewed</td>
+</tr>
+<tr>
+<td><a href="https://www.se.com/ww/en/download/document/SPD_NRAN-5TDSPN_EN/">Schneider rack-powering options</a></td>
+<td>WP29 / SPD_NRAN-5TDSPN_EN, version 8, 13 October 2021</td>
+<td>Landing-page description reviewed; full PDF not inspected</td>
+</tr>
+<tr>
+<td><a href="https://www.energy.gov/sites/default/files/2024-07/best-practice-guide-data-center-design.pdf">DOE/NREL design guide</a></td>
+<td>Revised July 2024; airflow and energy-metric sections</td>
+<td>PDF reviewed</td>
+</tr>
+<tr>
+<td><a href="https://www.dell.com/support/manuals/en-us/poweredge-mx7000/mx7000_fsm/safety-precautions?guid=guid-58747f98-609a-4a19-a64c-bf2cf7c32135&amp;lang=en-us">Dell MX7000 precautions</a></td>
+<td>Product-specific ESD/service precautions; regional rendering can vary</td>
+<td>Document reviewed</td>
+</tr>
+<tr>
+<td><a href="https://www.dell.com/support/kbdoc/en-us/000126418/poweredge-hdd-what-is-predicted-drive-failure-and-how-to-solve-it?lang=en">Dell predictive drive failure</a></td>
+<td>Article 000126418, displayed version 36, modified 7 October 2026</td>
+<td>Document reviewed</td>
+</tr>
+<tr>
+<td><a href="https://csrc.nist.gov/pubs/sp/800/34/r1/upd1/final">NIST SP 800-34 Rev. 1</a></td>
+<td>Updated November 2010; contingency-planning context</td>
+<td>Publication record reviewed</td>
+</tr>
+</tbody>
+</table>
+<p>The general Dell RAID overview could not be retrieved through the research tool and is not marked verified. This guide does not assert that a public handbook or product landing page establishes the configuration, competence or resilience of a particular workplace.</p>
+</main></body></html>
