@@ -85,3 +85,9 @@ The research-informed distinction is central: **Boolean logic expresses a policy
 Backend tests exercise JSON mode, optional-database failures, rich-field merging, combined filters and API behaviour. Browser checks exercise both Flask and static views, search/empty/error states, navigation, card reveal/rating, local progress persistence/reset and mobile layout. Python calculation examples, the synthetic AI policy demo, the unprivileged Linux archive/restore exercise, and the Python/Node examples were executed with appropriate success/failure checks.
 
 Cisco/Packet Tracer configurations, privileged namespace firewall rules, Windows PowerShell, Microsoft Access and MongoDB server exercises were reviewed but not executed in this environment. A reviewed example's **expected result** is a prediction for the stated lab, not an observation that the lab was run. MySQL query behaviour is covered using mocks; a live MySQL import was not performed.
+
+## Learning-pathway verification update — 14 November 2026
+
+The follow-up release adds stable content IDs, a versioned browser progress format, 36 ordered lessons, 108 original checkpoint questions, 24 self-reported labs and two capstones. The facilities guide contains its own source and calculation record; these additions do not imply new official assessment requirements.
+
+Automated checks now include API/content integrity, revision scheduling and import validation, deterministic simulation cases, and the same browser learning journeys on Flask and the static build. The four tools model synthetic subnetting, packet-path dependencies, ordered firewall policy and AI Boolean/risk/metrics decisions. They do not execute network changes, inspect real traffic or establish factual truth. External hardware and privileged lab execution limits above still apply.
