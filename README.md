@@ -1,6 +1,6 @@
 # AZ4CAF · Level 4 Data Centre Operations study companion
 
-Detailed revision notes, worked examples, practical workbooks and recall cards for the **HRUC Level 4 Data Centre Operations programme (2026–2027)**. Study in the browser using either the Flask app or the static GitHub Pages version. Both use the same curriculum dataset and shared interface.
+A guided learning workspace with **36 lessons, 104 detailed notes, 124 recall cards, 108 original checkpoint questions, 24 trackable labs, two semester capstones and four interactive practice tools** for the **HRUC Level 4 Data Centre Operations programme (2026–2027)**. Study in the browser using either the Flask app or the static GitHub Pages version. Both use the same curriculum dataset and shared interface.
 
 This is an independent learning resource, not an official HRUC, Amazon, Pearson, Cisco or CompTIA publication. The unit names and programme dates below follow the supplied programme outline. Learning checklists and exercises are supplementary; your tutor's unit specifications and assessment briefs determine what you must submit. Examples are illustrative, not evidence of real incidents or completed student work.
 
@@ -11,10 +11,26 @@ This is an independent learning resource, not an official HRUC, Amazon, Pearson,
 - [Switches, firewalls and complex networks](docs/network-labs.md): connected Cisco lab, VLANs, trunks, LACP, STP, routing, firewall policies, Linux verification and fault injection.
 - [Access, MongoDB, Python and Node.js](docs/data-tools.md): supplementary database and programming notes, local examples and operational use cases.
 - [Using AI and understanding AI firewalls](docs/ai-guide.md): prompts, verification, agent files, tool permissions, Boolean policy decisions and probabilistic detection.
+- [Hardware, power, cooling and resilience](docs/facilities-guide.md): power paths, UPS sizing, airflow, safe servicing and two facilities desk labs.
 - [Research sources and verification](docs/research.md): inspected primary sources, claim mapping, corrections and verification limits.
 - [Canonical notes and cards](docs/data/study_content.json): structured source used by both versions.
 
-The browser notebook includes full-text search, unit/semester/category/vendor filters, worked examples, practice prompts, self-check answers, references, read-aloud controls and progress stored in your browser. Flashcard ratings help plan revision; they do not measure qualification or exam readiness. The six guides also have generated HTML versions linked from the notebook, with contents lists and print support.
+The interface uses dark blue accents and grouped **Learn → Practise → Review** navigation. Start with the next lesson on the Continue dashboard, open its linked notes and cards, follow a lab, then check your understanding. The reference library stays available beneath the workspace.
+
+- **Learning pathway:** at least four ordered lessons per unit, suggested prerequisites, objectives, study time and links to supporting notes/cards/labs. The optional project remains separate.
+- **Checkpoints:** ten questions selected from a twelve-question unit bank, including three applied scenarios. Feedback explains each answer and links to notes and sources. A repeat checkpoint prioritises questions absent from the last saved attempt. An 80% result is a personal study milestone, not an official grade or certification result.
+- **Recall sessions:** up to ten due/new cards. Successful reviews advance through 1, 3, 7, 14 and 30 calendar days; “practise again” returns to one day. Review any card outside the schedule when useful.
+- **Lab notebook:** step checklists, expected results, troubleshooting, cleanup and optional reflections. Completion is self-reported; the browser cannot verify that you ran an external lab.
+- **Interactive tools:** subnet/VLSM calculations, a bounded packet-path explorer, editable ordered firewall rules and an AI Boolean/risk/metrics explorer. All use synthetic data and make no infrastructure changes or paid API calls.
+- **Search and reading:** search notes, cards and generated guide sections; direct links and retained reading state make it easier to revisit material. Read-aloud controls remain close to the reading area.
+
+The seven long-form guides have generated HTML versions with contents lists and print support.
+
+### Save and transfer your progress
+
+Progress stays in this browser, with no accounts or server upload. **Export progress** downloads a JSON backup including your optional lab reflections. Keep it private. Import validates the entire backup and previews it before you confirm replacement; malformed files leave existing progress intact. Progress from the earlier version migrates automatically using explicit legacy mappings. Unreadable saved data is retained for download rather than silently overwritten.
+
+Clearing browser/site data removes local progress. Export before changing browsers or moving between the Flask and GitHub Pages origins. The stable content IDs preserve records when wording changes; IDs are not qualification evidence.
 
 ## Programme map
 
@@ -62,7 +78,7 @@ For the static version, serve the `docs` directory (opening `index.html` directl
 python -m http.server 8000 --directory docs
 ```
 
-Open <http://127.0.0.1:8000>. GitHub Pages can use **Deploy from a branch → main → /docs** once the changes are merged. This task does not change the repository's hosting settings.
+Open <http://127.0.0.1:8000>. The repository's existing GitHub Actions Pages workflow builds Jekyll from `./docs` on pushes to `main`; this release uses the same generated static files and hosting configuration.
 
 ## Optional MySQL overlay
 
@@ -86,20 +102,24 @@ The seed is generated from the current JSON, retains custom rows and updates mat
 
 ## Maintain and validate
 
-Edit `docs/data/study_content.json` for searchable material and `docs/*.md` for the six long-form workbooks. Preserve unit/topic or unit/question identifiers when revising existing material so browser progress remains associated with the same item. Unit names connect notes, cards, filters and metadata.
+Edit `docs/data/study_content.json` for units, notes, cards and source records, `docs/data/learning_content.json` for lessons/questions/labs/capstones, and `docs/*.md` for the seven guides. Preserve assigned IDs when wording changes, and retain `legacy_keys` for migration from the earlier browser format. References use stable IDs and are validated for coverage and consistency. Source records distinguish document review from further references and identify applicable versions and dates.
 
 ```bash
 python -m pip install -r requirements-dev.txt
 python scripts/validate_content.py
 python scripts/sync_seed.py
 python scripts/build_guides.py
+python scripts/build_site.py
 python -m unittest discover -s tests -v
+node --test tests/*.test.js
 node --check docs/assets/study.js
+python -m playwright install chromium
+python -m unittest discover -s tests/browser -v
 ```
 
-Node.js is needed only for that optional JavaScript syntax check and relevant lab exercises. The Python `Markdown` development dependency generates browsable guide pages; generated guide HTML and SQL seeds are committed so the static site has no build requirement. CI checks content relationships, complete teaching fields, generated-file freshness, backend fallback/filter behaviour and JavaScript syntax.
+Node.js 24 LTS is used in CI for dependency-free JavaScript logic tests and syntax checks; it is not a runtime requirement for the site. For an existing system Chromium, set `CHROMIUM_EXECUTABLE=/usr/bin/chromium` when running browser tests. The Python `Markdown` development dependency generates browsable guide pages; generated guide HTML and SQL seeds are committed so the static site has no build requirement. CI checks curriculum/path coverage, question integrity, generated-file freshness, backend compatibility, progress migration/import/scheduling, simulation calculations and end-to-end browser journeys on both serving modes.
 
-Shared styles and scripts live in `docs/assets`. `docs/index.html` and `templates/index.html` use the same interface with different asset/data URLs. Flask exposes `/api/content`, `/api/units`, `/api/notes` and `/api/flashcards`; the last two accept `semester`, `unit`, `category`, `vendor` and `q` filters.
+Shared styles and scripts live in `docs/assets`. `templates/index.html` is the single source for the interface; `scripts/build_site.py` renders `docs/index.html` with Pages URLs. `scripts/build_guides.py` also generates `docs/data/search-index.json` using actual guide heading IDs. Do not edit generated HTML or search entries directly. Flask exposes aggregate `/api/content`, `/api/learning`, `/api/search-index`, `/api/units`, `/api/notes` and `/api/flashcards`; the last two accept `semester`, `unit`, `category`, `vendor` and `q` filters.
 
 ## Sources and academic integrity
 

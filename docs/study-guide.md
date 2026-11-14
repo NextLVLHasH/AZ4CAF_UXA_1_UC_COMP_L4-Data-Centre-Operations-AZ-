@@ -48,7 +48,7 @@ After the core exercises, use the focused guides to connect several technologies
 - [Complex network labs](network-labs.md): switch setup, VLANs, trunks, routed networks, firewall policy, verification and recovery.
 - [Access, MongoDB, Python and Node](data-tools.md): data modelling, queries, application access and reproducible local examples. Treat these as supplementary tools that support the computing units; they are not additional confirmed HRUC units.
 - [AI operations guide](ai-guide.md): deeper study of AI use, evaluation, agents and their operational boundaries.
-- [Linux access and diagnostics](labs.md#lab-16--linux-access-and-a-read-only-diagnostic-baseline): approved SSH access, identity, permissions and evidence collection.
+- [Linux access and diagnostics](labs.md#lab-16-linux-access-and-a-read-only-diagnostic-baseline): approved SSH access, identity, permissions and evidence collection.
 
 ## Semester 1 learning pathway
 
